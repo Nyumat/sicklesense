@@ -9,6 +9,7 @@ import {
   signIn,
 } from "next-auth/react";
 import { match } from "ts-pattern";
+import SignUpForm from "./signup-form";
 
 interface SignInProps {
   providers: Record<
@@ -33,14 +34,21 @@ export function SignInBtn({ providers }: SignInProps) {
       .otherwise(() => <span>Sign in with {provider.name}</span>);
 
     return (
-      <Button
-        key={provider.name}
-        onClick={() => signIn(provider.id)}
-        className="w-full"
-        variant="outline"
-      >
-        {buttonContent}
-      </Button>
+      <>
+        <Button
+          key={provider.name}
+          onClick={() => provider.type !== "credentials" && signIn(provider.id)}
+          className={"w-full"}
+          variant="outline"
+        >
+          {buttonContent ?? provider.name}
+        </Button>
+        {provider.type === "credentials" && (
+          <>
+            <SignUpForm />
+          </>
+        )}
+      </>
     );
   };
 

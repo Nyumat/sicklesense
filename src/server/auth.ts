@@ -5,6 +5,7 @@ import {
   type NextAuthOptions,
 } from "next-auth";
 import { type Adapter } from "next-auth/adapters";
+import CredentialsProvider from "next-auth/providers/credentials";
 import DiscordProvider from "next-auth/providers/discord";
 
 import { env } from "@/env";
@@ -51,6 +52,64 @@ export const authOptions: NextAuthOptions = {
     DiscordProvider({
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
+    }),
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: {
+          label: "Email",
+          type: "text",
+          placeholder: "nyumat@gmail.com",
+        },
+        name: {
+          label: "Name",
+          type: "text",
+          placeholder: "Nyumat",
+        },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.name) {
+          return null;
+        }
+
+        // Check if user exists
+        let user = await db.user.findUnique({
+          where: { email: credentials.email },
+        });
+
+        // If user doesn't exist, create a new one
+        if (!user) {
+          user = await db.user.create({
+            data: {
+              email: credentials.email,
+              name: credentials.name,
+            },
+          });
+        }
+
+        // Create or update the credentials account
+        await db.account.upsert({
+          where: {
+            provider_providerAccountId: {
+              provider: "credentials",
+              providerAccountId: user.id,
+            },
+          },
+          create: {
+            userId: user.id,
+            type: "credentials",
+            provider: "credentials",
+            providerAccountId: user.id,
+          },
+          update: {},
+        });
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+        };
+      },
     }),
     /**
      * ...add more providers here.

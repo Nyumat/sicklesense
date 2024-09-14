@@ -5,7 +5,7 @@ export type OnboardingState = {
   step: number;
   email?: string;
   preferences?: string[];
-  comple;
+  completed?: boolean;
 };
 
 function useOnboardingState(userId: string | null): {
@@ -38,7 +38,7 @@ function useOnboardingState(userId: string | null): {
   useEffect(() => {
     localStorage.setItem("onboardingState", JSON.stringify(state));
     if (userId) {
-      void saveOnboardingProgress(userId, state);
+      void saveOnboardingProgress(state);
     }
   }, [state, userId]);
 
@@ -51,7 +51,7 @@ function useOnboardingState(userId: string | null): {
   const completeOnboarding = () => {
     localStorage.removeItem("onboardingState");
     if (userId) {
-      void saveOnboardingProgress(userId, { ...state, completed: true });
+      void saveOnboardingProgress({ step: 3, completed: true });
     }
   };
 
