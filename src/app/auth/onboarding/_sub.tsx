@@ -3,11 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { getOnboardingProgress } from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -198,7 +198,7 @@ export function Onboarding({ userId }: { userId: string }) {
         scdType,
         conditionStatus,
       });
-      router.push("/");
+      router.push("/dashboard");
     } else {
       updateState({
         age: parseInt(age),

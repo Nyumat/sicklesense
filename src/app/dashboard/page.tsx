@@ -1,12 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { getServerAuthSession } from "@/server/auth";
 import Image from "next/image";
 
-export default function Dashboard() {
+export default async function Dashboard() {
+const session = await getServerAuthSession();
+
   return (
     <div className="p-8">
-      <h1 className="mb-4 text-2xl font-bold">Welcome back, Jasmine</h1>
+      <h1 className="mb-4 text-2xl font-bold">Welcome back, {session?.user.name}!</h1>
       <p className="mb-6 text-sm text-gray-500">
         You have 2 stories waiting for you!
       </p>
