@@ -10,6 +10,8 @@ import DiscordProvider from "next-auth/providers/discord";
 
 import { env } from "@/env";
 import { db } from "@/server/db";
+import bcrypt from "bcrypt";
+import { z } from "zod";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -39,6 +41,10 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
+    signIn: async ({ user, account, profile, email, credentials }) => {
+      console.log({ user, account, profile, email, credentials });
+      return true;
+    },
     session: ({ session, user }) => ({
       ...session,
       user: {
@@ -46,6 +52,14 @@ export const authOptions: NextAuthOptions = {
         id: user.id,
       },
     }),
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+      }
+      return token;
+    },
   },
   adapter: PrismaAdapter(db) as Adapter,
   providers: [
@@ -59,50 +73,41 @@ export const authOptions: NextAuthOptions = {
         email: {
           label: "Email",
           type: "text",
-          placeholder: "nyumat@gmail.com",
         },
-        name: {
-          label: "Name",
-          type: "text",
-          placeholder: "Nyumat",
+        password: {
+          label: "Password",
+          type: "password",
         },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.name) {
+        const parsedCredentials = z
+          .object({
+            email: z.string().email(),
+            password: z.string().min(6),
+          })
+          .safeParse(credentials);
+
+        if (!parsedCredentials.success) {
           return null;
         }
 
-        // Check if user exists
-        let user = await db.user.findUnique({
-          where: { email: credentials.email },
+        const { email, password } = parsedCredentials.data;
+
+        const user = await db.user.findFirst({
+          where: {
+            email,
+          },
         });
 
-        // If user doesn't exist, create a new one
-        if (!user) {
-          user = await db.user.create({
-            data: {
-              email: credentials.email,
-              name: credentials.name,
-            },
-          });
+        if (!user?.password) {
+          return null;
         }
 
-        // Create or update the credentials account
-        await db.account.upsert({
-          where: {
-            provider_providerAccountId: {
-              provider: "credentials",
-              providerAccountId: user.id,
-            },
-          },
-          create: {
-            userId: user.id,
-            type: "credentials",
-            provider: "credentials",
-            providerAccountId: user.id,
-          },
-          update: {},
-        });
+        const passwordsMatch = await bcrypt.compare(password, user.password);
+
+        if (!passwordsMatch) {
+          return null;
+        }
 
         return {
           id: user.id,

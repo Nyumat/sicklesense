@@ -1,4 +1,5 @@
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import bcrypt from "bcrypt";
 import { z } from "zod";
 
 export const userRouter = createTRPCRouter({
@@ -7,10 +8,11 @@ export const userRouter = createTRPCRouter({
       z.object({
         name: z.string().min(2).max(50),
         email: z.string().email(),
+        password: z.string().min(3),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const { name, email } = input;
+      const { name, email, password } = input;
 
       const existingUser = await ctx.db.user.findUnique({
         where: { email },
@@ -20,11 +22,13 @@ export const userRouter = createTRPCRouter({
         throw new Error("Email already in use");
       }
 
+      const hashedPassword = await bcrypt.hash(password, 10);
+
       const user = await ctx.db.user.create({
         data: {
           name,
           email,
-          emailVerified: new Date(),
+          password: hashedPassword,
         },
       });
 

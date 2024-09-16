@@ -24,3 +24,20 @@ export const saveOnboardingProgress = async (
     return false;
   }
 };
+
+type UserSignUpFields = {
+  email: string;
+  name: string;
+  password: string;
+};
+
+export const signUpUser = async (data: UserSignUpFields): Promise<boolean> => {
+  try {
+    const mutation = api.auth.signUp.useMutation();
+    await mutation.mutateAsync(data);
+    return true;
+  } catch (error) {
+    console.error("Failed to sign up user:", error);
+    return false;
+  }
+};
