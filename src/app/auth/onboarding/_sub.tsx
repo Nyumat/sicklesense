@@ -2,59 +2,98 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useOnboardingState } from "@/hooks/use-onboarding-state";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import React, { useState } from "react";
 
-const steps = [
-  {
-    title: "Welcome to Our App",
-    description: "We're glad to have you here. Let's get started with our app!",
-    content: (
-      <form className="w-full max-w-md">
-        <Input type="email" placeholder="Enter your email" className="mb-4" />
-        <Button type="submit" className="w-full">
-          Next
-        </Button>
-      </form>
-    ),
-  },
-  {
-    title: "Customize Your Experience",
-    description:
-      "In this step, you can customize your app experience to better suit your needs.",
-    content: (
-      <div className="space-y-4">
-        <div className="flex items-center space-x-2">
-          <input type="checkbox" id="option1" className="form-checkbox" />
-          <label htmlFor="option1">Option 1</label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <input type="checkbox" id="option2" className="form-checkbox" />
-          <label htmlFor="option2">Option 2</label>
-        </div>
-      </div>
-    ),
-  },
-  {
-    title: "You're All Set!",
-    description:
-      "You've successfully completed the onboarding process. Let's dive into the app now!",
-    content: (
-      <Button variant="outline" className="w-full">
-        Get Started
-      </Button>
-    ),
-  },
-];
+const SCDTypeSelect = ({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+}) => (
+  <Select onValueChange={onChange} defaultValue={value}>
+    <SelectTrigger className="w-full">
+      <SelectValue placeholder="Select SCD Type" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="HbSS">HbSS</SelectItem>
+      <SelectItem value="HbSC">HbSC</SelectItem>
+      <SelectItem value="HbS beta thalassemia">HbS beta thalassemia</SelectItem>
+      <SelectItem value="Other">Other</SelectItem>
+    </SelectContent>
+  </Select>
+);
 
-export function Onboarding({ userId }: { userId: string }) {
+const ConditionStatusSelect = ({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+}) => (
+  <Select onValueChange={onChange} defaultValue={value}>
+    <SelectTrigger className="w-full">
+      <SelectValue placeholder="Select Condition Status" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="Diagnosed">Diagnosed</SelectItem>
+      <SelectItem value="Carrier">Carrier</SelectItem>
+      <SelectItem value="Undiagnosed">Undiagnosed</SelectItem>
+    </SelectContent>
+  </Select>
+);
+
+const AgeInput = ({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+}) => (
+  <Input
+    type="number"
+    placeholder="Enter your age"
+    value={value}
+    onChange={(e) => onChange(e.target.value)}
+  />
+);
+
+
+export function Onboarding({
+  userId,
+  steps,
+}: {
+  userId: string;
+  steps: Array<{
+    title: string;
+    description: string;
+    component: React.ReactNode;
+  }>;
+}) {
   const [currentStep, setCurrentStep] = useState(0);
   const { state, updateState, completeOnboarding } = useOnboardingState(userId);
+  const [scdType, setScdType] = useState("");
+  const [age, setAge] = useState("");
+  const [conditionStatus, setConditionStatus] = useState("");
 
-  const nextStep = () =>
-    setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
+  const nextStep = () => {
+    if (currentStep === steps.length - 1) {
+      completeOnboarding();
+    } else {
+      setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
+    }
+  };
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
 
   return (
@@ -90,7 +129,20 @@ export function Onboarding({ userId }: { userId: string }) {
                 <p className="max-w-lg text-center text-lg text-gray-600 dark:text-gray-400">
                   {steps[currentStep]!.description}
                 </p>
-                {steps[currentStep]!.content}
+                {steps[currentStep]!.component}
+                {currentStep === 1 && (
+                  <div className="w-full space-y-4">
+                    <Label>SCD Type</Label>
+                    <SCDTypeSelect value={scdType} onChange={setScdType} />
+                    <Label>Age</Label>
+                    <AgeInput value={age} onChange={setAge} />
+                    <Label>Condition Status</Label>
+                    <ConditionStatusSelect
+                      value={conditionStatus}
+                      onChange={setConditionStatus}
+                    />
+                  </div>
+                )}
               </div>
             </motion.div>
           </AnimatePresence>
@@ -106,9 +158,11 @@ export function Onboarding({ userId }: { userId: string }) {
           <div className="text-2xl font-bold">{currentStep + 1}</div>
           <Button
             onClick={nextStep}
-            disabled={currentStep === steps.length - 1}
+            disabled={
+              currentStep === 1 && (!scdType || !age || !conditionStatus)
+            }
           >
-            Next
+            {currentStep === steps.length - 1 ? "Complete" : "Next"}
           </Button>
         </div>
       </div>
