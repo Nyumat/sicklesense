@@ -13,6 +13,7 @@ import { getOnboardingProgress } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 export type CompleteOnboarding = {
@@ -81,6 +82,7 @@ const AgeInput = ({
 );
 
 export function Onboarding({ userId }: { userId: string }) {
+  const router = useRouter();
   const [currentStep, setCurrentStep] = useState(0);
   const [state, setState] = useState<OnboardingState>({
     id: userId,
@@ -196,6 +198,7 @@ export function Onboarding({ userId }: { userId: string }) {
         scdType,
         conditionStatus,
       });
+      router.push("/");
     } else {
       updateState({
         age: parseInt(age),

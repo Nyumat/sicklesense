@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { LatestPost } from "@/app/_components/post";
+import { HeroSection } from "@/components/hero";
 import { ModeToggle } from "@/components/theme-toggle";
 import { getServerAuthSession } from "@/server/auth";
 import { api, HydrateClient } from "@/trpc/server";
@@ -15,6 +16,7 @@ export default async function Home() {
 
   return (
     <HydrateClient>
+      <HeroSection />
       <ModeToggle />
       <main className="flex min-h-screen flex-col items-center justify-center">
         <div className="container flex flex-col items-center justify-center gap-12 px-4">
