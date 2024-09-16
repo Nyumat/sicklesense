@@ -1,15 +1,15 @@
 "use client";
 
 import { userData } from "@/app/data";
-import React, { useEffect, useState } from "react";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { cn } from "@/lib/utils";
-import { Sidebar } from "../sidebar";
+import React, { useEffect, useState } from "react";
 import { Chat } from "./chat";
+import { Sidebar } from "./sidebar";
 
 interface ChatLayoutProps {
   defaultLayout: number[] | undefined;
@@ -18,7 +18,7 @@ interface ChatLayoutProps {
 }
 
 export function ChatLayout({
-  defaultLayout = [320, 480],
+  defaultLayout = [30, 70],
   defaultCollapsed = false,
   navCollapsedSize,
 }: ChatLayoutProps) {
@@ -73,7 +73,7 @@ export function ChatLayout({
         }}
         className={cn(
           isCollapsed &&
-            "min-w-[50px] md:min-w-[70px] transition-all duration-300 ease-in-out",
+            "min-w-[50px] transition-all duration-300 ease-in-out md:min-w-[70px]",
         )}
       >
         <Sidebar
@@ -82,7 +82,7 @@ export function ChatLayout({
             name: user.name,
             messages: user.messages ?? [],
             avatar: user.avatar,
-            variant: selectedUser.name === user.name ? "secondary" : "ghost",
+            variant: selectedUser?.name === user.name ? "secondary" : "ghost",
           }))}
           isMobile={isMobile}
         />
@@ -90,8 +90,8 @@ export function ChatLayout({
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={defaultLayout[1]} minSize={30}>
         <Chat
-          messages={selectedUser.messages}
-          selectedUser={selectedUser}
+          messages={selectedUser?.messages}
+          selectedUser={selectedUser!}
           isMobile={isMobile}
         />
       </ResizablePanel>

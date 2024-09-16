@@ -1,8 +1,7 @@
 import { Message, UserData } from "@/app/data";
-import ChatTopbar from "./chat-topbar";
+import useChatStore from "@/hooks/use-chat-store";
 import { ChatList } from "./chat-list";
-import React, { useEffect, useState } from "react";
-import useChatStore from "@/hooks/useChatStore";
+import ChatTopbar from "./chat-topbar";
 
 interface ChatProps {
   messages?: Message[];
@@ -20,7 +19,7 @@ export function Chat({ messages, selectedUser, isMobile }: ChatProps) {
   };
 
   return (
-    <div className="flex flex-col justify-between w-full h-full">
+    <div className="flex h-full w-full flex-col justify-between">
       <ChatTopbar selectedUser={selectedUser} />
 
       <ChatList

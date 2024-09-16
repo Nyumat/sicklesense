@@ -1,3 +1,8 @@
+import { ChatInput } from "@/app/_components/ui/chat/chat-input";
+import { Message, loggedInUserData } from "@/app/data";
+import useChatStore from "@/hooks/use-chat-store";
+import { cn } from "@/lib/utils";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   FileImage,
   Mic,
@@ -9,13 +14,8 @@ import {
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { Button, buttonVariants } from "../ui/button";
-import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "framer-motion";
-import { Message, loggedInUserData } from "@/app/data";
-import { EmojiPicker } from "../emoji-picker";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { ChatInput } from "../ui/chat/chat-input";
-import useChatStore from "@/hooks/useChatStore";
+import { EmojiPicker } from "./emoji-picker";
 
 interface ChatBottombarProps {
   isMobile: boolean;
@@ -115,7 +115,7 @@ export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
   };
 
   return (
-    <div className="px-2 py-4 flex justify-between w-full items-center gap-2">
+    <div className="flex w-full items-center justify-between gap-2 px-2 py-4">
       <div className="flex">
         <Popover>
           <PopoverTrigger asChild>
@@ -193,7 +193,7 @@ export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
       <AnimatePresence initial={false}>
         <motion.div
           key="input"
-          className="w-full relative"
+          className="relative w-full"
           layout
           initial={{ opacity: 0, scale: 1 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -214,7 +214,7 @@ export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
             placeholder="Type a message..."
             className="rounded-full"
           />
-          <div className="absolute right-4 bottom-2  ">
+          <div className="absolute bottom-2 right-4">
             <EmojiPicker
               onChange={(value) => {
                 setMessage(message + value);

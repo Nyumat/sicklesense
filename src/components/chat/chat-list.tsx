@@ -1,19 +1,18 @@
-import { Message, UserData } from "@/app/data";
-import { cn } from "@/lib/utils";
-import React, { useRef, useEffect } from "react";
-import ChatBottombar from "./chat-bottombar";
-import { AnimatePresence, motion } from "framer-motion";
 import {
-  ChatBubbleAvatar,
-  ChatBubbleMessage,
-  ChatBubbleTimestamp,
   ChatBubble,
   ChatBubbleAction,
   ChatBubbleActionWrapper,
-} from "../ui/chat/chat-bubble";
-import { ChatMessageList } from "../ui/chat/chat-message-list";
-import { DotsVerticalIcon, HeartIcon, Share1Icon } from "@radix-ui/react-icons";
+  ChatBubbleAvatar,
+  ChatBubbleMessage,
+  ChatBubbleTimestamp,
+} from "@/app/_components/ui/chat/chat-bubble";
+import { ChatMessageList } from "@/app/_components/ui/chat/chat-message-list";
+import { Message, UserData } from "@/app/data";
+import { DotsVerticalIcon } from "@radix-ui/react-icons";
+import { AnimatePresence, motion } from "framer-motion";
 import { Forward, Heart } from "lucide-react";
+import { useEffect, useRef } from "react";
+import ChatBottombar from "./chat-bottombar";
 
 interface ChatListProps {
   messages: Message[];
@@ -41,13 +40,13 @@ export function ChatList({
   }, [messages]);
 
   const actionIcons = [
-    { icon: DotsVerticalIcon, type: 'More' },
-    { icon: Forward, type: 'Like' },
-    { icon: Heart, type: 'Share' },
+    { icon: DotsVerticalIcon, type: "More" },
+    { icon: Forward, type: "Like" },
+    { icon: Heart, type: "Share" },
   ];
 
   return (
-    <div className="w-full overflow-y-auto h-full flex flex-col">
+    <div className="flex h-full w-full flex-col overflow-y-auto">
       <ChatMessageList ref={messagesContainerRef}>
         <AnimatePresence>
           {messages.map((message, index) => {
@@ -71,12 +70,9 @@ export function ChatList({
                 className="flex flex-col gap-2 p-4"
               >
                 {/* Usage of ChatBubble component */}
-                <ChatBubble variant={variant}
-                >
+                <ChatBubble variant={variant}>
                   <ChatBubbleAvatar src={message.avatar} />
-                  <ChatBubbleMessage
-                    isLoading={message.isLoading}
-                  >
+                  <ChatBubbleMessage isLoading={message.isLoading}>
                     {message.message}
                     {message.timestamp && (
                       <ChatBubbleTimestamp timestamp={message.timestamp} />
@@ -88,7 +84,11 @@ export function ChatList({
                         className="size-7"
                         key={type}
                         icon={<Icon className="size-4" />}
-                        onClick={() => console.log('Action ' + type + ' clicked for message ' + index)}
+                        onClick={() =>
+                          console.log(
+                            "Action " + type + " clicked for message " + index,
+                          )
+                        }
                       />
                     ))}
                   </ChatBubbleActionWrapper>

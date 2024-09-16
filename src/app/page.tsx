@@ -2,9 +2,9 @@ import Link from "next/link";
 
 import { LatestPost } from "@/app/_components/post";
 import { HeroSection } from "@/components/hero";
-import { ModeToggle } from "@/components/theme-toggle";
 import { getServerAuthSession } from "@/server/auth";
 import { api, HydrateClient } from "@/trpc/server";
+import { SiteHeader } from "./_components/nav";
 
 export default async function Home() {
   const hello = await api.post.hello({ text: "from tRPC" });
@@ -16,8 +16,8 @@ export default async function Home() {
 
   return (
     <HydrateClient>
+      <SiteHeader />
       <HeroSection />
-      <ModeToggle />
       <main className="flex min-h-screen flex-col items-center justify-center">
         <div className="container flex flex-col items-center justify-center gap-12 px-4">
           <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
