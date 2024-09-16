@@ -12,32 +12,19 @@ export const getOnboardingProgress =
     return null;
   };
 
-export const saveOnboardingProgress = async (
-  state: OnboardingState,
-): Promise<boolean> => {
-  try {
-    const mutation = api.onboarding.saveProgress.useMutation();
-    await mutation.mutateAsync(state);
-    return true;
-  } catch (error) {
-    console.error("Failed to save onboarding progress:", error);
-    return false;
-  }
-};
+// type UserSignUpFields = {
+//   email: string;
+//   name: string;
+//   password: string;
+// };
 
-type UserSignUpFields = {
-  email: string;
-  name: string;
-  password: string;
-};
-
-export const signUpUser = async (data: UserSignUpFields): Promise<boolean> => {
-  try {
-    const mutation = api.auth.signUp.useMutation();
-    await mutation.mutateAsync(data);
-    return true;
-  } catch (error) {
-    console.error("Failed to sign up user:", error);
-    return false;
-  }
-};
+// export const signUpUser = async (data: UserSignUpFields): Promise<boolean> => {
+//   try {
+//     const mutation = api.auth.signUp.useMutation();
+//     await mutation.mutateAsync(data);
+//     return true;
+//   } catch (error) {
+//     console.error("Failed to sign up user:", error);
+//     return false;
+//   }
+// };

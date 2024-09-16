@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -10,10 +9,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useOnboardingState } from "@/hooks/use-onboarding-state";
+import { getOnboardingProgress } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { api } from "@/trpc/react";
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+export type CompleteOnboarding = {
+  id: string | null;
+  age: number;
+  conditionStatus: string;
+  scdType: string;
+  step?: number;
+};
+export type OnboardingState = CompleteOnboarding & {
+  step?: number;
+};
 
 const SCDTypeSelect = ({
   value,
@@ -69,28 +80,129 @@ const AgeInput = ({
   />
 );
 
-
-export function Onboarding({
-  userId,
-  steps,
-}: {
-  userId: string;
-  steps: Array<{
-    title: string;
-    description: string;
-    component: React.ReactNode;
-  }>;
-}) {
+export function Onboarding({ userId }: { userId: string }) {
   const [currentStep, setCurrentStep] = useState(0);
-  const { state, updateState, completeOnboarding } = useOnboardingState(userId);
+  const [state, setState] = useState<OnboardingState>({
+    id: userId,
+    age: 0,
+    conditionStatus: "",
+    scdType: "",
+    step: 0,
+  });
   const [scdType, setScdType] = useState("");
   const [age, setAge] = useState("");
   const [conditionStatus, setConditionStatus] = useState("");
+  const mutation = api.onboarding.saveProgress.useMutation();
+  const steps = useMemo(() => {
+    return [
+      {
+        title: "Age",
+        description: "Enter your age",
+        component: <AgeInput value={age} onChange={setAge} />,
+      },
+      {
+        title: "SCD Type",
+        description: "Select your SCD type",
+        component: <SCDTypeSelect value={scdType} onChange={setScdType} />,
+      },
+      {
+        title: "Condition Status",
+        description: "Select your condition status",
+        component: (
+          <ConditionStatusSelect
+            value={conditionStatus}
+            onChange={setConditionStatus}
+          />
+        ),
+      },
+    ];
+  }, [age, scdType, conditionStatus]);
 
-  const nextStep = () => {
+  console.log({ state, currentStep, scdType, age, conditionStatus });
+
+  const saveOnboardingProgress = async ({
+    id,
+    age,
+    conditionStatus,
+    scdType,
+    step,
+  }: CompleteOnboarding): Promise<boolean> => {
+    try {
+      if (!id) {
+        throw new Error("User ID is required to save onboarding progress.");
+      }
+      await mutation.mutateAsync({ id, age, conditionStatus, scdType, step });
+      return true;
+    } catch (error) {
+      console.error("Failed to save onboarding progress:", error);
+      return false;
+    }
+  };
+
+  // Load state from localStorage on component mount
+  useEffect(() => {
+    const savedState = localStorage.getItem("onboardingState");
+    if (savedState) {
+      const retreivedState = JSON.parse(savedState) as OnboardingState;
+      setState(retreivedState);
+    } else if (userId) {
+      void getOnboardingProgress().then((progress) => {
+        if (progress) {
+          const currentProgress = progress;
+          setState({
+            id: userId,
+            age: currentProgress.age,
+            conditionStatus: currentProgress.conditionStatus,
+            scdType: currentProgress.scdType,
+            step: currentProgress.step,
+          });
+        }
+      });
+    }
+  }, [userId]);
+  // Save state to localStorage and database when it changes
+  useEffect(() => {
+    localStorage.setItem("onboardingState", JSON.stringify(state));
+  }, [state, userId]);
+
+  // Function to update state
+  const updateState = (newState: Partial<OnboardingState>) => {
+    setState((prev: OnboardingState) => ({ ...prev, ...newState }));
+  };
+
+  // Function to complete onboarding
+  const completeOnboarding = async ({
+    age,
+    conditionStatus,
+    scdType,
+  }: CompleteOnboarding) => {
+    localStorage.removeItem("onboardingState");
+    if (userId) {
+      await saveOnboardingProgress({
+        id: userId,
+        age,
+        conditionStatus,
+        scdType,
+        step: 3,
+      });
+    }
+  };
+
+  const nextStep = async () => {
     if (currentStep === steps.length - 1) {
-      completeOnboarding();
+      await completeOnboarding({
+        id: userId,
+        age: parseInt(age),
+        scdType,
+        conditionStatus,
+      });
     } else {
+      updateState({
+        age: parseInt(age),
+        scdType,
+        conditionStatus,
+        step: currentStep + 1,
+      });
       setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
     }
   };
@@ -130,19 +242,6 @@ export function Onboarding({
                   {steps[currentStep]!.description}
                 </p>
                 {steps[currentStep]!.component}
-                {currentStep === 1 && (
-                  <div className="w-full space-y-4">
-                    <Label>SCD Type</Label>
-                    <SCDTypeSelect value={scdType} onChange={setScdType} />
-                    <Label>Age</Label>
-                    <AgeInput value={age} onChange={setAge} />
-                    <Label>Condition Status</Label>
-                    <ConditionStatusSelect
-                      value={conditionStatus}
-                      onChange={setConditionStatus}
-                    />
-                  </div>
-                )}
               </div>
             </motion.div>
           </AnimatePresence>
@@ -156,12 +255,7 @@ export function Onboarding({
             Previous
           </Button>
           <div className="text-2xl font-bold">{currentStep + 1}</div>
-          <Button
-            onClick={nextStep}
-            disabled={
-              currentStep === 1 && (!scdType || !age || !conditionStatus)
-            }
-          >
+          <Button onClick={nextStep}>
             {currentStep === steps.length - 1 ? "Complete" : "Next"}
           </Button>
         </div>

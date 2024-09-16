@@ -2,13 +2,14 @@ import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { z } from "zod";
 
 const onboardingStateSchema = z.object({
-  step: z.number(),
-  email: z.string().email().optional(),
-  preferences: z.array(z.string()).optional(),
-  completed: z.boolean().optional(),
+  id: z.string(),
+  age: z.number().int(),
+  conditionStatus: z.string(),
+  scdType: z.string(),
+  step: z.number().int().optional(),
 });
 
-export type OnboardingState = z.infer<typeof onboardingStateSchema>
+export type OnboardingState = z.infer<typeof onboardingStateSchema>;
 
 export const onboardingRouter = createTRPCRouter({
   getProgress: protectedProcedure.query(async ({ ctx }) => {
