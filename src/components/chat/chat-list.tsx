@@ -24,12 +24,7 @@ interface ChatListProps {
 const getMessageVariant = (messageName: string, selectedUserName: string) =>
   messageName !== selectedUserName ? "sent" : "received";
 
-export function ChatList({
-  messages,
-  selectedUser,
-  sendMessage,
-  isMobile,
-}: ChatListProps) {
+export function ChatList({ messages, selectedUser, isMobile }: ChatListProps) {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

@@ -9,7 +9,7 @@ interface ChatProps {
   isMobile: boolean;
 }
 
-export function Chat({ messages, selectedUser, isMobile }: ChatProps) {
+export function Chat({ selectedUser, isMobile }: ChatProps) {
   const messagesState = useChatStore((state) => state.messages);
 
   const sendMessage = (newMessage: Message) => {

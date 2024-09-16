@@ -25,7 +25,7 @@ interface SidebarProps {
   isMobile: boolean;
 }
 
-export function Sidebar({ chats, isCollapsed, isMobile }: SidebarProps) {
+export function Sidebar({ chats, isCollapsed }: SidebarProps) {
   return (
     <div
       data-collapsed={isCollapsed}

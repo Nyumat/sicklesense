@@ -100,6 +100,7 @@ export default function ChatBottombar({ isMobile }: ChatBottombarProps) {
         setHasInitialResponse(true);
       }, 2500);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {

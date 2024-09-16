@@ -1,22 +1,22 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Bot, Send } from "lucide-react";
 import {
   ChatBubble,
   ChatBubbleAvatar,
   ChatBubbleMessage,
-} from "@/components/ui/chat/chat-bubble";
-import { ChatInput } from "@/components/ui/chat/chat-input";
+} from "@/app/_components/ui/chat/chat-bubble";
+import { ChatInput } from "@/app/_components/ui/chat/chat-input";
+import { ChatMessageList } from "@/app/_components/ui/chat/chat-message-list";
 import {
   ExpandableChat,
-  ExpandableChatHeader,
   ExpandableChatBody,
   ExpandableChatFooter,
-} from "@/components/ui/chat/expandable-chat";
-import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
+  ExpandableChatHeader,
+} from "@/app/_components/ui/chat/expandable-chat";
+import { Button } from "@/components/ui/button";
 import { AnimatePresence, motion } from "framer-motion";
+import { Bot, Send } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface Message {
   id: string;
@@ -75,10 +75,10 @@ export default function ChatSupport() {
       size="lg"
       position="bottom-right"
     >
-      <ExpandableChatHeader className="flex-col text-center justify-center">
+      <ExpandableChatHeader className="flex-col justify-center text-center">
         <h1 className="text-xl font-semibold">Chat with our AI ✨</h1>
         <p>Ask any question for our AI to answer</p>
-        <div className="flex gap-2 items-center pt-2">
+        <div className="flex items-center gap-2 pt-2">
           <Button variant="secondary">New Chat</Button>
           <Button variant="secondary">See FAQ</Button>
         </div>
@@ -113,7 +113,11 @@ export default function ChatSupport() {
                     variant={message.sender === "user" ? "sent" : "received"}
                   >
                     <ChatBubbleAvatar
-                      src={message.sender === "user" ? "https://avatars.githubusercontent.com/u/114422072?s=400&u=8a176a310ca29c1578a70b1c33bdeea42bf000b4&v=4" : ""}
+                      src={
+                        message.sender === "user"
+                          ? "https://avatars.githubusercontent.com/u/114422072?s=400&u=8a176a310ca29c1578a70b1c33bdeea42bf000b4&v=4"
+                          : ""
+                      }
                       fallback={message.sender === "user" ? "US" : "🤖"}
                     />
                     <ChatBubbleMessage
@@ -134,7 +138,7 @@ export default function ChatSupport() {
             e.preventDefault();
             handleSendMessage();
           }}
-          className="flex relative gap-2"
+          className="relative flex gap-2"
         >
           <ChatInput
             onKeyDown={onKeyDown}
@@ -146,7 +150,7 @@ export default function ChatSupport() {
             disabled={!inputMessage.trim()}
             type="submit"
             size="icon"
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 shrink-0"
+            className="absolute right-2 top-1/2 shrink-0 -translate-y-1/2 transform"
           >
             <Send className="size-4" />
           </Button>

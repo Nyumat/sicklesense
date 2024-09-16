@@ -1,17 +1,8 @@
-import Link from "next/link";
-
 import { SignInBtn } from "@/app/_components/signin-button";
 import { getServerAuthSession } from "@/server/auth";
 import { getProviders } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-
-export const description =
-  "A login page with two columns. The first column has the login form with email and password. There's a Forgot your passwork link and a link to sign up if you do not have an account. The second column has a cover image.";
-
-export const iframeHeight = "800px";
-
-export const containerClassName = "w-full h-full p-4 lg:p-0";
 // export default async function SignIn() {
 //   const session = await getServerAuthSession(authOptions);
 

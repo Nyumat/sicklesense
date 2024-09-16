@@ -1,15 +1,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { DiscordLogoIcon } from "@radix-ui/react-icons";
 import { type BuiltInProviderType } from "next-auth/providers/index";
 import {
   signIn,
   type ClientSafeProvider,
   type LiteralUnion,
 } from "next-auth/react";
-import { SignInForm } from "./auth-forms";
-import { DiscordLogoIcon } from "@radix-ui/react-icons";
 import { match } from "ts-pattern";
+import { SignInForm } from "./auth-forms";
 
 interface SignInProps {
   providers: Record<
@@ -42,12 +42,14 @@ export function SignInBtn({ providers }: SignInProps) {
         )}
         <Button
           className="w-full"
-          onClick={() => signIn(provider.id, { callbackUrl: "/auth/onboarding" })}
+          onClick={() =>
+            signIn(provider.id, { callbackUrl: "/auth/onboarding" })
+          }
           variant="outline"
         >
           {buttonContent}
         </Button>
-      </>,
+      </>
     );
   };
 

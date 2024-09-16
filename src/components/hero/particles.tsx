@@ -1,5 +1,5 @@
 "use client";
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { cn } from "@/lib/utils";
 import type { Container } from "@tsparticles/engine";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
@@ -23,7 +23,6 @@ export const SparklesCore = (props: ParticlesProps) => {
   const {
     id,
     className,
-    background,
     minSize,
     maxSize,
     speed,
