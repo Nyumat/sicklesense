@@ -1,29 +1,135 @@
-# Create T3 App
+# SickleSense
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+**SickleSense** is a web application designed to empower individuals with sickle cell disease (SCD) by providing AI-driven care insights, real-time support, and a community of patients, caregivers, and healthcare professionals.
 
-## What's next? How do I make an app with this?
+## 🚀 Features
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- **AI-Driven Health Insights**: Personalized recommendations, symptom tracking, and crisis alerts powered by OpenAI and Google Gemini.
+- **Medication and Care Plan Management**: Create and manage care plans, medication reminders, and doctor appointments with ease.
+- **Community Support**: Join support groups and chat with other patients, caregivers, and medical professionals.
+- **Crisis Alerts**: Get real-time notifications for potential health crises based on symptom logs and AI predictions.
+- **Personalized Resources**: Access articles, videos, and tips tailored to your specific health needs.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## 🛠 Tech Stack
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+- **Framework**: Next JS (React)
+- **Authentication**: NextAuth.js (OAuth, JWT)
+- **API**: tRPC for type-safe APIs
+- **Database**: Prisma ORM with PostgreSQL
+- **Styling**: Tailwind CSS, ShadCN UI Components
+- **AI Integration**: OpenAI, Google Gemini
+- **Containerization**: Docker
+- **Deployment**: Vercel
 
-## Learn More
+## 🧑🏿‍💻 Installation
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+### Prerequisites
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+- [Node.js](https://nodejs.org/)
+- [Docker](https://www.docker.com/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Prisma CLI](https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch-typescript-postgres)
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+### Clone the Repository
 
-## How do I deploy this?
+```bash
+git clone https://github.com/nyumat/sicklesense.git
+```
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+```bash
+cd sicklesense
+```
+
+### Install Dependencies
+
+```bash
+npm install
+```
+
+### Set Up Environment Variables
+
+Create a .env file based on the .env.example provided:
+
+```bash
+Copy code
+cp .env.example .env
+```
+
+### Initialize the Database
+
+Make sure Docker is installed and running.
+
+#### Start the local database using Docker Compose:
+
+```bash
+docker-compose -f docker-compose-local.yml up -d
+```
+
+#### Run the Prisma database setup:
+
+```bash
+npx prisma generate
+npx prisma db push
+```
+
+### Start the App
+
+You can now run the development server:
+
+```bash
+npm run dev
+```
+
+Then visit http://localhost:3000 to view SickleSense in your browser.
+
+📁 Project Structure
+
+```bash
+.
+├── public                   # Static assets
+├── src                      # Application source code
+│   ├── components           # Reusable components (UI elements, forms, etc.)
+│   ├── pages                # Next.js pages (each file represents a route)
+│   ├── prisma               # Prisma schema and database client
+│   ├── styles               # TailwindCSS configurations
+│   └── utils                # Utility functions and helpers
+├── .env.example             # Environment variables example file
+├── .eslintrc.cjs            # ESLint configuration
+├── docker-compose.yml       # Docker setup for local database
+├── package.json             # Project dependencies and scripts
+└── README.md                # Project documentation
+```
+
+### 🔧 Development
+
+#### Linting & Formatting
+
+This project uses ESLint and Prettier for code linting and formatting.
+
+Lint the codebase:
+
+```bash
+npm run lint
+```
+
+Format the code:
+
+```bash
+npm run format
+```
+
+### 🚀 Deployment
+
+The project is currently deployed on Vercel. To deploy your own instance, head over to the Vercel dashboard and follow the instructions to deploy a new project from the GitHub repository you're hosting SickleSense on.
+
+### 🤝 Contributing
+
+This was a hackathon project, but I'd love to see it grow and become a useful tool for the SCD community. If you'd like to contribute, feel free to open an issue or submit a pull request.
+
+### 🙏 Acknowledgements
+
+Shoutout to AfroTech for hosting the AfroTech Hacks 2024 hackathon, where this project was created. As someone with SCD, I'm excited to see the impact this project can have on the community.
+
+### 📄 License
+
+SickleSense is [MIT licensed](/LICENSE).
