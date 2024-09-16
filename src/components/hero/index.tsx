@@ -127,7 +127,8 @@ export const AltHeroSection = () => {
             className="animate-fade-up max-w-[42rem] text-balance leading-normal text-muted-foreground opacity-0 sm:text-xl sm:leading-8"
             style={{ animationDelay: "0.35s", animationFillMode: "forwards" }}
           >
-            An optimized and optimal way of dumping your json compatible data from markdown data store content :)
+            An optimized and optimal way of dumping your json compatible data
+            from markdown data store content :)
           </p>
 
           <div
