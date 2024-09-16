@@ -7,11 +7,63 @@ generator client {
 
 datasource db {
     provider = "postgresql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
     url      = env("DATABASE_URL")
+}
+
+enum SickleCellType {
+    HbSS
+    HbSC
+    HbSbetaPlus
+    HbSbetaZero
+}
+
+enum SCDGenotype {
+    SCA
+    SCT
+}
+
+enum TriggerEvent {
+    Stress
+    Infection
+    Dehydration
+    Cold
+    Heat
+    Exercise
+    Other
+}
+
+enum PainLevel {
+    None
+    Mild
+    Moderate
+    Severe
+}
+
+enum MoodAssessment {
+    Happy
+    Sad
+    Angry
+    Anxious
+    Depressed
+    Other
+}
+
+enum CommunicationPreference {
+    Email
+    Phone
+    SMS
+    Other
+}
+
+enum SleepPattern {
+    Good
+    Poor
+}
+
+enum CheckLevel {
+    High
+    Moderate
+    Low
 }
 
 model Post {
@@ -55,16 +107,17 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    password      String?
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    posts         Post[]
+    id              String          @id @default(cuid())
+    name            String?
+    email           String?         @unique
+    password        String?
+    emailVerified   DateTime?
+    image           String?
+    accounts        Account[]
+    sessions        Session[]
+    posts           Post[]
     onboardingState Json?
+    patientProfile  PatientProfile?
 }
 
 model VerificationToken {
@@ -73,4 +126,84 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model PatientProfile {
+    id     String @id @default(cuid())
+    userId String @unique
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    // Medical History
+    dateOfBirth            DateTime
+    gender                 String
+    sickleCellType         SickleCellType
+    Genotype               SCDGenotype
+    diagnosisDate          DateTime
+    complications          String[]
+    otherMedicalConditions String[]
+
+    // Current Treatment
+    medications              Json[] // Store as [{name: String, dosage: String, frequency: String}]
+    hydroxyureaUsage         Boolean
+    bloodTransfusionHistory  String // Store as {date: DateTime, location: String, reason: String}
+    painManagementStrategies String[] // Store as [{name: String, dosage: String, frequency: String}]
+
+    // Lifestyle Factors
+    occupation            String?
+    physicalActivityLevel CheckLevel
+    dietaryHabits         String[]
+    smokingStatus         String?
+    alcoholConsumption    String?
+
+    // Environmental Factors
+    location        String
+    homeEnvironment String[]
+    travelFrequency String
+
+    // Triggers
+    knownTriggerEvents TriggerEvent[]
+    allergies          String[]
+
+    // Support System
+    emergencyContact     Json // Store as {name: String, relationship: String, phone: String}
+    primaryCarePhysician String
+    hematologistContact  String
+
+    // Quality of Life Metrics
+    sleepPatterns  SleepPattern
+    energyLevels   CheckLevel
+    painLevel      PainLevel
+    moodAssessment MoodAssessment
+
+    // Goals
+    shortTermGoals String[]
+    longTermGoals  String[]
+
+    // Preferences
+    communicationPreference CommunicationPreference
+    clinicalTrialInterest   Boolean
+
+    // Data Sharing Consent
+    dataShareConsent Boolean
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Health Metrics (for tracking over time)
+    healthMetrics HealthMetric[]
+}
+
+model HealthMetric {
+    id               String         @id @default(cuid())
+    patientProfileId String
+    patientProfile   PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
+
+    date         DateTime
+    painLevel    PainLevel
+    medication   String?
+    triggerEvent TriggerEvent?
+    notes        String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
