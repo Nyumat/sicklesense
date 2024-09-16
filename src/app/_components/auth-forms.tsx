@@ -10,12 +10,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { extractErrorMessages, isTRPCClientError } from "@/lib/utils";
+import { isTRPCClientError } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TRPCClientError } from "@trpc/client";
 import { TRPCError } from "@trpc/server";
-import { DefaultErrorShape } from "@trpc/server/unstable-core-do-not-import";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -153,7 +151,6 @@ export function SignInForm() {
         email: data.email,
         password: data.password,
       });
-
       if (result?.error) {
         setError(result.error);
       } else if (result?.ok) {

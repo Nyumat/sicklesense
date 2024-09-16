@@ -2,8 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import { type BuiltInProviderType } from "next-auth/providers/index";
-import { type ClientSafeProvider, type LiteralUnion } from "next-auth/react";
+import {
+  signIn,
+  type ClientSafeProvider,
+  type LiteralUnion,
+} from "next-auth/react";
 import { SignInForm } from "./auth-forms";
+import { DiscordLogoIcon } from "@radix-ui/react-icons";
+import { match } from "ts-pattern";
 
 interface SignInProps {
   providers: Record<
@@ -17,37 +23,37 @@ export function SignInBtn({ providers }: SignInProps) {
     return null;
   }
 
-  //   const buildProviderButton = (provider: ClientSafeProvider) => {
-  //     const buttonContent = match(provider.id)
-  //       .with("discord", () => (
-  //         <>
-  //           <DiscordLogoIcon color="#5865F2" className="size-6" />
-  //           <span className="ml-2">Login with Discord</span>
-  //         </>
-  //       ))
-  //       .otherwise(() => <span>Sign in with {provider.name}</span>);
+  const buildProviderButton = (provider: ClientSafeProvider) => {
+    const buttonContent = match(provider.id)
+      .with("discord", () => (
+        <>
+          <DiscordLogoIcon color="#5865F2" className="size-6" />
+          <span className="ml-2">Login with Discord</span>
+        </>
+      ))
+      .otherwise(() => <span>Sign in with {provider.name}</span>);
 
-  //     return (
-  //       <>
-  //         {provider.type === "credentials" && (
-  //           <>
-  //             <SignUpForm />
-  //           </>
-  //         )}
-  //         <Button
-  //           className="w-full"
-  //           onClick={() => signIn(provider.id)}
-  //           variant="outline"
-  //         >
-  //           {buttonContent}
-  //         </Button>
-  //       </>
-  //     );
-  //   };
+    return (
+      <>
+        {provider.type === "credentials" && (
+          <>
+            <SignInForm />
+          </>
+        )}
+        <Button
+          className="w-full"
+          onClick={() => signIn(provider.id, { callbackUrl: "/auth/onboarding" })}
+          variant="outline"
+        >
+          {buttonContent}
+        </Button>
+      </>,
+    );
+  };
 
-  //   const providerButtons = Object.values(providers).map(buildProviderButton);
+  const providerButtons = Object.values(providers).map(buildProviderButton);
 
-  return <SignInForm />;
+  return <>{providerButtons}</>;
 }
 
 export function SignUpBtn() {
