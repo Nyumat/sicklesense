@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Activity, AlertCircle, Calendar, Droplet, MessageCircle, Pill, ThermometerSun } from "lucide-react"
 import { useState } from "react"
-import { Bar, BarChart, Line, LineChart, Pie, PieChart, RadialBar, RadialBarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, Line, LineChart, Pie, PieChart, RadialBarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
 
 const hemoglobinData = [
   { name: "Jan", level: 8.5 },
@@ -55,8 +55,17 @@ const symptomsData = [
 export default function Component() {
   const [activeTab, setActiveTab] = useState("overview")
 
+     const tabItems = [
+    { value: "overview", label: "Overview" },
+    { value: "charts", label: "Health Metrics" },
+    { value: "medications", label: "Medications" },
+    { value: "appointments", label: "Appointments" },
+    { value: "chat", label: "Chat" },
+    { value: "tips", label: "Health Tips" },
+  ]
+
   return (
-      <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen">
       <header className="flex items-center justify-between px-6 py-4 border-b">
         <h1 className="text-2xl font-bold">Sickle Cell Companion</h1>
         <Avatar>
@@ -64,17 +73,18 @@ export default function Component() {
           <AvatarFallback>SC</AvatarFallback>
         </Avatar>
       </header>
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-grow">
-          <TabsList className="flex flex-col items-start space-y-2">
-            <TabsTrigger value="overview" className="w-full justify-start">Overview</TabsTrigger>
-            <TabsTrigger value="charts" className="w-full justify-start">Health Metrics</TabsTrigger>
-            <TabsTrigger value="medications" className="w-full justify-start">Medications</TabsTrigger>
-            <TabsTrigger value="appointments" className="w-full justify-start">Appointments</TabsTrigger>
-            <TabsTrigger value="chat" className="w-full justify-start">Chat</TabsTrigger>
-            <TabsTrigger value="tips" className="w-full justify-start">Health Tips</TabsTrigger>
-          </TabsList>
-        </Tabs>
-        <main className="flex-1 p-6 overflow-y-auto">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-1 h-full">
+
+                      <TabsList className="flex flex-col h-full">
+                          {tabItems.map((tab) => (
+                                <TabsTrigger key={tab.value} value={tab.value} className={`p-2 rounded-md cursor-pointer ${activeTab === tab.value ? "bg-primary text-white" : "text-primary"}`}>
+                                    {tab.label}
+                                </TabsTrigger>
+                            ))}
+                            </TabsList>
+
+
+          <main className="flex-grow p-6 overflow-auto">
             <TabsContent value="overview" className="space-y-6">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Card>
@@ -173,7 +183,7 @@ export default function Component() {
                         startAngle={180} 
                         endAngle={0}
                       >
-                        <RadialBar minAngle={15} background clockWise={true} dataKey="value" />
+                        {/* <RadialBar minAngle={15} background clockWise={true} dataKey="value" /> */}
                       </RadialBarChart>
                     </ResponsiveContainer>
                   </CardContent>
@@ -360,10 +370,9 @@ export default function Component() {
                   </Button>
                 </CardContent>
               </Card>
-          </TabsContent>
-          </main>
-        </div>
-      </Tabs>
-    </div>
+            </TabsContent>
+              </main>
+        </Tabs>
+    </div >
   )
 }
