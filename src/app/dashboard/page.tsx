@@ -36,7 +36,7 @@ const session = await getServerAuthSession();
         </CardContent>
       </Card>
 
-      <h2 className="mb-4 text-xl font-semibold">Your stories</h2>
+      <h2 className="mb-4 text-xl font-semibold">Your Stats</h2>
       <div className="mb-6 grid grid-cols-3 gap-4">
         {["Cows in the field", "Riding horses", "Magical chicken"].map(
           (story) => (

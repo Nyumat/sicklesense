@@ -15,7 +15,6 @@ import { createQueryClient } from "./query-client";
 const createContext = cache(() => {
   const heads = new Headers(headers());
   heads.set("x-trpc-source", "rsc");
-  console.log("headers", { heads });
   heads.set("x-ip-address", headers().get("x-forwarded-for") || "");
   return createTRPCContext({
     headers: heads,

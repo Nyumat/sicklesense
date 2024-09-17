@@ -120,8 +120,6 @@ export function Onboarding({ userId }: { userId: string }) {
     ];
   }, [age, scdType, conditionStatus]);
 
-  console.log({ state, currentStep, scdType, age, conditionStatus });
-
   const saveOnboardingProgress = async ({
     id,
     age,
