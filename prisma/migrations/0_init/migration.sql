@@ -175,3 +175,4 @@ ALTER TABLE "PatientProfile" ADD CONSTRAINT "PatientProfile_userId_fkey" FOREIGN
 
 -- AddForeignKey
 ALTER TABLE "HealthMetric" ADD CONSTRAINT "HealthMetric_patientProfileId_fkey" FOREIGN KEY ("patientProfileId") REFERENCES "PatientProfile"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
