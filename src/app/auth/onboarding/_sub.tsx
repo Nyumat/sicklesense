@@ -93,7 +93,8 @@ export function Onboarding({ userId }: { userId: string }) {
   });
   const [scdType, setScdType] = useState("");
   const [age, setAge] = useState("");
-  const [conditionStatus, setConditionStatus] = useState("");
+    const [conditionStatus, setConditionStatus] = useState("");
+    const [dataConsent, setDataConsent] = useState(false);
   const mutation = api.onboarding.saveProgress.useMutation();
   const steps = useMemo(() => {
     return [
@@ -116,9 +117,23 @@ export function Onboarding({ userId }: { userId: string }) {
             onChange={setConditionStatus}
           />
         ),
-      },
+        },
+        {
+            title: "Data Consent",
+            description: "Do you consent to share your data?",
+            component: (
+                <div className="flex items-center space-x-4">
+                    <input
+                        type="checkbox"
+                        checked={dataConsent}
+                        onChange={(e) => setDataConsent(e.target.checked)}
+                    />
+                    <label>I consent to share my data</label>
+                </div>
+            ),
+        },
     ];
-  }, [age, scdType, conditionStatus]);
+  }, [age, scdType, conditionStatus, dataConsent]);
 
   const saveOnboardingProgress = async ({
     id,

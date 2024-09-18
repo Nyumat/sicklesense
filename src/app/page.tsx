@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { LatestPost } from "@/app/_components/post";
 import { HeroSection } from "@/components/hero";
 import { getServerAuthSession } from "@/server/auth";
 import { api, HydrateClient } from "@/trpc/server";
@@ -34,7 +33,7 @@ export default async function Home() {
             </p>
 
             <div className="flex flex-col items-center justify-center gap-4">
-              <p className="text-center text-2xl text-white">
+              <p className="text-center text-xl text-white">
                 {session && <span>Logged in as {session.user?.name}</span>}
               </p>
               <Link
@@ -45,8 +44,7 @@ export default async function Home() {
               </Link>
             </div>
           </div>
-
-          {session?.user && <LatestPost />}
+          {/* {session?.user && <LatestPost />} */}
         </div>
       </main>
     </HydrateClient>
