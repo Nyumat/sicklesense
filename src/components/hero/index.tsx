@@ -120,16 +120,6 @@ export function HeroSection() {
             </AnimatePresence>
           </motion.div>
         </div>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 3 }}
-          className="absolute left-0 top-0 h-full min-w-full overflow-hidden blur-3xl opacity-80"
-          style={{
-            backgroundImage:
-              "radial-gradient(ellipse 40% 50% at 50% 0%, #9284D4, transparent)",
-          }}
-        ></motion.div>
       </div>
     </>
   );
