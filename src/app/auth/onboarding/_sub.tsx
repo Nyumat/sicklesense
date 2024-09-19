@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox"
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -102,7 +102,7 @@ export function Onboarding({ userId }: { userId: string }) {
   const [scdType, setScdType] = useState("");
   const [age, setAge] = useState("");
   const [conditionStatus, setConditionStatus] = useState("");
-//   const [dataConsent, setDataConsent] = useState(false);
+  //   const [dataConsent, setDataConsent] = useState(false);
   const mutation = api.onboarding.saveProgress.useMutation();
   const steps = useMemo(() => {
     return [
@@ -131,20 +131,21 @@ export function Onboarding({ userId }: { userId: string }) {
         description: "Do you consent to share your data?",
         component: (
           <>
-            <div className="flex flex-col items-center space-y-4 w-full max-w-md mx-auto">
-      <div className="flex items-center space-x-2 scale-125">
-        <Checkbox id="data-consent" />
-        <Label
-          htmlFor="data-consent"
-          className="text-sm font-medium cursor-pointer"
-        >
-          Accept
-        </Label>
-      </div>
-      <p className="text-sm text-muted-foreground text-center">
-        By checking this box, you consent SickleSense to use your data to improve the experience on the platform.
-      </p>
-    </div>
+            <div className="mx-auto flex w-full max-w-md flex-col items-center space-y-4">
+              <div className="flex scale-125 items-center space-x-2">
+                <Checkbox id="data-consent" />
+                <Label
+                  htmlFor="data-consent"
+                  className="cursor-pointer text-sm font-medium"
+                >
+                  Accept
+                </Label>
+              </div>
+              <p className="text-center text-sm text-muted-foreground">
+                By checking this box, you consent SickleSense to use your data
+                to improve the experience on the platform.
+              </p>
+            </div>
           </>
         ),
       },

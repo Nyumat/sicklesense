@@ -2,15 +2,15 @@
 
 import Link from "next/link";
 import { DynamicForm } from "@/app/_components/reusable-form";
-import { formSchema } from "@/app/data"
+import { formSchema } from "@/app/data";
 import { ContentLayout } from "@/app/_components/admin-panel/content-layout";
 import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
 export default function AccountPage() {
@@ -36,13 +36,9 @@ export default function AccountPage() {
         </BreadcrumbList>
       </Breadcrumb>
       <div className="my-4">
-        <h1 className="text-2xl font-bold mb-4">Your Account</h1>
-    <DynamicForm 
-          schema={formSchema} 
-          onSubmit={() => console.log("hi")}
-
-          />
-          </div>
+        <h1 className="mb-4 text-2xl font-bold">Your Account</h1>
+        <DynamicForm schema={formSchema} onSubmit={() => console.log("hi")} />
+      </div>
     </ContentLayout>
   );
 }

@@ -3,34 +3,48 @@ import { ContentLayout } from "@/app/_components/admin-panel/content-layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Greeting } from "@/app/(router)/dashboard/(helper)/greeting"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Droplet, Activity, ThermometerSun, Bell, Mail, Search, PenSquare, ChevronRight } from "lucide-react"
-
+import { Greeting } from "@/app/(router)/dashboard/(helper)/greeting";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Droplet,
+  Activity,
+  ThermometerSun,
+  Bell,
+  Mail,
+  Search,
+  PenSquare,
+  ChevronRight,
+} from "lucide-react";
 
 export default function DashboardPage() {
-    const heartRateData = [
-  { time: "12am", rate: 65 },
-  { time: "3am", rate: 60 },
-  { time: "6am", rate: 62 },
-  { time: "9am", rate: 75 },
-  { time: "12pm", rate: 85 },
-  { time: "3pm", rate: 70 },
-  { time: "6pm", rate: 80 },
-  { time: "9pm", rate: 72 },
-  { time: "9am", rate: 75 },
-  { time: "12pm", rate: 85 },
-  { time: "6pm", rate: 80 },
-  { time: "9pm", rate: 72 },
-  { time: "3pm", rate: 70 },
-]
+  const heartRateData = [
+    { time: "12am", rate: 65 },
+    { time: "3am", rate: 60 },
+    { time: "6am", rate: 62 },
+    { time: "9am", rate: 75 },
+    { time: "12pm", rate: 85 },
+    { time: "3pm", rate: 70 },
+    { time: "6pm", rate: 80 },
+    { time: "9pm", rate: 72 },
+    { time: "9am", rate: 75 },
+    { time: "12pm", rate: 85 },
+    { time: "6pm", rate: 80 },
+    { time: "9pm", rate: 72 },
+    { time: "3pm", rate: 70 },
+  ];
   return (
     <ContentLayout title="Dashboard">
       <Breadcrumb>

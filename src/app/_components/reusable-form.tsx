@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { format } from 'date-fns';
-import { CalendarIcon } from 'lucide-react';
+import React from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 
 import {
   Form,
@@ -15,24 +15,24 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
-import { Checkbox } from '@/components/ui/checkbox';
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type SchemaType = z.ZodObject<any>;
 
@@ -40,48 +40,63 @@ interface DynamicFormProps {
   schema: SchemaType;
   onSubmit: (data: any) => void;
   defaultValues?: Record<string, any>;
-    fieldLabels?: Record<string, string>;
+  fieldLabels?: Record<string, string>;
 }
 
 const generateLabel = (key: string): string => {
   return key
     .split(/(?=[A-Z])/)
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 };
 
 const formSections = [
   {
     title: "Personal Information",
-    fields: ["username", "dateOfBirth", "gender", "sickleCellType", "genotype", "diagnosisDate"]
+    fields: [
+      "username",
+      "dateOfBirth",
+      "gender",
+      "sickleCellType",
+      "genotype",
+      "diagnosisDate",
+    ],
   },
   {
     title: "Medical Information",
-    fields: ["hydroxyureaUsage", "bloodTransfusionHistory", "physicalActivityLevel"]
+    fields: [
+      "hydroxyureaUsage",
+      "bloodTransfusionHistory",
+      "physicalActivityLevel",
+    ],
   },
   {
     title: "Location and Travel",
-    fields: ["location", "travelFrequency"]
+    fields: ["location", "travelFrequency"],
   },
   {
     title: "Medical Contacts",
-    fields: ["primaryCarePhysician", "hematologistContact"]
+    fields: ["primaryCarePhysician", "hematologistContact"],
   },
   {
     title: "Health Metrics",
-    fields: ["sleepPatterns", "energyLevels", "painLevel", "moodAssessment"]
+    fields: ["sleepPatterns", "energyLevels", "painLevel", "moodAssessment"],
   },
   {
     title: "Preferences",
-    fields: ["communicationPreference", "clinicalTrialInterest", "dataShareConsent"]
-  }
+    fields: [
+      "communicationPreference",
+      "clinicalTrialInterest",
+      "dataShareConsent",
+    ],
+  },
 ];
 
-export const DynamicForm: React.FC<DynamicFormProps> = ({ 
-  schema, 
-  onSubmit, 
+export const DynamicForm: React.FC<DynamicFormProps> = ({
+  schema,
+  onSubmit,
   defaultValues = {},
-  fieldLabels = {}
+  fieldLabels = {},
 }) => {
   const form = useForm({
     resolver: zodResolver(schema),
@@ -122,7 +137,11 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
             <FormItem>
               <FormLabel>{label}</FormLabel>
               <FormControl>
-                <Input type="number" {...field} onChange={(e) => field.onChange(Number(e.target.value))} />
+                <Input
+                  type="number"
+                  {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -197,35 +216,34 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
     }
 
     if (field instanceof z.ZodEnum) {
-        const values = JSON.parse(JSON.stringify(field._def.values))
+      const values = JSON.parse(JSON.stringify(field._def.values));
       return (
         <FormField
-      control={form.control}
-      name={label}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
-            <FormControl>
-              <SelectTrigger>
-                <SelectValue placeholder={`Select ${key}`} />
-              </SelectTrigger>
-            </FormControl>
-            <SelectContent>
-              {values.map((value: string) => (
-                <SelectItem key={value} value={value}>
-                  {value}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
+          control={form.control}
+          name={label}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{label}</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder={`Select ${key}`} />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {values.map((value: string) => (
+                    <SelectItem key={value} value={value}>
+                      {value}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       );
     }
-
 
     return null;
   };
@@ -233,25 +251,27 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {formSections.map((section, index) => (
             <Card key={index} className="w-full">
               <CardHeader>
                 <CardTitle>{section.title}</CardTitle>
               </CardHeader>
               <CardContent className="grid gap-4">
-                {section.fields.map(key => (
+                {section.fields.map((key) =>
                   schema.shape[key] ? (
                     <React.Fragment key={key}>
                       {renderField(key, schema.shape[key])}
                     </React.Fragment>
-                  ) : null
-                ))}
+                  ) : null,
+                )}
               </CardContent>
             </Card>
           ))}
         </div>
-        <Button type="submit" className="w-full">Submit</Button>
+        <Button type="submit" className="w-full">
+          Submit
+        </Button>
       </form>
     </Form>
   );

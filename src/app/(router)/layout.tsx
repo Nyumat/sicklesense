@@ -1,7 +1,7 @@
 import AdminPanelLayout from "../_components/admin-panel/admin-panel-layout";
 
 export default function DemoLayout({
-  children
+  children,
 }: {
   children: React.ReactNode;
 }) {

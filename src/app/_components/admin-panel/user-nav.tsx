@@ -9,7 +9,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-  TooltipProvider
+  TooltipProvider,
 } from "@/components/ui/tooltip";
 import {
   DropdownMenu,
@@ -18,7 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 export function UserNav() {
@@ -56,20 +56,20 @@ export function UserNav() {
         <DropdownMenuGroup>
           <DropdownMenuItem className="hover:cursor-pointer" asChild>
             <Link href="/dashboard" className="flex items-center">
-              <LayoutGrid className="w-4 h-4 mr-3 text-muted-foreground" />
+              <LayoutGrid className="mr-3 h-4 w-4 text-muted-foreground" />
               Dashboard
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem className="hover:cursor-pointer" asChild>
             <Link href="/account" className="flex items-center">
-              <User className="w-4 h-4 mr-3 text-muted-foreground" />
+              <User className="mr-3 h-4 w-4 text-muted-foreground" />
               Account
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="hover:cursor-pointer" onClick={() => {}}>
-          <LogOut className="w-4 h-4 mr-3 text-muted-foreground" />
+          <LogOut className="mr-3 h-4 w-4 text-muted-foreground" />
           Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>

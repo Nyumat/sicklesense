@@ -251,7 +251,7 @@ export const hemoglobinData = [
   { name: "Apr", level: 9.5 },
   { name: "May", level: 9.1 },
   { name: "Jun", level: 8.7 },
-]
+];
 
 export const painData = [
   { name: "Mon", level: 3 },
@@ -261,11 +261,9 @@ export const painData = [
   { name: "Fri", level: 5 },
   { name: "Sat", level: 2 },
   { name: "Sun", level: 1 },
-]
+];
 
-export const hydrationData = [
-  { name: "Current", value: 75 },
-]
+export const hydrationData = [{ name: "Current", value: 75 }];
 
 export const oxygenSaturationData = [
   { name: "12 AM", value: 95 },
@@ -274,20 +272,19 @@ export const oxygenSaturationData = [
   { name: "12 PM", value: 97 },
   { name: "4 PM", value: 95 },
   { name: "8 PM", value: 96 },
-]
+];
 
 export const medicationAdherenceData = [
   { name: "Taken", value: 85 },
   { name: "Missed", value: 15 },
-]
+];
 
 export const symptomsData = [
   { name: "Fatigue", value: 4 },
   { name: "Joint Pain", value: 3 },
   { name: "Shortness of Breath", value: 2 },
   { name: "Headache", value: 1 },
-]
-
+];
 
 export const formSchema = z.object({
   dateOfBirth: z.date(),
@@ -309,15 +306,36 @@ export const formSchema = z.object({
   location: z.string(),
   homeEnvironment: z.array(z.string()),
   travelFrequency: z.string(),
-  knownTriggerEvents: z.array(z.enum(["Stress", "Infection", "Dehydration", "Cold", "Heat", "Exercise", "Other"])),
+  knownTriggerEvents: z.array(
+    z.enum([
+      "Stress",
+      "Infection",
+      "Dehydration",
+      "Cold",
+      "Heat",
+      "Exercise",
+      "Other",
+    ]),
+  ),
   allergies: z.array(z.string()),
-  emergencyContact: z.object({ name: z.string(), phone: z.string(), relation: z.string() }),
+  emergencyContact: z.object({
+    name: z.string(),
+    phone: z.string(),
+    relation: z.string(),
+  }),
   primaryCarePhysician: z.string(),
   hematologistContact: z.string(),
   sleepPatterns: z.enum(["Good", "Poor"]),
   energyLevels: z.enum(["High", "Moderate", "Low"]),
   painLevel: z.enum(["None", "Mild", "Moderate", "Severe"]),
-  moodAssessment: z.enum(["Happy", "Sad", "Angry", "Anxious", "Depressed", "Other"]),
+  moodAssessment: z.enum([
+    "Happy",
+    "Sad",
+    "Angry",
+    "Anxious",
+    "Depressed",
+    "Other",
+  ]),
   shortTermGoals: z.array(z.string()),
   longTermGoals: z.array(z.string()),
   communicationPreference: z.enum(["Email", "Phone", "SMS", "Other"]),

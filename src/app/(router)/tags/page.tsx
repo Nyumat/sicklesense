@@ -3,15 +3,13 @@ import Link from "next/link";
 import { ContentLayout } from "@/app/_components/admin-panel/content-layout";
 import PlaceholderContent from "@/app/_components/place";
 import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-;
-
 export default function TagsPage() {
   return (
     <ContentLayout title="Tags">

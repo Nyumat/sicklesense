@@ -5,11 +5,13 @@ import { getServerAuthSession } from "@/server/auth";
 import Image from "next/image";
 
 export default async function Dashboard() {
-const session = await getServerAuthSession();
+  const session = await getServerAuthSession();
 
   return (
     <div className="p-8">
-      <h1 className="mb-4 text-2xl font-bold">Welcome back, {session?.user.name}!</h1>
+      <h1 className="mb-4 text-2xl font-bold">
+        Welcome back, {session?.user.name}!
+      </h1>
       <p className="mb-6 text-sm text-gray-500">
         You have 2 stories waiting for you!
       </p>

@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
 
 function getGreeting(date = new Date()) {
   const hours = date.getHours();
@@ -14,10 +14,10 @@ function getGreeting(date = new Date()) {
 }
 
 export function Greeting() {
-const greeting=  getGreeting()
-return (
+  const greeting = getGreeting();
+  return (
     <>
-  <motion.div
+      <motion.div
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
@@ -26,6 +26,5 @@ return (
         {greeting}, Nyuma
       </motion.div>
     </>
-)
-
+  );
 }
