@@ -26,12 +26,7 @@ import {
   DropdownMenuContent,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-
-type Submenu = {
-  href: string;
-  label: string;
-  active: boolean;
-};
+import { Submenu } from "@/lib/menu-list";
 
 interface CollapseMenuButtonProps {
   icon: LucideIcon;
@@ -42,7 +37,7 @@ interface CollapseMenuButtonProps {
 }
 
 export function CollapseMenuButton({
-  icon: Icon,
+  icon: MenuIcon,
   label,
   active,
   submenus,
@@ -68,7 +63,7 @@ export function CollapseMenuButton({
           <div className="flex w-full items-center justify-between">
             <div className="flex items-center">
               <span className="mr-4">
-                <Icon size={18} />
+                <MenuIcon size={18} />
               </span>
               <p
                 className={cn(
@@ -98,7 +93,7 @@ export function CollapseMenuButton({
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent className="data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down overflow-hidden">
-        {submenus.map(({ href, label, active }, index) => (
+        {submenus.map(({ href, label, active, icon: SubMenuIcon }, index) => (
           <Button
             key={index}
             variant={active ? "secondary" : "ghost"}
@@ -107,7 +102,13 @@ export function CollapseMenuButton({
           >
             <Link href={href}>
               <span className="ml-2 mr-4">
-                <Dot size={18} />
+                {SubMenuIcon ? (
+                  <>
+                    <SubMenuIcon size={16} />
+                  </>
+                ) : (
+                  <Dot size={18} />
+                )}
               </span>
               <p
                 className={cn(
@@ -137,7 +138,7 @@ export function CollapseMenuButton({
                 <div className="flex w-full items-center justify-between">
                   <div className="flex items-center">
                     <span className={cn(isOpen === false ? "" : "mr-4")}>
-                      <Icon size={18} />
+                      <MenuIcon size={18} />
                     </span>
                     <p
                       className={cn(

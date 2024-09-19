@@ -2,16 +2,18 @@ import {
   Bookmark,
   LayoutGrid,
   LucideIcon,
+  MessageSquare,
   Settings,
   SquarePen,
   Tag,
   Users,
 } from "lucide-react";
 
-type Submenu = {
+export type Submenu = {
   href: string;
   label: string;
   active: boolean;
+  icon?: LucideIcon;
 };
 
 type Menu = {
@@ -34,7 +36,7 @@ export function getMenuList(pathname: string): Group[] {
       menus: [
         {
           href: "/dashboard",
-          label: "Dashboard",
+          label: "Home",
           active: pathname.includes("/dashboard"),
           icon: LayoutGrid,
           submenus: [],
@@ -46,19 +48,21 @@ export function getMenuList(pathname: string): Group[] {
       menus: [
         {
           href: "",
-          label: "Posts",
-          active: pathname.includes("/posts"),
-          icon: SquarePen,
+          label: "Community",
+          active: pathname.includes("/community"),
+          icon: Users,
           submenus: [
             {
-              href: "/posts",
-              label: "All Posts",
-              active: pathname === "/posts",
+              href: "/community",
+              label: "Community Discussion",
+              icon: MessageSquare,
+              active: pathname === "/community",
             },
             {
-              href: "/posts/new",
+              href: "/community/posts/new",
               label: "New Post",
-              active: pathname === "/posts/new",
+              icon: SquarePen,
+              active: pathname === "/community/posts/new",
             },
           ],
         },

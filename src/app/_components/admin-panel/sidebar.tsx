@@ -7,6 +7,7 @@ import { useStore } from "@/hooks/use-store";
 import { cn } from "@/lib/utils";
 import { Menu } from "./menu";
 import { SidebarToggle } from "./sidebar-toggle";
+import Image from "next/image";
 
 export function Sidebar() {
   const sidebar = useStore(useSidebarToggle, (state) => state);
@@ -31,16 +32,21 @@ export function Sidebar() {
           asChild
         >
           <Link href="/dashboard" className="flex items-center gap-2">
-            <PanelsTopLeft className="mr-1 h-6 w-6" />
+            <Image
+              alt="SickleSense"
+              src="/sicklesense.png"
+              width={40}
+              height={40}
+            />
             <h1
               className={cn(
-                "whitespace-nowrap text-lg font-bold transition-[transform,opacity,display] duration-300 ease-in-out",
+                "whitespace-nowrap bg-gradient-to-r from-[#FA5C5F] via-[#9592d3] to-[#0BACB4] bg-clip-text font-mono text-lg font-bold text-transparent transition-[transform,opacity,display] duration-300 ease-in-out",
                 sidebar?.isOpen === false
                   ? "hidden -translate-x-96 opacity-0"
-                  : "translate-x-0 opacity-100",
+                  : "-translate-x-4 opacity-100",
               )}
             >
-              Brand
+              ickle Sense
             </h1>
           </Link>
         </Button>

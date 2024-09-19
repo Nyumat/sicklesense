@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { ContentLayout } from "@/app/_components/admin-panel/content-layout";
 import { Button } from "@/components/ui/button";
@@ -28,8 +30,12 @@ import {
   PenSquare,
   ChevronRight,
 } from "lucide-react";
+import { NotificationButton } from "@/app/_components/admin-panel/notification-button";
 
 export default function DashboardPage() {
+  const summaryText = `Your hemoglobin levels are stable. Remember to stay hydrated and
+            take your medications as prescribed. If you experience any unusual
+            symptoms, please contact your healthcare provider.`;
   const heartRateData = [
     { time: "12am", rate: 65 },
     { time: "3am", rate: 60 },
@@ -51,12 +57,12 @@ export default function DashboardPage() {
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href="/">Home</Link>
+              <Link href="/">SickleSense</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Dashboard</BreadcrumbPage>
+            <BreadcrumbPage>Home</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -68,12 +74,18 @@ export default function DashboardPage() {
             <Input className="min-w-80 pl-8" placeholder="Search anything..." />
           </div>
           <div className="ml-4 flex items-center space-x-2">
-            <Button variant="ghost" size="icon">
-              <Bell />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <Mail />
-            </Button>
+            <NotificationButton
+              icon={Bell}
+              notificationCount={2}
+              variant="ghost"
+              size="icon"
+            />
+            <NotificationButton
+              icon={Mail}
+              notificationCount={8}
+              variant="ghost"
+              size="icon"
+            />
           </div>
         </header>
       </div>
@@ -128,11 +140,7 @@ export default function DashboardPage() {
           <CardTitle>Today&apos;s Summary</CardTitle>
         </CardHeader>
         <CardContent>
-          <p>
-            Your hemoglobin levels are stable. Remember to stay hydrated and
-            take your medications as prescribed. If you experience any unusual
-            symptoms, please contact your healthcare provider.
-          </p>
+          <p>{summaryText}</p>
         </CardContent>
       </Card>
 
@@ -211,17 +219,17 @@ export default function DashboardPage() {
               SEE ALL
             </Button>
           </CardTitle>
-          <CardDescription>512 CONVERSATIONS</CardDescription>
+          <CardDescription>Start a conversation</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="rounded-lg bg-blue-100 p-4">
               <p className="text-blue-800">
-                Let&apos;s make it easier for you to monitor your nutrition.
+                SickleSense makes it easier for you to monitor your sickle cell.
               </p>
               <p className="mt-2 text-blue-800">
-                I&apos;ll set up a food diary for you to record your meals and
-                snacks! 🍎🥗
+                Our chatbot can answer questions, which is fed <i>your data</i>{" "}
+                to give responses.
               </p>
             </div>
             <div className="flex items-center space-x-2">
