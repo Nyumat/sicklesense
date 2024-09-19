@@ -97,8 +97,10 @@ export default function NewPostPage() {
                     </BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>
-            <div className="my-4">
-                <h1 className="mb-4 text-2xl font-bold">Create New Post</h1>
+            <div className="container mx-auto my-6">
+                <h1 className="text-3xl font-bold mb-6">
+                    Create New Post
+                </h1>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <FormField

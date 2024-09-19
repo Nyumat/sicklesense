@@ -94,7 +94,7 @@ export function AllPosts() {
     }, [inView, hasMore, filteredPosts, displayedPosts]);
 
     return (
-        <div className="space-y-6 md:p-6 bg-secondary rounded-lg shadow-inner">
+        <div className="space-y-6 md:p-6 dark:bg-muted rounded-lg shadow-none">
             <div className="flex justify-between items-center">
                 <div className="relative flex-grow mr-4">
                     <Input
@@ -102,7 +102,7 @@ export function AllPosts() {
                         placeholder="Search posts..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10 pr-4 py-2 w-full rounded-full border-2 border-input focus:border-ring focus:ring focus:ring-ring focus:ring-opacity-50 transition duration-300"
+                        className="pl-10 pr-4 py-2 w-full rounded-full border-1 border-input focus:border-ring focus:ring focus:ring-ring focus:ring-opacity-50 transition duration-300 shadow-md"
                     />
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                 </div>

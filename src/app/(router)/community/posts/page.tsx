@@ -34,8 +34,10 @@ export default function PostsPage() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-          <div className="my-4">
-              <h1 className="mb-4 text-2xl font-bold">Community Posts</h1>
+          <div className="container mx-auto my-6">
+              <h1 className="text-3xl font-bold mb-6">
+                    Community Posts
+                </h1>
             <AllPosts />
           </div>
     </ContentLayout>
