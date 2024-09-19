@@ -11,7 +11,7 @@ export const Users: User[] = [
   {
     id: 2,
     avatar:
-      "https://images.freeimages.com/images/large-previews/fdd/man-avatar-1632964.jpg?fmt=webp&h=350",
+      "https://avatars.githubusercontent.com/u/46255836?v=4",
     messages: [],
     name: "John Doe",
   },
@@ -42,7 +42,7 @@ export const userData: User[] = [
   {
     id: 1,
     avatar:
-      "https://images.freeimages.com/images/large-previews/971/basic-shape-avatar-1632968.jpg?fmt=webp&h=350",
+      "https://avatars.githubusercontent.com/u/46255836?v=4",
     messages: [
       {
         id: 1,

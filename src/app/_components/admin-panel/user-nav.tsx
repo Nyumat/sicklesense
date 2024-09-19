@@ -33,8 +33,8 @@ export function UserNav() {
                 className="relative h-8 w-8 rounded-full"
               >
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src="#" alt="Avatar" />
-                  <AvatarFallback className="bg-transparent">JD</AvatarFallback>
+                                  <AvatarImage src="https://avatars.githubusercontent.com/u/46255836?v=4" alt="Avatar" />
+                  <AvatarFallback className="bg-transparent">TN</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
