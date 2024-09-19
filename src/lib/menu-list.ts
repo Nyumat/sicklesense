@@ -47,16 +47,16 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: "Contents",
       menus: [
         {
-          href: "",
+          href: "/community",
           label: "Community",
           active: pathname.includes("/community"),
           icon: Users,
           submenus: [
             {
-              href: "/community",
+              href: "/community/posts",
               label: "Community Discussion",
               icon: MessageSquare,
-              active: pathname === "/community",
+              active: pathname === "/community/posts",
             },
             {
               href: "/community/posts/new",

@@ -10,6 +10,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { AllPosts } from "./all-posts";
+import { PostsProvider } from "./context";
 export default function PostsPage() {
   return (
     <ContentLayout title="All Posts">
@@ -32,7 +34,10 @@ export default function PostsPage() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <PlaceholderContent />
+          <div className="my-4">
+              <h1 className="mb-4 text-2xl font-bold">Community Posts</h1>
+            <AllPosts />
+          </div>
     </ContentLayout>
   );
 }
