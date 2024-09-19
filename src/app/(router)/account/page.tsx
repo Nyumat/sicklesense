@@ -1,5 +1,8 @@
-import Link from "next/link";
+"use client";
 
+import Link from "next/link";
+import { DynamicForm } from "@/app/_components/reusable-form";
+import { formSchema } from "@/app/data"
 import { ContentLayout } from "@/app/_components/admin-panel/content-layout";
 import PlaceholderContent from "@/app/_components/place";
 import {
@@ -34,7 +37,14 @@ export default function AccountPage() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <PlaceholderContent />
+      <div className="my-4">
+        <h1 className="text-2xl font-bold mb-4">Your Account</h1>
+    <DynamicForm 
+          schema={formSchema} 
+          onSubmit={() => console.log("hi")}
+
+          />
+          </div>
     </ContentLayout>
   );
 }

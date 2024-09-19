@@ -1,7 +1,8 @@
 import Link from "next/link";
-
 import { ContentLayout } from "@/app/_components/admin-panel/content-layout";
 import PlaceholderContent from "@/app/_components/place";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -10,8 +11,27 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
+import { Greeting } from "@/app/(router)/dashboard/(helper)/greeting"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { CalendarDays, MessageCircle, Droplet, Activity, ThermometerSun, Pill, Calendar, AlertCircle, Bell, Mail, Search, PenSquare, ChevronRight } from "lucide-react"
+
 
 export default function DashboardPage() {
+    const heartRateData = [
+  { time: "12am", rate: 65 },
+  { time: "3am", rate: 60 },
+  { time: "6am", rate: 62 },
+  { time: "9am", rate: 75 },
+  { time: "12pm", rate: 85 },
+  { time: "3pm", rate: 70 },
+  { time: "6pm", rate: 80 },
+  { time: "9pm", rate: 72 },
+  { time: "9am", rate: 75 },
+  { time: "12pm", rate: 85 },
+  { time: "6pm", rate: 80 },
+  { time: "9pm", rate: 72 },
+  { time: "3pm", rate: 70 },
+]
   return (
     <ContentLayout title="Dashboard">
       <Breadcrumb>
@@ -27,7 +47,170 @@ export default function DashboardPage() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <PlaceholderContent />
+      <div className="flex md:flex-row flex-col justify-between">
+      <Greeting />
+      <header className="flex justify-between items-center pb-4">
+            <div className="relative">
+              <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 pr-1" />
+              <Input className="pl-8 min-w-80" placeholder="Search anything..." />
+            </div>
+            <div className="flex items-center space-x-2 ml-4">
+              <Button variant="ghost" size="icon">
+                <Bell />
+              </Button>
+              <Button variant="ghost" size="icon">
+                <Mail />
+              </Button>
+            </div>
+          </header>
+          </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-2">
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Hemoglobin</CardTitle>
+                    <Activity className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">9.1 g/dL</div>
+                    <p className="text-xs text-muted-foreground">+5% from last month</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Pain Level</CardTitle>
+                    <ThermometerSun className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">2 / 10</div>
+                    <p className="text-xs text-muted-foreground">Last updated 2h ago</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Hydration</CardTitle>
+                    <Droplet className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">75%</div>
+                    <p className="text-xs text-muted-foreground">Drink 500ml more water</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Oxygen Saturation</CardTitle>
+                    <Activity className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">96%</div>
+                    <p className="text-xs text-muted-foreground">Within normal range</p>
+                  </CardContent>
+                </Card>
+              </div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Today's Summary</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>Your hemoglobin levels are stable. Remember to stay hydrated and take your medications as prescribed. If you experience any unusual symptoms, please contact your healthcare provider.</p>
+                </CardContent>
+              </Card>
+
+              <div className="grid grid-cols-3 gap-2 py-2">
+                <Card className="bg-blue-500 text-white">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Heart Rate</CardTitle>
+                    <Button variant="ghost" size="icon" className="text-white">
+                      <PenSquare className="h-4 w-4" />
+                    </Button>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold">65 BPM</div>
+                    <div className="h-[80px]">
+                      {/* Heart rate graph placeholder */}
+                      <div className="w-full h-full flex items-end space-x-1">
+                        {heartRateData.map((data, index) => (
+                          <div
+                            key={index}
+                            className="bg-blue-300 w-[8%]"
+                            style={{ height: `${(data.rate / 100) * 100}%` }}
+                          ></div>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card className="bg-red-500 text-white">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Blood Pressure</CardTitle>
+                    <Button variant="ghost" size="icon" className="text-white">
+                      <PenSquare className="h-4 w-4" />
+                    </Button>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold">120 mmHg</div>
+                    <div className="h-[80px] flex items-center justify-center">
+                      {/* Blood pressure icon placeholder */}
+                      <div className="w-12 h-12 border-4 border-white rounded-full"></div>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card className="bg-teal-500 text-white">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">Sleep</CardTitle>
+                    <Button variant="ghost" size="icon" className="text-white">
+                      <PenSquare className="h-4 w-4" />
+                    </Button>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold">87%</div>
+                    <div className="h-[80px]">
+                      {/* Sleep graph placeholder */}
+                      <div className="w-full h-full flex items-end space-x-1">
+                        {[70, 80, 60, 90, 75, 85, 80].map((value, index) => (
+                          <div
+                            key={index}
+                            className="bg-teal-300 w-[12%]"
+                            style={{ height: `${value}%` }}
+                          ></div>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Wellness AI Chatbot */}
+            <Card className="col-span-2">
+              <CardHeader>
+                <CardTitle className="flex justify-between items-center">
+                  Wellness AI Chatbot
+                  <Button variant="ghost" size="sm">
+                    SEE ALL
+                  </Button>
+                </CardTitle>
+                <CardDescription>512 CONVERSATIONS</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="bg-blue-100 p-4 rounded-lg">
+                    <p className="text-blue-800">
+                      Let's make it easier for you to monitor your nutrition.
+                    </p>
+                    <p className="text-blue-800 mt-2">
+                      I'll set up a food diary for you to record your meals and snacks! 🍎🥗
+                    </p>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Input
+                      placeholder="Reply to AI chatbot..."
+                    />
+                    <Button size="icon" className="bg-blue-500 text-white">
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
     </ContentLayout>
   );
 }

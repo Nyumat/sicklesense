@@ -21,7 +21,7 @@ export function HeroSection({ session }: HeroSectionProps) {
     show: { opacity: 1, y: 0, transition: { type: "spring" } },
   };
   return (
-    <section className="space-y-6 pb-12 pt-16 lg:py-28">
+    <section className="space-y-6 pb-12 pt-16 md:py-20 lg:py-28">
       <div className="absolute left-0 top-0 h-full w-full">
         <SparklesCore
           id="tsparticlesfullpage"
@@ -50,10 +50,10 @@ export function HeroSection({ session }: HeroSectionProps) {
         >
           <motion.h1
             variants={FADE_DOWN_ANIMATION_VARIANTS}
-            className="bg-gradient-to-tr from-purple-300/80 to-white/90 bg-clip-text font-headingAlt text-8xl font-bold tracking-normal text-transparent"
+            className="mx-8 bg-gradient-to-tr from-purple-300/80 to-white/90 bg-clip-text font-headingAlt text-6xl font-bold tracking-normal text-transparent md:text-8xl"
           >
-            <div className="mb-4"></div>
-            Personalized Care for Sickle Cell
+            Personalized <br className="md:hidden" /> Care for
+            <br className="md:hidden" /> Sickle Cell
             <span className="text-[hsl(280,100%,70%)]/60">
               {" "}
               <SparklesText
@@ -62,13 +62,13 @@ export function HeroSection({ session }: HeroSectionProps) {
                   first: "hsl(280,100%,85%)",
                   second: "hsl(280,100%,90%)",
                 }}
-                className="text-8xl text-inherit"
+                className="text-6xl md:text-8xl"
               />
             </span>
           </motion.h1>
           <motion.p
             variants={FADE_DOWN_ANIMATION_VARIANTS}
-            className="mx-auto mt-6 max-w-xl text-lg leading-8"
+            className="mx-auto mt-6 max-w-md text-lg leading-8 lg:max-w-xl"
           >
             SickleSense Provides AI-Powered Health Plans Tailored to Your Unique
             Journey with Sickle Cell Disease.

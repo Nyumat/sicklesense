@@ -1,13 +1,21 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { getOnboardingProgress } from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -93,8 +101,8 @@ export function Onboarding({ userId }: { userId: string }) {
   });
   const [scdType, setScdType] = useState("");
   const [age, setAge] = useState("");
-    const [conditionStatus, setConditionStatus] = useState("");
-    const [dataConsent, setDataConsent] = useState(false);
+  const [conditionStatus, setConditionStatus] = useState("");
+  const [dataConsent, setDataConsent] = useState(false);
   const mutation = api.onboarding.saveProgress.useMutation();
   const steps = useMemo(() => {
     return [
@@ -117,21 +125,29 @@ export function Onboarding({ userId }: { userId: string }) {
             onChange={setConditionStatus}
           />
         ),
-        },
-        {
-            title: "Data Consent",
-            description: "Do you consent to share your data?",
-            component: (
-                <div className="flex items-center space-x-4">
-                    <input
-                        type="checkbox"
-                        checked={dataConsent}
-                        onChange={(e) => setDataConsent(e.target.checked)}
-                    />
-                    <label>I consent to share my data</label>
-                </div>
-            ),
-        },
+      },
+      {
+        title: "Data Consent",
+        description: "Do you consent to share your data?",
+        component: (
+          <>
+            <div className="flex flex-col items-center space-y-4 w-full max-w-md mx-auto">
+      <div className="flex items-center space-x-2 scale-125">
+        <Checkbox id="data-consent" />
+        <Label
+          htmlFor="data-consent"
+          className="text-sm font-medium cursor-pointer"
+        >
+          Accept
+        </Label>
+      </div>
+      <p className="text-sm text-muted-foreground text-center">
+        By checking this box, you consent SickleSense to use your data to improve the experience on the platform.
+      </p>
+    </div>
+          </>
+        ),
+      },
     ];
   }, [age, scdType, conditionStatus, dataConsent]);
 
@@ -225,56 +241,61 @@ export function Onboarding({ userId }: { userId: string }) {
   const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
 
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-center bg-gray-50 dark:bg-gray-900">
-      <div className="w-full max-w-md p-5">
-        <div className="mb-8 flex justify-center space-x-4">
-          {steps.map((_, index) => (
-            <div
-              key={index}
-              className={cn(
-                "h-4 w-4 rounded-full transition-colors duration-200",
-                index <= currentStep
-                  ? "bg-[hsl(280,100%,70%)]"
-                  : "bg-[hsl(280,100%,90%)]",
-              )}
-            />
-          ))}
-        </div>
-        <div className="relative h-[400px]">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentStep}
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
-              transition={{ duration: 0.3 }}
-              className="absolute left-0 top-0 w-full"
-            >
-              <div className="flex flex-col items-center justify-center space-y-6">
-                <h1 className="text-center text-4xl font-bold text-gray-900 dark:text-gray-100">
-                  {steps[currentStep]!.title}
-                </h1>
-                <p className="max-w-lg text-center text-lg text-gray-600 dark:text-gray-400">
-                  {steps[currentStep]!.description}
-                </p>
-                {steps[currentStep]!.component}
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-        <div className="mt-8 flex justify-between">
-          <Button
-            onClick={prevStep}
-            disabled={currentStep === 0}
-            variant="outline"
+    <div className="flex min-h-screen w-full items-center justify-center bg-background p-4">
+      <div className="w-full max-w-md">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentStep}
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 30 }}
+            transition={{ duration: 0.3 }}
           >
-            Previous
-          </Button>
-          <div className="text-2xl font-bold">{currentStep + 1}</div>
-          <Button onClick={nextStep}>
-            {currentStep === steps.length - 1 ? "Complete" : "Next"}
-          </Button>
-        </div>
+            <Card className="w-full">
+              <CardHeader>
+                <div className="flex justify-center space-x-2">
+                  {steps.map((_, index) => (
+                    <div
+                      key={index}
+                      className={cn(
+                        "h-2 w-2 rounded-full transition-colors duration-200",
+                        index <= currentStep ? "bg-primary" : "bg-primary/30",
+                      )}
+                    />
+                  ))}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col items-center justify-center space-y-6">
+                  <h1 className="text-center text-2xl font-bold sm:text-3xl">
+                    {steps[currentStep]!.title}
+                  </h1>
+                  <p className="max-w-lg text-center text-sm text-muted-foreground sm:text-base">
+                    {steps[currentStep]!.description}
+                  </p>
+                  <div className="w-full max-w-xs">
+                    {steps[currentStep]!.component}
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter className="flex justify-between">
+                <Button
+                  onClick={prevStep}
+                  disabled={currentStep === 0}
+                  variant="outline"
+                >
+                  Previous
+                </Button>
+                <div className="text-xl font-bold sm:text-2xl">
+                  {currentStep + 1}
+                </div>
+                <Button onClick={nextStep}>
+                  {currentStep === steps.length - 1 ? "Complete" : "Next"}
+                </Button>
+              </CardFooter>
+            </Card>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );

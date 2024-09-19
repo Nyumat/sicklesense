@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export const Users: User[] = [
   {
     id: 1,
@@ -241,3 +243,84 @@ export interface User {
   messages: Message[];
   name: string;
 }
+
+export const hemoglobinData = [
+  { name: "Jan", level: 8.5 },
+  { name: "Feb", level: 9.2 },
+  { name: "Mar", level: 8.8 },
+  { name: "Apr", level: 9.5 },
+  { name: "May", level: 9.1 },
+  { name: "Jun", level: 8.7 },
+]
+
+export const painData = [
+  { name: "Mon", level: 3 },
+  { name: "Tue", level: 2 },
+  { name: "Wed", level: 4 },
+  { name: "Thu", level: 3 },
+  { name: "Fri", level: 5 },
+  { name: "Sat", level: 2 },
+  { name: "Sun", level: 1 },
+]
+
+export const hydrationData = [
+  { name: "Current", value: 75 },
+]
+
+export const oxygenSaturationData = [
+  { name: "12 AM", value: 95 },
+  { name: "4 AM", value: 94 },
+  { name: "8 AM", value: 96 },
+  { name: "12 PM", value: 97 },
+  { name: "4 PM", value: 95 },
+  { name: "8 PM", value: 96 },
+]
+
+export const medicationAdherenceData = [
+  { name: "Taken", value: 85 },
+  { name: "Missed", value: 15 },
+]
+
+export const symptomsData = [
+  { name: "Fatigue", value: 4 },
+  { name: "Joint Pain", value: 3 },
+  { name: "Shortness of Breath", value: 2 },
+  { name: "Headache", value: 1 },
+]
+
+
+export const formSchema = z.object({
+  dateOfBirth: z.date(),
+  gender: z.string(),
+  sickleCellType: z.enum(["HbSS", "HbSC", "HbSbetaPlus", "HbSbetaZero"]),
+  genotype: z.enum(["SCA", "SCT"]),
+  diagnosisDate: z.date(),
+  complications: z.array(z.string()),
+  otherMedicalConditions: z.array(z.string()),
+  medications: z.array(z.object({ name: z.string(), dosage: z.string() })),
+  hydroxyureaUsage: z.boolean(),
+  bloodTransfusionHistory: z.string(),
+  painManagementStrategies: z.array(z.string()),
+  occupation: z.string().optional(),
+  physicalActivityLevel: z.enum(["High", "Moderate", "Low"]),
+  dietaryHabits: z.array(z.string()),
+  smokingStatus: z.string().optional(),
+  alcoholConsumption: z.string().optional(),
+  location: z.string(),
+  homeEnvironment: z.array(z.string()),
+  travelFrequency: z.string(),
+  knownTriggerEvents: z.array(z.enum(["Stress", "Infection", "Dehydration", "Cold", "Heat", "Exercise", "Other"])),
+  allergies: z.array(z.string()),
+  emergencyContact: z.object({ name: z.string(), phone: z.string(), relation: z.string() }),
+  primaryCarePhysician: z.string(),
+  hematologistContact: z.string(),
+  sleepPatterns: z.enum(["Good", "Poor"]),
+  energyLevels: z.enum(["High", "Moderate", "Low"]),
+  painLevel: z.enum(["None", "Mild", "Moderate", "Severe"]),
+  moodAssessment: z.enum(["Happy", "Sad", "Angry", "Anxious", "Depressed", "Other"]),
+  shortTermGoals: z.array(z.string()),
+  longTermGoals: z.array(z.string()),
+  communicationPreference: z.enum(["Email", "Phone", "SMS", "Other"]),
+  clinicalTrialInterest: z.boolean(),
+  dataShareConsent: z.boolean(),
+});
