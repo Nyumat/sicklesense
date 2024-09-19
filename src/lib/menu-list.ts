@@ -79,7 +79,7 @@ export function getMenuList(pathname: string): Group[] {
         },
         {
           href: "/plan",
-          label: "Health Plan",
+          label: "Devices & Plan",
           active: pathname.includes("/plan"),
           icon: Hospital,
           submenus: [],
