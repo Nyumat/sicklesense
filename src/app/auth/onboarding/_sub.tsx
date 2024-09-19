@@ -102,7 +102,7 @@ export function Onboarding({ userId }: { userId: string }) {
   const [scdType, setScdType] = useState("");
   const [age, setAge] = useState("");
   const [conditionStatus, setConditionStatus] = useState("");
-  const [dataConsent, setDataConsent] = useState(false);
+//   const [dataConsent, setDataConsent] = useState(false);
   const mutation = api.onboarding.saveProgress.useMutation();
   const steps = useMemo(() => {
     return [
@@ -149,7 +149,7 @@ export function Onboarding({ userId }: { userId: string }) {
         ),
       },
     ];
-  }, [age, scdType, conditionStatus, dataConsent]);
+  }, [age, scdType, conditionStatus]);
 
   const saveOnboardingProgress = async ({
     id,

@@ -3,7 +3,6 @@
 import { z } from "zod";
 import Link from "next/link";
 import { ContentLayout } from "@/app/_components/admin-panel/content-layout";
-import PlaceholderContent from "@/app/_components/place";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -12,9 +11,7 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
-import { Label } from "@/components/ui/breadcrumb"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"

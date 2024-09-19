@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React from 'react';
@@ -10,7 +11,6 @@ import { CalendarIcon } from 'lucide-react';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -33,8 +33,6 @@ import {
 } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Switch } from '@/components/ui/switch';
-import { Textarea } from '@/components/ui/textarea';
 
 type SchemaType = z.ZodObject<any>;
 
@@ -42,6 +40,7 @@ interface DynamicFormProps {
   schema: SchemaType;
   onSubmit: (data: any) => void;
   defaultValues?: Record<string, any>;
+    fieldLabels?: Record<string, string>;
 }
 
 const generateLabel = (key: string): string => {
@@ -198,7 +197,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
     }
 
     if (field instanceof z.ZodEnum) {
-        let values = JSON.parse(JSON.stringify(field._def.values))
+        const values = JSON.parse(JSON.stringify(field._def.values))
       return (
         <FormField
       control={form.control}

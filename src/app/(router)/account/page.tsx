@@ -4,7 +4,6 @@ import Link from "next/link";
 import { DynamicForm } from "@/app/_components/reusable-form";
 import { formSchema } from "@/app/data"
 import { ContentLayout } from "@/app/_components/admin-panel/content-layout";
-import PlaceholderContent from "@/app/_components/place";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -13,7 +12,6 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
-;
 
 export default function AccountPage() {
   return (
