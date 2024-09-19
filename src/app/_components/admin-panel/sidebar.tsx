@@ -1,4 +1,3 @@
-import { PanelsTopLeft } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,7 @@ import Image from "next/image";
 
 export function Sidebar() {
   const sidebar = useStore(useSidebarToggle, (state) => state);
-
+ss
   if (!sidebar) return null;
 
   return (
