@@ -119,6 +119,14 @@ export default {
             transform: "translate(-50%, -50%) scale(0.9)",
           },
         },
+        "slide-down": {
+            from: {
+                transform: "translateY(-100%)",
+            },
+            to: {
+                transform: "translateY(0)",
+            },
+            },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
