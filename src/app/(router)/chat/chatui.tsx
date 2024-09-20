@@ -1,17 +1,16 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import Image from 'next/image';
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Paperclip, Send, X, Eye } from "lucide-react";
-import { cn } from '@/lib/utils';
-import { useStore } from '@/hooks/use-store';
-import { useSidebarToggle } from '@/hooks/use-sidebar-toggle';
-import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from '@/components/ui/textarea';
+import { useSidebarToggle } from '@/hooks/use-sidebar-toggle';
+import { useStore } from '@/hooks/use-store';
+import { cn } from '@/lib/utils';
+import { Eye, Paperclip, Send, X } from "lucide-react";
+import Image from 'next/image';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface Message {
     id: string;

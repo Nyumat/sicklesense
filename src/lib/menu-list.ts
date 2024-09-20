@@ -1,15 +1,12 @@
 import {
-  Bookmark,
   BotMessageSquare,
   Hospital,
   LayoutGrid,
   LucideIcon,
   MessageSquare,
-  Pill,
   PillBottle,
   Settings,
   SquarePen,
-  Tag,
   Users,
 } from "lucide-react";
 

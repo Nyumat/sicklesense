@@ -6,29 +6,8 @@ import { useEffect, useState } from "react";
 
 const loadingStates = [
     {
-        text: "Buying a condo",
-    },
-    {
-        text: "Travelling in a flight",
-    },
-    {
-        text: "Meeting Tyler Durden",
-    },
-    {
-        text: "He makes soap",
-    },
-    {
-        text: "We goto a bar",
-    },
-    {
-        text: "Start a fight",
-    },
-    {
-        text: "We like it",
-    },
-    {
-        text: "Welcome to F**** C***",
-    },
+        text: "Preparing SickleSense for you...",
+    }
 ];
 
 export default function MultiStepLoaderDemo() {
@@ -43,6 +22,7 @@ export default function MultiStepLoaderDemo() {
         }, 5000);
 
         return () => clearTimeout(timer);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <div className="flex h-[60vh] w-full items-center justify-center">

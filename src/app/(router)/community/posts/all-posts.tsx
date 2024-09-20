@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { faker } from "@faker-js/faker";
 import { AnimatePresence, motion } from "framer-motion";
 import Fuse from 'fuse.js';
 import { Plus, Search } from "lucide-react";
@@ -11,46 +10,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { useDebounce } from "use-debounce";
 import { usePosts } from "./context";
-import { Post, PostCard, Reply } from "./post";
-
-function generateNonLoremParagraph(numSentences: number) {
-    let paragraph = "";
-    for (let i = 0; i < numSentences; i++) {
-        let sentence = faker.word.sample()
-        sentence = sentence.charAt(0).toUpperCase() + sentence.slice(1);
-        paragraph += sentence + " ";
-    }
-    return paragraph.trim();
-}
-
-const generateFakePosts = (count: number): Post[] => {
-    const posts: Post[] = [];
-    for (let i = 0; i < count; i++) {
-        const post: Post = {
-            id: faker.string.uuid(),
-            title: faker.lorem.sentence(),
-            content: generateNonLoremParagraph(faker.number.int({ min: 1, max: 5 })),
-            date: faker.date.recent(),
-            likes: faker.number.int({ min: 0, max: 100 }),
-            replies: [],
-            author: faker.person.firstName(),
-            avatar: faker.image.avatar(),
-        };
-        posts.push(post);
-        for (let j = 0; j < faker.number.int({ min: 0, max: 5 }); j++) {
-            const reply: Reply = {
-                id: faker.string.uuid(),
-                content: generateNonLoremParagraph(faker.number.int({ min: 1, max: 5 })),
-                date: faker.date.recent(),
-                author: faker.person.firstName(),
-                avatar: faker.image.avatar(),
-                replies: [],
-            };
-            post.replies?.push(reply);
-        }
-    }
-    return posts;
-};
+import { Post, PostCard } from "./post";
 
 const POSTS_PER_LOAD = 5;
 

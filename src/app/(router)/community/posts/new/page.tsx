@@ -1,8 +1,5 @@
 "use client";
 
-import { z } from "zod";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ContentLayout } from "@/app/_components/admin-panel/content-layout";
 import {
     Breadcrumb,
@@ -12,10 +9,7 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import {
     Form,
     FormControl,
@@ -24,7 +18,13 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { usePosts } from "../context";
 import { Post } from "../post";
 
@@ -32,17 +32,6 @@ const formSchema = z.object({
     title: z.string().min(3, "Title must be at least 3 characters").max(100, "Title must not exceed 100 characters"),
     content: z.string().min(10, "Content must be at least 10 characters").max(1000, "Content must not exceed 1000 characters"),
 });
-
-interface NewPostPageProps {
-    onAddPost: (post: {
-        id: string;
-        title: string;
-        content: string;
-        likes: number;
-        replies: number;
-        date: Date;
-    }) => void;
-}
 
 export default function NewPostPage() {
     const router = useRouter();

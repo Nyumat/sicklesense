@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, ArrowRight, X } from 'lucide-react';
-import React, { useEffect } from 'react';
+import React from 'react';
 import tour from './tour-producer';
 
 export const TourDisplay = (props: {
@@ -12,14 +12,6 @@ export const TourDisplay = (props: {
 }) => {
 
     const ctx = tour.useContext()
-    useEffect(() => {
-        ctx.open()
-        return () => {
-            ctx.close()
-        }
-    }, [])
-
-    console.log({ ctx })
 
     return (
         <Card className="w-[350px] relative">

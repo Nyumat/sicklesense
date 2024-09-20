@@ -1,8 +1,5 @@
 "use client"
 
-import { useState } from 'react'
-import { format, startOfToday, eachDayOfInterval, startOfWeek, endOfWeek, isSameDay, addDays } from 'date-fns'
-import { Calendar as CalendarIcon, Plus, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import {
@@ -22,13 +19,13 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
     Select,
     SelectContent,
@@ -39,12 +36,14 @@ import {
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableHead,
     TableHeader,
-    TableRow,
+    TableRow
 } from "@/components/ui/table"
+import { addDays, eachDayOfInterval, endOfWeek, format, isSameDay, startOfToday, startOfWeek } from 'date-fns'
+import { Calendar as CalendarIcon, Plus, X } from "lucide-react"
+import { useState } from 'react'
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 interface Medication {
@@ -136,7 +135,7 @@ export function MedicationTracker() {
         }
     }
 
-    
+
 
     const addAppointment = () => {
         if (newAppointment.title && newAppointment.date && newAppointment.doctor) {

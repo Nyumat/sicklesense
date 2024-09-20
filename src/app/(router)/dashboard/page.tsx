@@ -1,5 +1,5 @@
 "use client";
-
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Greeting } from "@/app/(router)/dashboard/(helper)/greeting";
 import { ContentLayout } from "@/app/_components/admin-panel/content-layout";
 import { NotificationButton } from "@/app/_components/admin-panel/notification-button";

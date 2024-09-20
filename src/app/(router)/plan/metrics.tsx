@@ -1,23 +1,23 @@
 "use client";
 
-import { useEffect, useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { LayoutDashboard, Activity, Heart, Droplet, Thermometer, Settings, LogOut, PauseCircle, CheckCircle, XCircle } from "lucide-react"
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { match } from 'ts-pattern'
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
     Tooltip as TT,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-} from "@/components/ui/accordion"
+import { CheckCircle, Droplet, Heart, PauseCircle, Thermometer, XCircle } from "lucide-react";
+import { useEffect, useState } from 'react';
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { match } from 'ts-pattern';
 
 const heartRateData = [
     { time: '00:00', rate: 62 }, { time: '04:00', rate: 60 }, { time: '08:00', rate: 75 },
@@ -36,7 +36,7 @@ const hydrationData = [
 
 export function Metrics() {
     const [currentPlanStatus, setCurrentPlanStatus] = useState('active')
-    const [archivedPlans, setArchivedPlans] = useState([
+    const [archivedPlans, ] = useState([
         { id: '1', name: 'Previous Altitude Plan', startDate: '01/01/2020', endDate: '12/31/2020', description: 'Focus on moderate altitude exposure.' },
         { id: '2', name: 'Hydration Improvement', startDate: '06/01/2019', endDate: '12/31/2019', description: 'Increase daily water intake.' },
     ])
