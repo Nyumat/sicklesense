@@ -26,7 +26,6 @@ export function HeroSection({ session }: HeroSectionProps) {
   return (
     <>
       <div className="absolute left-0 top-0 z-0 h-full w-full">
-        <ModeToggle />
         <SparklesCore
           id="tsparticlesfullpage"
           background="transparent"

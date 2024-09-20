@@ -1,5 +1,3 @@
-"use client";
-
 import React, {
     createContext,
     useContext,
@@ -9,7 +7,6 @@ import React, {
     useState,
 } from "react"
 import { createPortal } from "react-dom"
-import { motion } from "framer-motion";
 
 import { cn } from "@/lib/utils"
 
@@ -125,22 +122,24 @@ export const TourFactory = <T extends string>(order: T[]) => {
                 top = viewportHeight - height - padding;
             }
 
-            return { left, top };
+            return {
+                left,
+                top,
+            };
         }
 
-        // TODO: Add exit animation
         return createPortal(
-            <motion.div   
+            <div
                 id="tour"
                 className={cn(
-                    "pointer-events-auto fixed left-0 top-0 h-screen w-screen transition-all duration-500 ease-out",
+                    "pointer-events-auto fixed left-0 top-0 h-screen w-screen transition-none",
                     !ctx.show ? "invisible" : "visible"
                 )}
             >
                 <div
                     ref={ref}
                     className={cn(
-                        `absolute z-50 transition-all duration-500 ease-out`
+                        `absolute z-50 transition-all duration-500 ease-in-out`
                     )}
                     style={{
                         ...closest(),
@@ -149,7 +148,7 @@ export const TourFactory = <T extends string>(order: T[]) => {
                     {currentElement.render}
                 </div>
                 <div
-                    className={`absolute z-40 h-screen w-screen overflow-hidden opacity-90 shadow-[0_0_0_100vw_rgba(0,0,0,.99)] transition-all duration-500 ease-in-out`}
+                    className={`absolute z-40 h-screen w-screen overflow-hidden opacity-80 shadow-[0_0_0_100vw_rgba(0,0,0,.99)] transition-all duration-500 ease-in-out`}
                     style={{
                         height: currentElementRect.height,
                         width: currentElementRect.width,
@@ -157,7 +156,7 @@ export const TourFactory = <T extends string>(order: T[]) => {
                         top: currentElementRect.y,
                     }}
                 />
-            </motion.div>,
+            </div>,
             document.body
         )
     }
@@ -174,8 +173,7 @@ export const TourFactory = <T extends string>(order: T[]) => {
                 if (lookAheadIndex >= order.length || lookAheadIndex < 0) {
                     return currIndex
                 }
-                const nextKey = order[lookAheadIndex];
-                if (nextKey && !nodes.current.has(nextKey)) {
+                if (order[lookAheadIndex] !== undefined && !nodes.current.has(order[lookAheadIndex])) {
                     return getNextIndex(lookAheadIndex, nextDiff)
                 }
                 return lookAheadIndex

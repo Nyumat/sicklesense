@@ -1,18 +1,17 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
-import { PostCard, Post, Reply } from "./post";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Plus } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useDebounce } from "use-debounce";
+import { Input } from "@/components/ui/input";
 import { faker } from "@faker-js/faker";
-import { useInView } from "react-intersection-observer";
+import { AnimatePresence, motion } from "framer-motion";
 import Fuse from 'fuse.js';
+import { Plus, Search } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { useInView } from "react-intersection-observer";
+import { useDebounce } from "use-debounce";
 import { usePosts } from "./context";
+import { Post, PostCard, Reply } from "./post";
 
 function generateNonLoremParagraph(numSentences: number) {
     let paragraph = "";

@@ -1,6 +1,7 @@
 "use client";
 
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useContext, useState } from 'react';
+import tour from '../../dashboard/(helper)/tour-producer';
 import { Post, Reply } from './post';
 
 interface PostsContextType {
@@ -36,10 +37,12 @@ export function PostsProvider({ children }: { children: React.ReactNode }) {
             });
         });
     }
-   
+
     return (
         <PostsContext.Provider value={{ posts, addPost, getPost, addReply }}>
-            {children}
+            <tour.TourProvider>
+                {children}
+            </tour.TourProvider>
         </PostsContext.Provider>
     );
 }

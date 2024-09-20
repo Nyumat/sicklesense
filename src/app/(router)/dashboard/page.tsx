@@ -1,9 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import { Greeting } from "@/app/(router)/dashboard/(helper)/greeting";
 import { ContentLayout } from "@/app/_components/admin-panel/content-layout";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { NotificationButton } from "@/app/_components/admin-panel/notification-button";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -12,7 +11,7 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Greeting } from "@/app/(router)/dashboard/(helper)/greeting";
+import { Button } from "@/components/ui/button";
 import {
     Card,
     CardContent,
@@ -21,27 +20,28 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import {
-    Droplet,
-    Activity,
-    ThermometerSun,
-    Bell,
-    Mail,
-    Search,
-    PenSquare,
-    ChevronRight,
-} from "lucide-react";
-import { NotificationButton } from "@/app/_components/admin-panel/notification-button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { Plus } from "lucide-react";
-import { addDays, eachDayOfInterval, endOfWeek, format, isSameDay, startOfToday, startOfWeek } from "date-fns";
-import { use, useEffect, useLayoutEffect, useState } from "react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import tour from "./(helper)/tour-producer";
+import { addDays, eachDayOfInterval, endOfWeek, format, isSameDay, startOfToday, startOfWeek } from "date-fns";
+import {
+    Activity,
+    Bell,
+    ChevronRight,
+    Droplet,
+    Mail,
+    PenSquare,
+    Plus,
+    Search,
+    ThermometerSun,
+} from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { TourDisplay } from "./(helper)/tour-display";
+import tour from "./(helper)/tour-producer";
 
 interface Medication {
     id: number;
@@ -80,7 +80,30 @@ interface HealthMetric {
 }
 
 export default function DashboardPage() {
-    const ctx = tour.useContext();
+    const ctx = tour.useContext()
+
+    useEffect(() => {
+        const tour = localStorage.getItem("tour")
+        if (!tour) {
+            const promise = new Promise((resolve) => {
+                ctx.open()
+                resolve(true)
+            })
+
+            promise.then(() => {
+                localStorage.setItem("tour", "true")
+            })
+        } else {
+            ctx.close()
+        }
+
+        return () => {
+            ctx.close()
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
     const [medications, setMedications] = useState<Medication[]>([
         { id: 1, name: "Hydroxyurea", dosage: "500mg", frequency: "Daily", time: "08:00" },
         { id: 2, name: "Folic Acid", dosage: "1mg", frequency: "Daily", time: "20:00" },
@@ -110,19 +133,6 @@ export default function DashboardPage() {
         date: new Date(),
         doctor: '',
     })
-
-    useEffect(() => {
-        if (!ctx) return;
-        Promise.resolve().then(() => {
-            console.log("Opening tour");
-            void ctx.open();
-        });
-
-        if (ctx.current === ctx.nodes.size) {
-            console.log("Closing tour");
-            void ctx.close();
-        }
-    }, [ctx]);
 
     const healthMetrics: HealthMetric[] = [
         { date: "2023-06-01", painLevel: 3, fatigueLevel: 4, hydrationLevel: 7 },
@@ -197,127 +207,127 @@ export default function DashboardPage() {
     ];
     return (
         <>
-                <ContentLayout title="Dashboard">
-                    <Breadcrumb>
-                        <BreadcrumbList>
-                            <BreadcrumbItem>
-                                <BreadcrumbLink asChild>
-                                    <Link href="/">SickleSense</Link>
-                                </BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>Home</BreadcrumbPage>
-                            </BreadcrumbItem>
-                        </BreadcrumbList>
-                    </Breadcrumb>
-                    <div className="flex flex-col justify-between md:flex-row gap-4">
-                        <Greeting />
-                        <header className="flex items-center justify-between pb-4">
-                            <tour.TourFocus
-                                name="search"
-                                tourRender={
-                                    <TourDisplay title="Search Anything">
-                                        <p>
-                                            Use the search bar to quickly find information on the site!{" "}
-                                            <code>Command + K</code> will open the command palette.
-                                        </p>
-                                    </TourDisplay>
-                                }
-                            >
-                                <div className="relative">
-                                    <Search className="absolute left-2 top-1/2 -translate-y-1/2 transform pr-1 text-gray-400" />
-                                    <Input className="min-w-80 pl-8" placeholder="Search anything..." />
-                                </div>
-                            </tour.TourFocus>
-                            <div className="ml-4 flex items-center space-x-2">
-                                <NotificationButton
-                                    icon={Bell}
-                                    notificationCount={2}
-                                    variant="ghost"
-                                    size="icon"
-                                />
-                                <NotificationButton
-                                    icon={Mail}
-                                    notificationCount={8}
-                                    variant="ghost"
-                                    size="icon"
-                                />
-                            </div>
-                        </header>
-                    </div>
-                    <tour.TourFocus name="metrics" tourRender={<TourDisplay title="Health Metrics">
-                        <p>
-                            These are your current health metrircs. You can add more information under the <b>Profile {">"} My Account </b> tab.
-                        </p>
-                    </TourDisplay>}>
-
-                        <div className="mb-2 grid gap-2 md:grid-cols-2 lg:grid-cols-4 space-y-8">
-                            <Card>
-                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <CardTitle className="text-sm font-medium">Hemoglobin</CardTitle>
-                                    <Activity className="h-4 w-4 text-muted-foreground" />
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="text-2xl font-bold">9.1 g/dL</div>
-                                    <p className="text-xs text-muted-foreground">+5% from last month</p>
-                                </CardContent>
-                            </Card>
-                            <Card>
-                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <CardTitle className="text-sm font-medium">Pain Level</CardTitle>
-                                    <ThermometerSun className="h-4 w-4 text-muted-foreground" />
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="text-2xl font-bold">2 / 10</div>
-                                    <p className="text-xs text-muted-foreground">Last updated 2h ago</p>
-                                </CardContent>
-                            </Card>
-                            <Card>
-                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <CardTitle className="text-sm font-medium">Hydration</CardTitle>
-                                    <Droplet className="h-4 w-4 text-muted-foreground" />
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="text-2xl font-bold">75%</div>
-                                    <p className="text-xs text-muted-foreground">
-                                        Drink 500ml more water
+            <ContentLayout title="Dashboard">
+                <Breadcrumb>
+                    <BreadcrumbList>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink asChild>
+                                <Link href="/">SickleSense</Link>
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbPage>Home</BreadcrumbPage>
+                        </BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
+                <div className="flex flex-col justify-between md:flex-row gap-4">
+                    <Greeting />
+                    <header className="flex items-center justify-between pb-4">
+                        <tour.TourFocus
+                            name="search"
+                            tourRender={
+                                <TourDisplay title="Search Anything">
+                                    <p>
+                                        Use the search bar to quickly find information on the site!{" "}
+                                        <code>Command + K</code> will open the command palette.
                                     </p>
-                                </CardContent>
-                            </Card>
-                            <Card>
-                                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                    <CardTitle className="text-sm font-medium">
-                                        Oxygen Saturation
-                                    </CardTitle>
-                                    <Activity className="h-4 w-4 text-muted-foreground" />
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="text-2xl font-bold">96%</div>
-                                    <p className="text-xs text-muted-foreground">Within normal range</p>
-                                </CardContent>
-                            </Card>
+                                </TourDisplay>
+                            }
+                        >
+                            <div className="relative">
+                                <Search className="absolute left-2 top-1/2 -translate-y-1/2 transform pr-1 text-gray-400" />
+                                <Input className="min-w-80 pl-8" placeholder="Search anything..." />
+                            </div>
+                        </tour.TourFocus>
+                        <div className="ml-4 flex items-center space-x-2">
+                            <NotificationButton
+                                icon={Bell}
+                                notificationCount={2}
+                                variant="ghost"
+                                size="icon"
+                            />
+                            <NotificationButton
+                                icon={Mail}
+                                notificationCount={8}
+                                variant="ghost"
+                                size="icon"
+                            />
                         </div>
-                    </tour.TourFocus>
-                    <tour.TourFocus name="summary" tourRender={<TourDisplay title="Today's Summary">
-                        <p>
-                            This is a summary of your health status for today. It includes an AI gathered summary of your health status.
-                        </p>
-                    </TourDisplay>}>
+                    </header>
+                </div>
+                <tour.TourFocus name="metrics" tourRender={<TourDisplay title="Health Metrics">
+                    <p>
+                        These are your current health metrircs. You can add more information under the <b>Profile {">"} My Account </b> tab.
+                    </p>
+                </TourDisplay>}>
+
+                    <div className="mb-2 grid gap-2 md:grid-cols-2 lg:grid-cols-4 space-y-8">
                         <Card>
-                            <CardHeader>
-                                <CardTitle>Today&apos;s Summary</CardTitle>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Hemoglobin</CardTitle>
+                                <Activity className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
                             <CardContent>
-                                <p>{summaryText}</p>
+                                <div className="text-2xl font-bold">9.1 g/dL</div>
+                                <p className="text-xs text-muted-foreground">+5% from last month</p>
                             </CardContent>
                         </Card>
-                    </tour.TourFocus>
-                    <tour.TourFocus name="charts" tourRender={<TourDisplay title="Health Metrics Chart">
-                        <p>
-                            These charts show the trend of your health metrics over the past week.
-                        </p>
-                    </TourDisplay>}>
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Pain Level</CardTitle>
+                                <ThermometerSun className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">2 / 10</div>
+                                <p className="text-xs text-muted-foreground">Last updated 2h ago</p>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">Hydration</CardTitle>
+                                <Droplet className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">75%</div>
+                                <p className="text-xs text-muted-foreground">
+                                    Drink 500ml more water
+                                </p>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                                <CardTitle className="text-sm font-medium">
+                                    Oxygen Saturation
+                                </CardTitle>
+                                <Activity className="h-4 w-4 text-muted-foreground" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-2xl font-bold">96%</div>
+                                <p className="text-xs text-muted-foreground">Within normal range</p>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </tour.TourFocus>
+                <tour.TourFocus name="summary" tourRender={<TourDisplay title="Today's Summary">
+                    <p>
+                        This is a summary of your health status for today. It includes an AI gathered summary of your health status.
+                    </p>
+                </TourDisplay>}>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Today&apos;s Summary</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p>{summaryText}</p>
+                        </CardContent>
+                    </Card>
+                </tour.TourFocus>
+                <tour.TourFocus name="charts" tourRender={<TourDisplay title="Health Metrics Chart">
+                    <p>
+                        These charts show the trend of your health metrics over the past week.
+                    </p>
+                </TourDisplay>}>
                     <div className="grid grid-cols-3 gap-2 py-2 my-4">
                         <Card className="bg-blue-500 text-white">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -383,111 +393,111 @@ export default function DashboardPage() {
                             </CardContent>
                         </Card>
                     </div>
-                    </tour.TourFocus>
-                    <Card className="col-span-2 my-4">
-                        <CardHeader>
-                            <CardTitle className="flex items-center justify-between">
-                                SickleSense AI Chatbot
-                                <Button variant="ghost" size="sm">
-                                    See All Messages
-                                </Button>
-                            </CardTitle>
-                            <CardDescription>Start a conversation</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="space-y-4">
-                                <div className="rounded-lg bg-muted p-4">
-                                    <p className="text-blue-200">
-                                        SickleSense makes it easier for you to monitor your sickle cell.
-                                    </p>
-                                    <p className="mt-2 text-blue-200">
-                                        Our chatbot can answer questions, which is fed <i>your data</i>{" "}
-                                        to give responses.
-                                    </p>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <Input placeholder="Reply to AI chatbot..." />
-                                    <Button size="icon" className="bg-blue-500 text-white">
-                                        <ChevronRight className="h-4 w-4" />
-                                    </Button>
-                                </div>
+                </tour.TourFocus>
+                <Card className="col-span-2 my-4">
+                    <CardHeader>
+                        <CardTitle className="flex items-center justify-between">
+                            SickleSense AI Chatbot
+                            <Button variant="ghost" size="sm">
+                                See All Messages
+                            </Button>
+                        </CardTitle>
+                        <CardDescription>Start a conversation</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-4">
+                            <div className="rounded-lg bg-muted p-4">
+                                <p className="text-blue-200">
+                                    SickleSense makes it easier for you to monitor your sickle cell.
+                                </p>
+                                <p className="mt-2 text-blue-200">
+                                    Our chatbot can answer questions, which is fed <i>your data</i>{" "}
+                                    to give responses.
+                                </p>
                             </div>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Symptom Tracker</CardTitle>
-                            <CardDescription>Log and monitor your symptoms</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Date</TableHead>
-                                        <TableHead>Symptom</TableHead>
-                                        <TableHead>Severity</TableHead>
+                            <div className="flex items-center space-x-2">
+                                <Input placeholder="Reply to AI chatbot..." />
+                                <Button size="icon" className="bg-blue-500 text-white">
+                                    <ChevronRight className="h-4 w-4" />
+                                </Button>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Symptom Tracker</CardTitle>
+                        <CardDescription>Log and monitor your symptoms</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Date</TableHead>
+                                    <TableHead>Symptom</TableHead>
+                                    <TableHead>Severity</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {symptoms.map((symptom) => (
+                                    <TableRow key={symptom.id}>
+                                        <TableCell>{format(symptom.date, 'PP')}</TableCell>
+                                        <TableCell>{symptom.name}</TableCell>
+                                        <TableCell>{symptom.severity}</TableCell>
                                     </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {symptoms.map((symptom) => (
-                                        <TableRow key={symptom.id}>
-                                            <TableCell>{format(symptom.date, 'PP')}</TableCell>
-                                            <TableCell>{symptom.name}</TableCell>
-                                            <TableCell>{symptom.severity}</TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </CardContent>
-                        <CardFooter>
-                            <Dialog open={isAddSymptomOpen} onOpenChange={setIsAddSymptomOpen}>
-                                <DialogTrigger asChild>
-                                    <Button variant={"outline"} className={cn("w-full", "outline-dashed opacity-50 hover:opacity-75")}>
-                                        <Plus className="mr-2 h-4 w-4" /> Log Symptom
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent>
-                                    <DialogHeader>
-                                        <DialogTitle>Log New Symptom</DialogTitle>
-                                        <DialogDescription>
-                                            Enter the details of the symptom you're experiencing.
-                                        </DialogDescription>
-                                    </DialogHeader>
-                                    <div className="grid gap-4 py-4">
-                                        <div className="grid grid-cols-4 items-center gap-4">
-                                            <Label htmlFor="symptom-name" className="text-right">
-                                                Symptom
-                                            </Label>
-                                            <Input
-                                                id="symptom-name"
-                                                value={newSymptom.name}
-                                                onChange={(e) => setNewSymptom({ ...newSymptom, name: e.target.value })}
-                                                className="col-span-3"
-                                            />
-                                        </div>
-                                        <div className="grid grid-cols-4 items-center gap-4">
-                                            <Label htmlFor="symptom-severity" className="text-right">
-                                                Severity (1-10)
-                                            </Label>
-                                            <Slider
-                                                id="symptom-severity"
-                                                min={1}
-                                                max={10}
-                                                step={1}
-                                                value={[newSymptom.severity]}
-                                                onValueChange={(value) => setNewSymptom({ ...newSymptom, severity: value[0] ?? 0 })}
-                                                className="col-span-3"
-                                            />
-                                        </div>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                    <CardFooter>
+                        <Dialog open={isAddSymptomOpen} onOpenChange={setIsAddSymptomOpen}>
+                            <DialogTrigger asChild>
+                                <Button variant={"outline"} className={cn("w-full", "outline-dashed opacity-50 hover:opacity-75")}>
+                                    <Plus className="mr-2 h-4 w-4" /> Log Symptom
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Log New Symptom</DialogTitle>
+                                    <DialogDescription>
+                                        Enter the details of the symptom you&apos;re experiencing.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div className="grid gap-4 py-4">
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="symptom-name" className="text-right">
+                                            Symptom
+                                        </Label>
+                                        <Input
+                                            id="symptom-name"
+                                            value={newSymptom.name}
+                                            onChange={(e) => setNewSymptom({ ...newSymptom, name: e.target.value })}
+                                            className="col-span-3"
+                                        />
                                     </div>
-                                    <DialogFooter>
-                                        <Button onClick={addSymptom}>Log Symptom</Button>
-                                    </DialogFooter>
-                                </DialogContent>
-                            </Dialog>
-                        </CardFooter>
-                    </Card>
-                </ContentLayout>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                        <Label htmlFor="symptom-severity" className="text-right">
+                                            Severity (1-10)
+                                        </Label>
+                                        <Slider
+                                            id="symptom-severity"
+                                            min={1}
+                                            max={10}
+                                            step={1}
+                                            value={[newSymptom.severity]}
+                                            onValueChange={(value) => setNewSymptom({ ...newSymptom, severity: value[0] ?? 0 })}
+                                            className="col-span-3"
+                                        />
+                                    </div>
+                                </div>
+                                <DialogFooter>
+                                    <Button onClick={addSymptom}>Log Symptom</Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+                    </CardFooter>
+                </Card>
+            </ContentLayout>
         </>
     );
 }

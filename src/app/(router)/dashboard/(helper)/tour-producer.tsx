@@ -5,9 +5,6 @@ const tour = TourFactory([
     "metrics",
     "summary",
     "charts",
-    "temperature",
-    "hydration",
-    "emergencyContact"
 ])
 
 export default tour
