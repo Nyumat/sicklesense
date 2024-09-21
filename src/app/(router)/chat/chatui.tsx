@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -22,8 +22,11 @@ interface Message {
 export function ChatUI() {
     const sidebar = useStore(useSidebarToggle, (state) => state);
     const [messages, setMessages] = useState<Message[]>([
-        { id: '1', content: "Hello! How can I help you today?", sender: 'AI', timestamp: new Date() },
-        { id: '2', content: "Hi! I have a question about my account.", sender: 'user', timestamp: new Date() },
+        { id: '1', content: "Good afternoon! I noticed your heart rate was elevated earlier. How are you feeling now?", sender: 'AI', timestamp: new Date() },
+        { id: '2', content: "I felt a bit of chest pain earlier, but it's gone now. Should I be worried?", sender: 'user', timestamp: new Date() },
+        { id: '3', content: "It’s great to hear the pain has subsided. Since your hemoglobin levels were stable last week, it may not be a crisis, but I'll monitor for any further signs. Please keep me updated.", sender: 'AI', timestamp: new Date() },
+        { id: '4', content: "Thanks! Also, I’ve had some trouble sleeping lately. Any suggestions?", sender: 'user', timestamp: new Date() },
+        { id: '5', content: "It could be related to dehydration, which can worsen symptoms. Try increasing your water intake before bed. I can also send over some breathing exercises if you'd like.", sender: 'AI', timestamp: new Date() }
     ]);
     const [newMessage, setNewMessage] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -78,6 +81,7 @@ export function ChatUI() {
                 >
                     {message.sender === 'AI' && (
                         <Avatar className="mr-2">
+                            <AvatarImage src="/lol.jpg" alt="Bot Avatar" />
                             <AvatarFallback>AI</AvatarFallback>
                         </Avatar>
                     )}
@@ -94,6 +98,7 @@ export function ChatUI() {
                     </div>
                     {message.sender === 'user' && (
                         <Avatar className="ml-2">
+                            <AvatarImage src="https://avatars.githubusercontent.com/u/46255836?v=4" alt="Nyuma Avatar" />
                             <AvatarFallback>You</AvatarFallback>
                         </Avatar>
                     )}
