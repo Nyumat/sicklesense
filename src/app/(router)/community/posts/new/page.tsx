@@ -52,8 +52,8 @@ export default function NewPostPage() {
             likes: 0,
             replies: [],
             date: new Date(),
-            author: "Current User", // Replace with actual user data
-            avatar: "https://avatars.githubusercontent.com/u/46255836?v=4", // Replace with actual user avatar
+            author: "Tom Nyuma",
+            avatar: "https://avatars.githubusercontent.com/u/46255836?v=4",
         };
         addPost(newPost);
         router.push('/community/posts');
