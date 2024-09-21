@@ -187,9 +187,9 @@ export default function DashboardPage() {
     const weekStart = startOfWeek(selectedDate || startOfToday())
     const weekEnd = endOfWeek(selectedDate || startOfToday())
     const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd })
-    const summaryText = `Your hemoglobin levels are stable. Remember to stay hydrated and
-            take your medications as prescribed. If you experience any unusual
-            symptoms, please contact your healthcare provider.`;
+    const summaryText = `As of today's date, your hemoglobin levels are stable. Remember to stay hydrated and
+            take your Folic Acid and Hydroxyurea doses today. If you experience any
+            symptoms, please contact Dr. Levi, the hematologist we've pulled from your records on SickleSense.`;
     const heartRateData = [
         { time: "12am", rate: 65 },
         { time: "3am", rate: 60 },
@@ -377,7 +377,7 @@ export default function DashboardPage() {
                                 </Button>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-3xl font-bold">87%</div>
+                                <div className="text-3xl font-bold">7.5 hrs/day</div>
                                 <div className="h-[80px]">
                                     {/* Sleep graph placeholder */}
                                     <div className="flex h-full w-full items-end space-x-1">

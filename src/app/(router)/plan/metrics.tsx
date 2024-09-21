@@ -36,9 +36,9 @@ const hydrationData = [
 
 export function Metrics() {
     const [currentPlanStatus, setCurrentPlanStatus] = useState('active')
-    const [archivedPlans, ] = useState([
-        { id: '1', name: 'Previous Altitude Plan', startDate: '01/01/2020', endDate: '12/31/2020', description: 'Focus on moderate altitude exposure.' },
-        { id: '2', name: 'Hydration Improvement', startDate: '06/01/2019', endDate: '12/31/2019', description: 'Increase daily water intake.' },
+    const [archivedPlans,] = useState([
+        { id: '1', name: 'Take All Medication', startDate: '06/12/2023', endDate: '12/31/2023', description: 'Take all prescribed medication daily.' },
+        { id: '2', name: 'Hydration Improvement', startDate: '08/18/2023', endDate: '12/1/2023', description: 'Increase your daily water intake.' },
     ])
 
     const getPlanStatusColor = (status: string) => {
@@ -52,7 +52,7 @@ export function Metrics() {
 
 
     return (
-        <main className="container flex-1 my-6 overflow-auto space-y-4">
+        <main className="container flex-1 my-6 overflow-auto space-y-6">
             <div className="flex items-start justify-start gap-2">
                 <h1 className="text-3xl font-bold">Your Health Plan</h1>
             </div>
@@ -94,7 +94,7 @@ export function Metrics() {
                         <CardDescription>
                             For this next plan, we need you to focus on avoiding high altitudes. According to your data, you were above 2000m for 3 days last month, which is a high-risk factor for sickle cell crises.
                             Going forward, we recommend you avoid altitudes above 1500m. <br /><br />
-                            <i className='text-xs text-muted-foreground'>Last updated 01/01/2021</i>
+                            <i className='text-xs text-muted-foreground'>Last updated on 09/25/2024</i>
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -105,11 +105,11 @@ export function Metrics() {
                             </div>
                             <div className="flex flex-col">
                                 <p className="text-sm text-muted-foreground">Start Date</p>
-                                <p className="text-lg font-bold">01/01/2021</p>
+                                <p className="text-lg font-bold">09/10/2024</p>
                             </div>
                             <div className="flex flex-col">
                                 <p className="text-sm text-muted-foreground">End Date</p>
-                                <p className="text-lg font-bold">01/01/2022</p>
+                                <p className="text-lg font-bold">09/30/2024</p>
                             </div>
                         </div>
                     </CardContent>
@@ -144,7 +144,7 @@ export function Metrics() {
 
 
             <div className='flex items-start justify-start gap-2'>
-                <h1 className="text-2xl font-bold my-2 pb-4">Wearable Device Metrics</h1>
+                <h1 className="text-2xl font-bold my-2">Wearable Device Metrics</h1>
                 <LiveDot status="online" />
             </div>
 

@@ -13,7 +13,7 @@ import { MedicationTracker } from "./board";
 
 export default function MedicationPage() {
     return (
-        <ContentLayout title="Users">
+        <ContentLayout title="Medication & Appointments Tracker">
             <Breadcrumb>
                 <BreadcrumbList>
                     <BreadcrumbItem>

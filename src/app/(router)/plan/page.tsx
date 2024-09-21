@@ -12,7 +12,7 @@ import {
 import { Metrics } from "./metrics";
 export default function TagsPage() {
     return (
-        <ContentLayout title="Tags">
+        <ContentLayout title="Devices & Plan">
             <Breadcrumb>
                 <BreadcrumbList>
                     <BreadcrumbItem>
