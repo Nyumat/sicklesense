@@ -329,7 +329,7 @@ export default function DashboardPage() {
                     </p>
                 </TourDisplay>}>
                     <div className="grid grid-cols-3 gap-2 py-2 my-4">
-                        <Card className="bg-blue-500 text-white">
+                        <Card className="text-white">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">Heart Rate</CardTitle>
                                 <Button variant="ghost" size="icon" className="text-white">
@@ -352,7 +352,7 @@ export default function DashboardPage() {
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className="bg-red-500 text-white">
+                        <Card className=" text-white">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">
                                     Blood Pressure
@@ -369,7 +369,7 @@ export default function DashboardPage() {
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className="bg-teal-500 text-white">
+                        <Card className="bg-muted text-white">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">Sleep</CardTitle>
                                 <Button variant="ghost" size="icon" className="text-white">

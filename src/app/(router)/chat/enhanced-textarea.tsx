@@ -1,22 +1,21 @@
+import React, { KeyboardEvent, ChangeEvent, useRef, useEffect } from 'react';
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import React, { ChangeEvent, KeyboardEvent, useEffect, useRef } from 'react';
 
-interface EnhancedTextareaProps
-    extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-    onSubmit: () => void;
+interface EnhancedTextareaProps extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'onSubmit'> {
+    onSubmit: (event: React.FormEvent) => void;
 }
 
 export const EnhancedTextarea = React.forwardRef<
     HTMLTextAreaElement,
     EnhancedTextareaProps
->(({ className, onSubmit, ...props }, forwardedRef) => {
+>(({ className, onSubmit, onChange, ...props }, forwardedRef) => {
     const internalRef = useRef<HTMLTextAreaElement>(null);
 
     const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            onSubmit();
+            onSubmit(e);
         }
     };
 
@@ -26,6 +25,11 @@ export const EnhancedTextarea = React.forwardRef<
             textarea.style.height = 'auto';
             textarea.style.height = `${textarea.scrollHeight}px`;
         }
+    };
+
+    const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+        onChange?.(e);
+        adjustTextareaHeight();
     };
 
     useEffect(() => {
@@ -45,10 +49,7 @@ export const EnhancedTextarea = React.forwardRef<
             {...props}
             ref={internalRef}
             onKeyDown={handleKeyDown}
-            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
-                props.onChange?.(e);
-                adjustTextareaHeight();
-            }}
+            onChange={handleChange}
             className={cn(
                 "min-h-[40px] max-h-[200px] resize-none",
                 className
