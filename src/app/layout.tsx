@@ -1,10 +1,12 @@
 import "@/styles/globals.css";
 
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
+import { TRPCReactProvider } from "@/trpc/react";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
-
-import { ThemeProvider } from "@/components/theme-provider";
-import { TRPCReactProvider } from "@/trpc/react";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
 import { PostsProvider } from "./(router)/community/posts/context";
 
 export const metadata: Metadata = {
@@ -21,13 +23,14 @@ export default function RootLayout({
             <body>
                 <ThemeProvider
                     attribute="class"
-                    defaultTheme="system"
-                    enableSystem
+                    defaultTheme="dark"
+                    enableSystem={false} // TODO: Maybe enable this in the future (?)
                     disableTransitionOnChange
                 >
                     <TRPCReactProvider>
                         <PostsProvider>{children}</PostsProvider>
                     </TRPCReactProvider>
+                    <Toaster closeButton richColors />
                 </ThemeProvider>
             </body>
         </html>
