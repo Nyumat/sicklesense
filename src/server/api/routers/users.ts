@@ -5,6 +5,23 @@ import bcrypt from "bcrypt";
 import { z } from "zod";
 
 export const userRouter = createTRPCRouter({
+  me: publicProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session?.user.id;
+    if (!userId) {
+      return null;
+    }
+
+    const user = await ctx.db.user.findUnique({
+      where: { id: userId },
+      select: {
+        name: true,
+        email: true,
+        image: true,
+      },
+    });
+
+    return user;
+  }),
   addSymptom: publicProcedure
     .input(
       z.object({
