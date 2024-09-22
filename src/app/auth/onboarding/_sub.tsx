@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
     Card,
     CardContent,
@@ -8,8 +9,8 @@ import {
     CardHeader,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
     Select,
     SelectContent,
@@ -20,17 +21,21 @@ import {
 import { getOnboardingProgress } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
+import { format } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
+import { CalendarIcon } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
+type Gender = "Male" | "Female" | "Other" | null | string;
 export type CompleteOnboarding = {
     id: string | null;
-    age: number;
-    conditionStatus: string;
+    dateOfBirth: Date | null;
+    gender: string | null;
     scdType: string;
     step?: number;
 };
+
 export type OnboardingState = CompleteOnboarding & {
     step?: number;
 };
@@ -47,29 +52,32 @@ const SCDTypeSelect = ({
             <SelectValue placeholder="Select SCD Type" />
         </SelectTrigger>
         <SelectContent>
-            <SelectItem value="HbSS">HbSS</SelectItem>
-            <SelectItem value="HbSC">HbSC</SelectItem>
-            <SelectItem value="HbS beta thalassemia">HbS beta thalassemia</SelectItem>
-            <SelectItem value="Other">Other</SelectItem>
+            {['AA', 'AS', 'SS', 'AC', 'SC'].map((type) => (
+                <SelectItem key={type} value={type}>
+                    {type}
+                </SelectItem>
+            ))}
         </SelectContent>
     </Select>
 );
 
-const ConditionStatusSelect = ({
+const GendeSelect = ({
     value,
     onChange,
 }: {
-    value: string;
+    value: string | null;
     onChange: (value: string) => void;
 }) => (
-    <Select onValueChange={onChange} defaultValue={value}>
+    <Select onValueChange={onChange} defaultValue={value?.toString()}>
         <SelectTrigger className="w-full">
             <SelectValue placeholder="Select Condition Status" />
         </SelectTrigger>
         <SelectContent>
-            <SelectItem value="Diagnosed">Diagnosed</SelectItem>
-            <SelectItem value="Carrier">Carrier</SelectItem>
-            <SelectItem value="Undiagnosed">Undiagnosed</SelectItem>
+            {["Male", "Female", "Other"].map((gender) => (
+                <SelectItem key={gender} value={gender}>
+                    {gender}
+                </SelectItem>
+            ))}
         </SelectContent>
     </Select>
 );
@@ -78,15 +86,47 @@ const AgeInput = ({
     value,
     onChange,
 }: {
-    value: string;
-    onChange: (value: string) => void;
+    value: Date | null;
+    onChange: (value: Date) => void;
 }) => (
-    <Input
-        type="number"
-        placeholder="Enter your age"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-    />
+    <div className="w-full flex items-center">
+        <Popover>
+            <PopoverTrigger asChild>
+
+                <Button
+                    variant={"outline"}
+                    className={cn(
+                        "w-[240px] pl-3 text-left font-normal",
+                        !value && "text-muted-foreground"
+                    )}
+                >
+                    {value ? (
+                        format(value, "PPP")
+                    ) : (
+                        <span>Pick a date</span>
+                    )}
+                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                </Button>
+
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                    captionLayout="dropdown-buttons"
+                    fromYear={1900}
+                    toYear={2025}
+                    mode="single"
+                    selected={value ? new Date(value) : undefined}
+                    onSelect={(date) => {
+                        if (date) onChange(date);
+                    }}
+                    disabled={(date) =>
+                        date > new Date() || date < new Date("1900-01-01")
+                    }
+                    initialFocus
+                />
+            </PopoverContent>
+        </Popover>
+    </div>
 );
 
 export function Onboarding({ userId }: { userId: string }) {
@@ -94,22 +134,22 @@ export function Onboarding({ userId }: { userId: string }) {
     const [currentStep, setCurrentStep] = useState(0);
     const [state, setState] = useState<OnboardingState>({
         id: userId,
-        age: 0,
-        conditionStatus: "",
+        dateOfBirth: null,
+        gender: null,
         scdType: "",
         step: 0,
     });
     const [scdType, setScdType] = useState("");
-    const [age, setAge] = useState("");
-    const [conditionStatus, setConditionStatus] = useState("");
+    const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
+    const [gender, setGender] = useState<Gender | string | null>("");
     //   const [dataConsent, setDataConsent] = useState(false);
     const mutation = api.onboarding.saveProgress.useMutation();
     const steps = useMemo(() => {
         return [
             {
-                title: "Age",
-                description: "Enter your age",
-                component: <AgeInput value={age} onChange={setAge} />,
+                title: "Date of Birth",
+                description: "Enter your date of birth",
+                component: <AgeInput value={dateOfBirth} onChange={setDateOfBirth} />,
             },
             {
                 title: "SCD Type",
@@ -117,13 +157,10 @@ export function Onboarding({ userId }: { userId: string }) {
                 component: <SCDTypeSelect value={scdType} onChange={setScdType} />,
             },
             {
-                title: "Condition Status",
-                description: "Select your condition status",
+                title: "Gener",
+                description: "Select your gender",
                 component: (
-                    <ConditionStatusSelect
-                        value={conditionStatus}
-                        onChange={setConditionStatus}
-                    />
+                    <GendeSelect value={gender} onChange={setGender} />
                 ),
             },
             {
@@ -150,20 +187,20 @@ export function Onboarding({ userId }: { userId: string }) {
                 ),
             },
         ];
-    }, [age, scdType, conditionStatus]);
+    }, [scdType, gender, dateOfBirth]);
 
     const saveOnboardingProgress = async ({
         id,
-        age,
-        conditionStatus,
+        dateOfBirth,
+        gender,
         scdType,
         step,
     }: CompleteOnboarding): Promise<boolean> => {
         try {
-            if (!id) {
-                throw new Error("User ID is required to save onboarding progress.");
+            if (!id || !dateOfBirth || !gender || !scdType) {
+                throw new Error("All fields are required to save onboarding progress.");
             }
-            await mutation.mutateAsync({ id, age, conditionStatus, scdType, step });
+            await mutation.mutateAsync({ id, dateOfBirth, gender, scdType, step });
             return true;
         } catch (error) {
             console.error("Failed to save onboarding progress:", error);
@@ -183,8 +220,8 @@ export function Onboarding({ userId }: { userId: string }) {
                     const currentProgress = progress;
                     setState({
                         id: userId,
-                        age: currentProgress.age,
-                        conditionStatus: currentProgress.conditionStatus,
+                        dateOfBirth: currentProgress.dateOfBirth,
+                        gender: currentProgress.gender,
                         scdType: currentProgress.scdType,
                         step: currentProgress.step,
                     });
@@ -204,16 +241,16 @@ export function Onboarding({ userId }: { userId: string }) {
 
     // Function to complete onboarding
     const completeOnboarding = async ({
-        age,
-        conditionStatus,
+        dateOfBirth,
+        gender,
         scdType,
     }: CompleteOnboarding) => {
         localStorage.removeItem("onboardingState");
         if (userId) {
             await saveOnboardingProgress({
                 id: userId,
-                age,
-                conditionStatus,
+                dateOfBirth,
+                gender,
                 scdType,
                 step: 3,
             });
@@ -224,16 +261,16 @@ export function Onboarding({ userId }: { userId: string }) {
         if (currentStep === steps.length - 1) {
             await completeOnboarding({
                 id: userId,
-                age: parseInt(age),
+                dateOfBirth,
                 scdType,
-                conditionStatus,
+                gender,
             });
             router.push("/auth/onboarded");
         } else {
             updateState({
-                age: parseInt(age),
+                dateOfBirth,
                 scdType,
-                conditionStatus,
+                gender,
                 step: currentStep + 1,
             });
             setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
@@ -274,7 +311,7 @@ export function Onboarding({ userId }: { userId: string }) {
                                     <p className="max-w-lg text-center text-sm text-muted-foreground sm:text-base">
                                         {steps[currentStep]!.description}
                                     </p>
-                                    <div className="w-full max-w-xs">
+                                    <div className="flex flex-col items-center justify-center space-y-4">
                                         {steps[currentStep]!.component}
                                     </div>
                                 </div>

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 export type CompleteOnboarding = {
   id: string | null;
-  age: number;
+  dateOfBirth: Date;
   conditionStatus: string;
   scdType: string;
   step?: number;
@@ -18,14 +18,14 @@ function useOnboardingState(userId: string | null): {
   updateState: (newState: Partial<OnboardingState>) => void;
   completeOnboarding: ({
     id,
-    age,
+    dateOfBirth,
     conditionStatus,
     scdType,
   }: CompleteOnboarding) => void;
 } {
   const [state, setState] = useState<OnboardingState>({
     id: userId,
-    age: 0,
+    dateOfBirth: new Date(),
     conditionStatus: "",
     scdType: "",
     step: 0,
@@ -37,7 +37,7 @@ function useOnboardingState(userId: string | null): {
 
   const saveOnboardingProgress = async ({
     id,
-    age,
+    dateOfBirth,
     conditionStatus,
     scdType,
     step,
@@ -47,7 +47,13 @@ function useOnboardingState(userId: string | null): {
         throw new Error("User ID is required to save onboarding progress.");
       }
       const mutation = api.onboarding.saveProgress.useMutation();
-      await mutation.mutateAsync({ id, age, conditionStatus, scdType, step });
+      await mutation.mutateAsync({
+        id,
+        dateOfBirth,
+        conditionStatus,
+        scdType,
+        step,
+      });
       return true;
     } catch (error) {
       console.error("Failed to save onboarding progress:", error);
@@ -67,7 +73,7 @@ function useOnboardingState(userId: string | null): {
           const currentProgress = progress;
           setState({
             id: userId,
-            age: currentProgress.age,
+            dateOfBirth: currentProgress.dateOfBirth,
             conditionStatus: currentProgress.conditionStatus,
             scdType: currentProgress.scdType,
             step: currentProgress.step,
@@ -88,7 +94,7 @@ function useOnboardingState(userId: string | null): {
 
   // Function to complete onboarding
   const completeOnboarding = async ({
-    age,
+    dateOfBirth,
     conditionStatus,
     scdType,
   }: CompleteOnboarding) => {
@@ -96,7 +102,7 @@ function useOnboardingState(userId: string | null): {
     if (userId) {
       await saveOnboardingProgress({
         id: userId,
-        age,
+        dateOfBirth,
         conditionStatus,
         scdType,
         step: 3,

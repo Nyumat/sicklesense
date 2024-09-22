@@ -1,10 +1,11 @@
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import { Gender, SickleCellType } from "@prisma/client";
 import { z } from "zod";
 
 const onboardingStateSchema = z.object({
   id: z.string(),
-  age: z.number().int(),
-  conditionStatus: z.string(),
+  dateOfBirth: z.date(),
+  gender: z.string(),
   scdType: z.string(),
   step: z.number().int().optional(),
 });
@@ -29,6 +30,20 @@ export const onboardingRouter = createTRPCRouter({
         where: { id: ctx.session.user.id },
         data: { onboardingState: input },
       });
+
+      await ctx.db.user.update({
+        where: { id: ctx.session.user.id },
+          data: {
+              patientProfile: {
+                  create: {
+                      dateOfBirth: input.dateOfBirth,
+                      gender: input.gender as Gender,
+                      sickleCellType: input.scdType as SickleCellType,
+                  },
+              },
+          },
+      });
+
       return true;
     }),
 
@@ -37,7 +52,7 @@ export const onboardingRouter = createTRPCRouter({
       where: { id: ctx.session.user.id },
       data: {
         onboardingState: {
-          step: 999, // You can use any number to indicate completion
+          step: 5,
           completed: true,
         },
       },
