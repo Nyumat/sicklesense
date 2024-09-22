@@ -18,6 +18,7 @@ services:
 
 volumes:
   postgres-data:
+    name: postgres-data-${COMPOSE_PROJECT_NAME:-default}-${TIMESTAMP:-0}
 
 networks:
   backend:
