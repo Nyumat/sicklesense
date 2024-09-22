@@ -19,7 +19,7 @@ export function ChatUI() {
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const [messages, setMessages] = useState<CoreMessage[]>([]);
     const [input, setInput] = useState('');
-
+    const [data, setData] = useState<any>({});
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -36,8 +36,8 @@ export function ChatUI() {
         setInput('');
 
         const result = await continueConversation(newMessages);
-
-        for await (const content of readStreamableValue(result)) {
+        setData(result.data);
+        for await (const content of readStreamableValue(result.message)) {
             setMessages([
                 ...newMessages,
                 {
@@ -81,6 +81,7 @@ export function ChatUI() {
             ))}
             <div ref={messagesEndRef} />
             <div className="fixed bottom-0 left-0 right-0 p-4 bg-background shadow-inner">
+                {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
                 <form className={cn("flex space-x-2 mx-auto", sidebar?.isOpen === false ? "lg:ml-[90px]" : "lg:ml-72")} onSubmit={async e => {
                     e.preventDefault();
                     const newMessages: CoreMessage[] = [
@@ -92,8 +93,9 @@ export function ChatUI() {
                     setInput('');
 
                     const result = await continueConversation(newMessages);
+                    setData(result.data);
 
-                    for await (const content of readStreamableValue(result)) {
+                    for await (const content of readStreamableValue(result.message)) {
                         setMessages([
                             ...newMessages,
                             {
