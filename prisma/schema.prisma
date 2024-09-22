@@ -106,6 +106,7 @@ model PatientProfile {
   updatedAt                DateTime                 @updatedAt
   gender                   Gender?
   healthMetrics            HealthMetric[]
+  symptoms                 Symptom[]
   user                     User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -117,6 +118,17 @@ model HealthMetric {
   medication       String?
   triggerEvent     TriggerEvent?
   notes            String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  patientProfile   PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
+}
+
+model Symptom {
+  id               String         @id @default(cuid())
+  patientProfileId String
+  name             String
+  severity         Int
+  date             DateTime       @default(now())
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
   patientProfile   PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
