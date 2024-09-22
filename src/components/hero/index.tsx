@@ -69,7 +69,7 @@ export function HeroSection({ session }: HeroSectionProps) {
         slidesToScroll: 1,
         autoplay: true,
         autoplaySpeed: 3000,
-        fade: true,
+        fade: false,
         dotsClass: "slick-dots flex justify-center gap-2 text-white",
         arrows: true,
     };
