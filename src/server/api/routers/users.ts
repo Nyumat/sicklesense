@@ -1,9 +1,78 @@
 import { CompleteOnboarding } from "@/app/auth/onboarding/_sub";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { Gender, SickleCellType } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { z } from "zod";
 
 export const userRouter = createTRPCRouter({
+  updatePersonalInfo: publicProcedure
+    .input(
+      z.object({
+        dateOfBirth: z.string(),
+        sickleCellType: z.string(),
+        gender: z.string(),
+        diagnosisDate: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.session?.user.id;
+      if (!userId) {
+        throw new Error("Unauthorized");
+      }
+
+      const type = input.sickleCellType as SickleCellType;
+      const gender = input.gender as Gender;
+      if (!Object.values(SickleCellType).includes(type)) {
+        throw new Error("Invalid sickle cell type");
+      }
+
+      const user = await ctx.db.user.update({
+        where: { id: userId },
+        data: {
+          patientProfile: {
+            update: {
+              dateOfBirth: new Date(input.dateOfBirth),
+              sickleCellType: type,
+              gender: gender,
+              diagnosisDate: new Date(input.diagnosisDate),
+            },
+          },
+        },
+        select: {
+          patientProfile: {
+            select: {
+              dateOfBirth: true,
+              sickleCellType: true,
+              gender: true,
+              diagnosisDate: true,
+            },
+          },
+        },
+      });
+
+      return user?.patientProfile;
+    }),
+  personalInfo: publicProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session?.user.id;
+    if (!userId) {
+      return null;
+    }
+    const userPersonalInformation = await ctx.db.user.findUnique({
+      where: { id: userId },
+      select: {
+        patientProfile: {
+          select: {
+            dateOfBirth: true,
+            sickleCellType: true,
+            gender: true,
+            diagnosisDate: true,
+          },
+        },
+      },
+    });
+
+    return userPersonalInformation?.patientProfile;
+  }),
   isOnboarded: publicProcedure.query(async ({ ctx }) => {
     const userId = ctx.session?.user.id;
     if (!userId) {

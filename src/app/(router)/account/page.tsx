@@ -1,5 +1,3 @@
-"use client";
-
 import { ContentLayout } from "@/app/_components/admin-panel/content-layout";
 import { PersonalInfoForm } from "@/app/_components/forms";
 import {
@@ -11,9 +9,11 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { api } from "@/trpc/server";
 import Link from "next/link";
 
-export default function AccountPage() {
+export default async function AccountPage() {
+    const personalInfo = await api.users.personalInfo()
     return (
         <ContentLayout title="Account">
             <Breadcrumb>
@@ -42,10 +42,9 @@ export default function AccountPage() {
                         <CardTitle>Personal Information</CardTitle>
                     </CardHeader>
                     <CardContent className="grid gap-4">
-                        <PersonalInfoForm />
+                        <PersonalInfoForm info={personalInfo} />
                     </CardContent>
                 </Card>
-
             </div>
         </ContentLayout>
     );

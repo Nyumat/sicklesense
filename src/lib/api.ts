@@ -10,7 +10,8 @@ export const getOnboardingProgress =
       return null;
     }
     return null;
-  };
+    };
+  
 
 // type UserSignUpFields = {
 //   email: string;

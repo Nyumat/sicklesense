@@ -51,7 +51,7 @@ interface DynamicFormProps {
 }
 
 const formSections = [
-    { title: "Personal Information", fields: ["username", "dateOfBirth", "gender", "sickleCellType", "genotype", "diagnosisDate"] },
+    // { title: "Personal Information", fields: ["username", "dateOfBirth", "gender", "sickleCellType", "genotype", "diagnosisDate"] },
     { title: "Medical Information", fields: ["hydroxyureaUsage", "bloodTransfusionHistory", "physicalActivityLevel"] },
     { title: "Location and Travel", fields: ["location", "travelFrequency"] },
     { title: "Medical Contacts", fields: ["primaryCarePhysician", "hematologistContact"] },

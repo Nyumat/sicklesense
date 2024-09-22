@@ -24,26 +24,46 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { api } from "@/trpc/react";
 import { zodResolver } from '@hookform/resolvers/zod';
+import { $Enums } from "@prisma/client";
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from "sonner";
 import * as z from 'zod';
 
 const formSchema = z.object({
-    dateOfBirth: z.date({ required_error: "Date of birth is required." }),
-    gender: z.enum(["M", "F", "O"], { required_error: "Please select a gender" }),
-    genotype: z.enum(['AA', 'AS', 'SS', 'AC', 'SC'], { required_error: "Please select a genotype" }),
+    dateOfBirth: z.date({ required_error: "Date of birth is required." }).nullable(),
+    gender: z.enum(["Male", "Female", "Other"], { required_error: "Please select a gender" }).nullable(),
+    genotype: z.enum(['AA', 'AS', 'SS', 'AC', 'SC'], { required_error: "Please select a genotype" }).nullable(),
     diagnosisDate: z.date().nullable(),
     sinceBirth: z.boolean().default(false),
 });
 
-export function PersonalInfoForm() {
+interface PersonalInfoFormProps {
+    info: {
+        dateOfBirth: Date | null;
+        gender: $Enums.Gender | null;
+        sickleCellType: $Enums.SickleCellType | null;
+        diagnosisDate: Date | null;
+    } | null | undefined;
+}
+
+// TODO: Fix DOB === Diagnosis Date not working
+
+export function PersonalInfoForm({ info }: PersonalInfoFormProps) {
+
+    const mutation = api.users.updatePersonalInfo.useMutation();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            sinceBirth: false,
+            sinceBirth: info?.diagnosisDate === info?.dateOfBirth,
+            dateOfBirth: info?.dateOfBirth ?? undefined,
+            gender: info?.gender ?? undefined,
+            genotype: info?.sickleCellType ?? undefined,
+            diagnosisDate: info?.diagnosisDate ?? undefined,
         },
     });
 
@@ -56,8 +76,30 @@ export function PersonalInfoForm() {
         }
     }, [watchSinceBirth, watchDateOfBirth, form]);
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        const data = await mutation.mutateAsync({
+            dateOfBirth: values.dateOfBirth?.toISOString() ?? "",
+            gender: values.gender ?? "",
+            sickleCellType: values.genotype ?? "",
+            diagnosisDate: values.diagnosisDate?.toISOString() ?? "",
+        });
+        form.reset({
+            dateOfBirth: data?.dateOfBirth,
+            gender: data?.gender,
+            genotype: data?.sickleCellType,
+            diagnosisDate: data?.diagnosisDate,
+        })
+
+        if (mutation.error) {
+            toast.error("An error occurred while updating personal information");
+            return;
+        }
+
+        if (data?.diagnosisDate === data?.dateOfBirth) {
+            form.setValue("sinceBirth", true);
+        }
+
+        toast.success("Personal information updated successfully");
     }
 
     return (
@@ -90,8 +132,11 @@ export function PersonalInfoForm() {
                                 </PopoverTrigger>
                                 <PopoverContent className="w-auto p-0" align="start">
                                     <Calendar
+                                        captionLayout="dropdown-buttons"
+                                        fromYear={1900}
+                                        toYear={2025}
                                         mode="single"
-                                        selected={field.value}
+                                        selected={field.value ?? new Date()}
                                         onSelect={field.onChange}
                                         disabled={(date) =>
                                             date > new Date() || date < new Date("1900-01-01")
@@ -110,16 +155,16 @@ export function PersonalInfoForm() {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Gender</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select onValueChange={field.onChange} defaultValue={field.value?.toString()}>
                                 <FormControl>
                                     <SelectTrigger>
                                         <SelectValue placeholder="Select gender" />
                                     </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                    <SelectItem value="M">Male</SelectItem>
-                                    <SelectItem value="F">Female</SelectItem>
-                                    <SelectItem value="O">Other</SelectItem>
+                                    <SelectItem value="Male">Male</SelectItem>
+                                    <SelectItem value="Female">Female</SelectItem>
+                                    <SelectItem value="Other">Other</SelectItem>
                                 </SelectContent>
                             </Select>
                             <FormMessage />
@@ -132,7 +177,7 @@ export function PersonalInfoForm() {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Sickle Cell Type</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <Select onValueChange={field.onChange} defaultValue={field.value?.toString()}>
                                 <FormControl>
                                     <SelectTrigger>
                                         <SelectValue placeholder="Select sickle cell type" />
