@@ -39,9 +39,11 @@ import {
     ThermometerSun,
 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { TourDisplay } from "./(helper)/tour-display";
 import tour from "./(helper)/tour-producer";
+import { Some } from "./(helper)/symptoms";
+import { api } from "@/trpc/react";
 
 interface Medication {
     id: number;
@@ -81,7 +83,7 @@ interface HealthMetric {
 
 export default function DashboardPage() {
     const ctx = tour.useContext()
-
+    const serverSymptoms = api.users.symptoms.useQuery().data ?? []
     useEffect(() => {
         const tour = localStorage.getItem("tour")
         if (!tour) {
@@ -424,79 +426,9 @@ export default function DashboardPage() {
                         </div>
                     </CardContent>
                 </Card>
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Symptom Tracker</CardTitle>
-                        <CardDescription>Log and monitor your symptoms</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Date</TableHead>
-                                    <TableHead>Symptom</TableHead>
-                                    <TableHead>Severity</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {symptoms.map((symptom) => (
-                                    <TableRow key={symptom.id}>
-                                        <TableCell>{format(symptom.date, 'PP')}</TableCell>
-                                        <TableCell>{symptom.name}</TableCell>
-                                        <TableCell>{symptom.severity}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </CardContent>
-                    <CardFooter>
-                        <Dialog open={isAddSymptomOpen} onOpenChange={setIsAddSymptomOpen}>
-                            <DialogTrigger asChild>
-                                <Button variant={"outline"} className={cn("w-full", "outline-dashed opacity-50 hover:opacity-75")}>
-                                    <Plus className="mr-2 h-4 w-4" /> Log Symptom
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>Log New Symptom</DialogTitle>
-                                    <DialogDescription>
-                                        Enter the details of the symptom you&apos;re experiencing.
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <div className="grid gap-4 py-4">
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="symptom-name" className="text-right">
-                                            Symptom
-                                        </Label>
-                                        <Input
-                                            id="symptom-name"
-                                            value={newSymptom.name}
-                                            onChange={(e) => setNewSymptom({ ...newSymptom, name: e.target.value })}
-                                            className="col-span-3"
-                                        />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="symptom-severity" className="text-right">
-                                            Severity (1-10)
-                                        </Label>
-                                        <Slider
-                                            id="symptom-severity"
-                                            min={1}
-                                            max={10}
-                                            step={1}
-                                            value={[newSymptom.severity]}
-                                            onValueChange={(value) => setNewSymptom({ ...newSymptom, severity: value[0] ?? 0 })}
-                                            className="col-span-3"
-                                        />
-                                    </div>
-                                </div>
-                                <DialogFooter>
-                                    <Button onClick={addSymptom}>Log Symptom</Button>
-                                </DialogFooter>
-                            </DialogContent>
-                        </Dialog>
-                    </CardFooter>
-                </Card>
+                <Suspense fallback={<div>Loading...</div>}>
+                    <Some serverSymptoms={serverSymptoms} />
+                    </Suspense>
             </ContentLayout>
         </>
     );

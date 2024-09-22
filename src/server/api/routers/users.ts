@@ -5,6 +5,61 @@ import bcrypt from "bcrypt";
 import { z } from "zod";
 
 export const userRouter = createTRPCRouter({
+  addSymptom: publicProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        severity: z.number(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.session?.user.id;
+      if (!userId) {
+        throw new Error("Unauthorized");
+      }
+
+      const symptom = await ctx.db.symptom.create({
+        data: {
+          name: input.name,
+          severity: input.severity,
+          patientProfile: {
+            connect: {
+              userId,
+            },
+          },
+        },
+      });
+
+      return symptom;
+    }),
+  symptoms: publicProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session?.user.id;
+    if (!userId) {
+      return [];
+    }
+    const _ = await ctx.db.user.findUnique({
+      where: { id: userId },
+      select: {
+        patientProfile: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    if (!_) {
+      return [];
+    }
+
+    const symptoms = await ctx.db.symptom.findMany({
+      where: {
+        patientProfileId: _.patientProfile?.id,
+      },
+    });
+
+    return symptoms;
+  }),
   updatePersonalInfo: publicProcedure
     .input(
       z.object({
