@@ -41,10 +41,11 @@ import {
     TableHeader,
     TableRow
 } from "@/components/ui/table"
-import { addDays, eachDayOfInterval, endOfWeek, format, isSameDay, startOfToday, startOfWeek } from 'date-fns'
+import { eachDayOfInterval, endOfWeek, format, isSameDay, startOfToday, startOfWeek } from 'date-fns'
 import { Calendar as CalendarIcon, Plus, X } from "lucide-react"
 import { useState } from 'react'
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { CreateAppointment } from "../dashboard/(helper)/appointments"
 
 interface Medication {
     id: number;
@@ -61,13 +62,6 @@ interface LogEntry {
     taken: boolean;
 }
 
-interface Appointment {
-    id: number;
-    title: string;
-    date: Date;
-    doctor: string;
-}
-
 interface HealthMetric {
     date: string;
     painLevel: number;
@@ -76,7 +70,6 @@ interface HealthMetric {
 }
 
 export function MedicationTracker() {
-    const [isAddAppointmentOpen, setIsAddAppointmentOpen] = useState(false)
     const [medications, setMedications] = useState<Medication[]>([
         { id: 1, name: "Aspirin", dosage: "81mg", frequency: "Daily", time: "08:00" },
         { id: 2, name: "Lisinopril", dosage: "10mg", frequency: "Daily", time: "20:00" },
@@ -84,21 +77,12 @@ export function MedicationTracker() {
     const [logs, setLogs] = useState<LogEntry[]>([])
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(startOfToday())
     const [isAddMedicationOpen, setIsAddMedicationOpen] = useState(false)
-    const [appointments, setAppointments] = useState<Appointment[]>([
-        { id: 1, title: "Hematologist Check-up", date: addDays(new Date(), 7), doctor: "Dr. Smith" },
-        { id: 2, title: "Pain Management", date: addDays(new Date(), 14), doctor: "Dr. Johnson" },
-    ])
+
     const [newMedication, setNewMedication] = useState<Omit<Medication, 'id'>>({
         name: '',
         dosage: '',
         frequency: 'Daily',
         time: '',
-    })
-
-    const [newAppointment, setNewAppointment] = useState<Omit<Appointment, 'id'>>({
-        title: '',
-        date: new Date(),
-        doctor: '',
     })
 
     const healthMetrics: HealthMetric[] = [
@@ -132,16 +116,6 @@ export function MedicationTracker() {
             ))
         } else {
             setLogs([...logs, { id: Date.now(), medicationId, date, taken: true }])
-        }
-    }
-
-
-
-    const addAppointment = () => {
-        if (newAppointment.title && newAppointment.date && newAppointment.doctor) {
-            setAppointments([...appointments, { ...newAppointment, id: Date.now() }])
-            setIsAddAppointmentOpen(false)
-            setNewAppointment({ title: '', date: new Date(), doctor: '' })
         }
     }
 
@@ -321,88 +295,7 @@ export function MedicationTracker() {
                 </Card>
             </div>
             <div className="my-8 space-y-8">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Appointments</CardTitle>
-                        <CardDescription>Manage your medical appointments</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Date</TableHead>
-                                    <TableHead>Title</TableHead>
-                                    <TableHead>Doctor</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {appointments.map((appointment) => (
-                                    <TableRow key={appointment.id}>
-                                        <TableCell>{format(appointment.date, 'PP')}</TableCell>
-                                        <TableCell>{appointment.title}</TableCell>
-                                        <TableCell>{appointment.doctor}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </CardContent>
-                    <CardFooter>
-                        <Dialog open={isAddAppointmentOpen} onOpenChange={setIsAddAppointmentOpen}>
-                            <DialogTrigger asChild>
-                                <Button>
-                                    <Plus className="mr-2 h-4 w-4" /> Add Appointment
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>Add New Appointment</DialogTitle>
-                                    <DialogDescription>
-                                        Enter the details of your new appointment.
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <div className="grid gap-4 py-4">
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="appointment-title" className="text-right">
-                                            Title
-                                        </Label>
-                                        <Input
-                                            id="appointment-title"
-                                            value={newAppointment.title}
-                                            onChange={(e) => setNewAppointment({ ...newAppointment, title: e.target.value })}
-                                            className="col-span-3"
-                                        />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="appointment-date" className="text-right">
-                                            Date
-                                        </Label>
-                                        <Input
-                                            id="appointment-date"
-                                            type="date"
-                                            value={format(newAppointment.date, 'yyyy-MM-dd')}
-                                            onChange={(e) => setNewAppointment({ ...newAppointment, date: new Date(e.target.value) })}
-                                            className="col-span-3"
-                                        />
-                                    </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="appointment-doctor" className="text-right">
-                                            Doctor
-                                        </Label>
-                                        <Input
-                                            id="appointment-doctor"
-                                            value={newAppointment.doctor}
-                                            onChange={(e) => setNewAppointment({ ...newAppointment, doctor: e.target.value })}
-                                            className="col-span-3"
-                                        />
-                                    </div>
-                                </div>
-                                <DialogFooter>
-                                    <Button onClick={addAppointment}>Add Appointment</Button>
-                                </DialogFooter>
-                            </DialogContent>
-                        </Dialog>
-                    </CardFooter>
-                </Card>
+                <CreateAppointment />
 
                 <Card>
                     <CardHeader>
