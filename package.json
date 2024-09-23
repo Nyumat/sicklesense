@@ -12,7 +12,7 @@
         "dev": "next dev",
         "lint": "next lint",
         "start": "next start",
-        "postinstall": "prisma migrate deploy",
+        "postinstall": "npx prisma generate && prisma migrate deploy",
         "format": "prettier --write ."
     },
     "dependencies": {
