@@ -3,7 +3,7 @@
 import { LayoutGrid, LogOut, User } from "lucide-react";
 import Link from "next/link";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
@@ -21,9 +21,11 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { api } from "@/trpc/react";
-import { redirect } from "next/navigation";
+import { signOut } from "next-auth/react";
+import { redirect, useRouter } from "next/navigation";
 
 export function UserNav() {
+    const router = useRouter();
     const me = api.users.me.useQuery();
     if (me.isFetched && !me.data) {
         redirect("/auth/signin");
@@ -43,7 +45,7 @@ export function UserNav() {
                                 className="relative h-8 w-8 rounded-full"
                             >
                                 <Avatar className="h-8 w-8">
-                                    <AvatarImage src={me.data?.image ?? ""} alt={me.data?.name ?? ""} />  
+                                    <AvatarImage src={me.data?.image ?? ""} alt={me.data?.name ?? ""} />
                                 </Avatar>
                             </Button>
                         </DropdownMenuTrigger>
@@ -71,13 +73,13 @@ export function UserNav() {
                     </DropdownMenuItem>
                     <DropdownMenuItem className="hover:cursor-pointer" asChild>
                         <Link href="/account" className="flex items-center">
-                            <User className="mr-3 h-4 w-4 text-muted-foreground" />
+                            <User className="mr-3 h-4 w-4 text-muted-foreground" onClick={() => router.push("/account")} />
                             Account
                         </Link>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="hover:cursor-pointer" onClick={() => { }}>
+                <DropdownMenuItem className="hover:cursor-pointer" onClick={() => signOut()}>
                     <LogOut className="mr-3 h-4 w-4 text-muted-foreground" />
                     Sign out
                 </DropdownMenuItem>

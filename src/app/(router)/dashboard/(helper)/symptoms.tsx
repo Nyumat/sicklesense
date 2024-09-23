@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -24,12 +23,12 @@ import {
 import { useState } from "react";
 
 export function Some({ serverSymptoms }: { serverSymptoms: Symptom[] }) {
-    const mutation = api.users.addSymptom.useMutation();
     const [symptoms, setSymptoms] = useState<Symptom[]>(serverSymptoms)
     const [isAddSymptomOpen, setIsAddSymptomOpen] = useState(false)
     const [newSymptom, setNewSymptom] = useState<Omit<Symptom, 'id' | 'date' | 'createdAt' | 'updatedAt' | 'patientProfileId'>>({ name: '', severity: 0 })
+    const mutation = api.users.addSymptom.useMutation();
 
-    async function addSymptom() {
+    async function addNewSymptom() {
         const data = await mutation.mutateAsync(newSymptom)
         setSymptoms([...symptoms, data])
         setIsAddSymptomOpen(false)
@@ -103,7 +102,7 @@ export function Some({ serverSymptoms }: { serverSymptoms: Symptom[] }) {
                                 </div>
                             </div>
                             <DialogFooter>
-                                <Button onClick={addSymptom}>Log Symptom</Button>
+                                <Button onClick={addNewSymptom}>Log Symptom</Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
