@@ -42,7 +42,7 @@ import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import { TourDisplay } from "./(helper)/tour-display";
 import tour from "./(helper)/tour-producer";
-import { Some } from "./(helper)/symptoms";
+import { CreateSymptom } from "./(helper)/symptoms";
 import { api } from "@/trpc/react";
 
 interface Medication {
@@ -102,7 +102,6 @@ export default function DashboardPage() {
         return () => {
             ctx.close()
         }
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -427,7 +426,7 @@ export default function DashboardPage() {
                     </CardContent>
                 </Card>
                 <Suspense fallback={<div>Loading...</div>}>
-                    <Some serverSymptoms={serverSymptoms} />
+                    <CreateSymptom />
                     </Suspense>
             </ContentLayout>
         </>

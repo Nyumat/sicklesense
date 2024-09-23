@@ -210,6 +210,7 @@ export function Onboarding({ userId }: { userId: string }) {
 
     // Load state from localStorage on component mount
     useEffect(() => {
+        localStorage.removeItem("tour");
         const savedState = localStorage.getItem("onboardingState");
         if (savedState) {
             const retreivedState = JSON.parse(savedState) as OnboardingState;

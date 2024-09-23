@@ -22,17 +22,18 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-export function Some({ serverSymptoms }: { serverSymptoms: Symptom[] }) {
-    const [symptoms, setSymptoms] = useState<Symptom[]>(serverSymptoms)
+export function CreateSymptom() {
+    const [symptoms] = api.users.symptoms.useSuspenseQuery();
+    const utils = api.useUtils();
     const [isAddSymptomOpen, setIsAddSymptomOpen] = useState(false)
     const [newSymptom, setNewSymptom] = useState<Omit<Symptom, 'id' | 'date' | 'createdAt' | 'updatedAt' | 'patientProfileId'>>({ name: '', severity: 0 })
-    const mutation = api.users.addSymptom.useMutation();
-
-    async function addNewSymptom() {
-        const data = await mutation.mutateAsync(newSymptom)
-        setSymptoms([...symptoms, data])
-        setIsAddSymptomOpen(false)
-    }
+    const mutation = api.users.addSymptom.useMutation({
+        onSuccess: async () => {
+            await utils.users.symptoms.invalidate();
+            setIsAddSymptomOpen(false)
+        }
+    });
+    
     return (
         <>
             <Card>
@@ -102,7 +103,10 @@ export function Some({ serverSymptoms }: { serverSymptoms: Symptom[] }) {
                                 </div>
                             </div>
                             <DialogFooter>
-                                <Button onClick={addNewSymptom}>Log Symptom</Button>
+                                <Button onClick={(e) => {
+                                    e.preventDefault()
+                                    mutation.mutate(newSymptom)
+                                }}>{mutation.isPending ? 'Adding...' : 'Add Symptom'}</Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
