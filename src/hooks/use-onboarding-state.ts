@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 export type CompleteOnboarding = {
   id: string | null;
   dateOfBirth: Date;
-  conditionStatus: string;
+  gender: string;
   scdType: string;
   step?: number;
 };
@@ -19,14 +19,13 @@ function useOnboardingState(userId: string | null): {
   completeOnboarding: ({
     id,
     dateOfBirth,
-    conditionStatus,
     scdType,
   }: CompleteOnboarding) => void;
 } {
   const [state, setState] = useState<OnboardingState>({
     id: userId,
     dateOfBirth: new Date(),
-    conditionStatus: "",
+    gender: "",
     scdType: "",
     step: 0,
   });
@@ -38,7 +37,7 @@ function useOnboardingState(userId: string | null): {
   const saveOnboardingProgress = async ({
     id,
     dateOfBirth,
-    conditionStatus,
+    gender,
     scdType,
     step,
   }: CompleteOnboarding): Promise<boolean> => {
@@ -50,7 +49,7 @@ function useOnboardingState(userId: string | null): {
       await mutation.mutateAsync({
         id,
         dateOfBirth,
-        conditionStatus,
+        gender,
         scdType,
         step,
       });
@@ -74,7 +73,7 @@ function useOnboardingState(userId: string | null): {
           setState({
             id: userId,
             dateOfBirth: currentProgress.dateOfBirth,
-            conditionStatus: currentProgress.conditionStatus,
+            gender: currentProgress.gender,
             scdType: currentProgress.scdType,
             step: currentProgress.step,
           });
@@ -95,7 +94,7 @@ function useOnboardingState(userId: string | null): {
   // Function to complete onboarding
   const completeOnboarding = async ({
     dateOfBirth,
-    conditionStatus,
+    gender,
     scdType,
   }: CompleteOnboarding) => {
     localStorage.removeItem("onboardingState");
@@ -103,7 +102,7 @@ function useOnboardingState(userId: string | null): {
       await saveOnboardingProgress({
         id: userId,
         dateOfBirth,
-        conditionStatus,
+        gender,
         scdType,
         step: 3,
       });
