@@ -19,7 +19,7 @@ export function ChatUI() {
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const [messages, setMessages] = useState<CoreMessage[]>([]);
     const [input, setInput] = useState('');
-    const [data, setData] = useState<any>({});
+    const [data, setData] = useState<{ [key: string]: string } | null>(null);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
