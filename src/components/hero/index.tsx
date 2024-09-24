@@ -68,7 +68,7 @@ export function HeroSection({ session }: HeroSectionProps) {
         slidesToShow: 1,
         slidesToScroll: 1,
         autoplay: true,
-        autoplaySpeed: 3000,
+        autoplaySpeed: 7000,
         fade: false,
         dotsClass: "slick-dots flex justify-center gap-2 text-white",
         arrows: true,
@@ -83,7 +83,7 @@ export function HeroSection({ session }: HeroSectionProps) {
     }
 
     return (
-        <section className="relative overflow-hidden min-h-screen flex items-center justify-center mt-16">
+        <section className="relative overflow-hidden min-h-screen flex items-center justify-center md:mt-16">
             <div className="absolute inset-0 z-0">
                 <SparklesCore
                     id="tsparticlesfullpage"
@@ -97,7 +97,7 @@ export function HeroSection({ session }: HeroSectionProps) {
                     }
                 />
             </div>
-            <div className="container mx-auto px-4 py-12 relative z-10">
+            <div className="container mx-auto px-4 py-6 md:py-12 relative z-10">
                 <motion.div
                     className="flex flex-col items-center text-center"
                     initial="hidden"
@@ -114,7 +114,7 @@ export function HeroSection({ session }: HeroSectionProps) {
                 >
                     <motion.h1
                         variants={FADE_DOWN_ANIMATION_VARIANTS}
-                        className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold tracking-normal dark:text-[hsl(280,100%,85%)] max-w-3xl"
+                        className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-normal dark:text-[hsl(280,100%,85%)] max-w-3xl"
                     >
                         Your Sickle Cell Command Center{" "}
                         <span className="text-[hsl(280,100%,70%)]/60 whitespace-normal">
@@ -125,13 +125,13 @@ export function HeroSection({ session }: HeroSectionProps) {
                                     first: "hsl(280,100%,85%)",
                                     second: "hsl(280,100%,90%)",
                                 }}
-                                className="inline-block"
+                                className="inline-block text-3xl sm:text-4xl md:text-6xl lg:text-7xl"
                             />
                         </span>
                     </motion.h1>
                     <motion.p
                         variants={FADE_DOWN_ANIMATION_VARIANTS}
-                        className="mt-6 max-w-2xl text-base sm:text-lg leading-7 sm:leading-8"
+                        className="mt-6 max-w-2xl text-base xs:text-sm md:text-lg leading-7 sm:leading-8"
                     >
                         Sickle Sense is an all-in-one platform bridging the gap between you, your data, and better health outcomes for sickle cell patients worldwide.{" "}
                     </motion.p>
@@ -169,7 +169,7 @@ export function HeroSection({ session }: HeroSectionProps) {
                         className="mt-12 w-full max-w-3xl mx-auto relative"
                     >
                         <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg blur-3xl opacity-50 -z-10" />
-                        <Slider {...carouselSettings}>
+                        <Slider {...carouselSettings} className="scale-90 md:scale-100">
                             {images.map((image, index) => (
                                 <div key={index} className="outline-none">
                                     <Image
