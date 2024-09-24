@@ -103,7 +103,7 @@ export function CreateSymptom() {
                                 </div>
                             </div>
                             <DialogFooter>
-                                <Button onClick={(e) => {
+                                <Button className="w-full" onClick={(e) => {
                                     e.preventDefault()
                                     mutation.mutate(newSymptom)
                                 }}>{mutation.isPending ? 'Adding...' : 'Add Symptom'}</Button>
