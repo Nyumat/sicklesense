@@ -77,7 +77,7 @@ const ReorderableMedicationsTable = ({ medications, removeMedication, updateMedi
         setItems(medications);
     }, [medications]);
 
-    const handleReorder = (reorderedItems: any) => {
+    const handleReorder = (reorderedItems: Medication[]) => {
         if (!isLayoutUnlocked) {
             toast.error('Please unlock the layout to reorder items');
             return;
