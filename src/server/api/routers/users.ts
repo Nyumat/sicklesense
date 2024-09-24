@@ -5,6 +5,43 @@ import bcrypt from "bcrypt";
 import { z } from "zod";
 
 export const userRouter = createTRPCRouter({
+  toggleMedicationReminder: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        reminder: z.boolean(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.session?.user.id;
+      if (!userId) {
+        throw new Error("Unauthorized");
+      }
+
+      const medication = await ctx.db.medication.findUnique({
+        where: {
+          id: input.id,
+          PatientProfile: {
+            userId,
+          },
+        },
+      });
+
+      if (!medication) {
+        throw new Error("Medication not found");
+      }
+
+      const updated = await ctx.db.medication.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          reminderEnabled: input.reminder,
+        },
+      });
+
+      return updated;
+    }),
   reorderMedications: publicProcedure
     .input(
       z.array(
@@ -352,17 +389,44 @@ export const userRouter = createTRPCRouter({
         dosage: z.string(),
         frequency: z.string(),
         time: z.string(),
+        reminderEnabled: z.boolean(),
+        reminderDetails: z
+          .object({
+            reminderFrequency: z.string().optional(),
+            reminderTime: z.date().optional(),
+            reminderPhone: z.string().optional(),
+          })
+          .optional()
+          .refine(
+            (a) => {
+              if (a?.reminderFrequency || a?.reminderTime || a?.reminderPhone) {
+                return true;
+              }
+              return false;
+            },
+            {
+              message: "Reminder details are required if reminder is enabled",
+            },
+          ),
       }),
     )
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session?.user.id;
+
       if (!userId) {
         throw new Error("Unauthorized");
       }
 
+      const { reminderDetails, ...medicationData } = input;
+      const { reminderTime, reminderFrequency, reminderPhone } =
+        input.reminderDetails ?? {};
+
       const newMedication = await ctx.db.medication.create({
         data: {
-          ...input,
+          ...medicationData,
+          reminderTime: reminderTime ?? null,
+          reminderFrequency: reminderFrequency ?? null,
+          reminderPhone: reminderPhone ?? null,
           PatientProfile: {
             connect: {
               userId,

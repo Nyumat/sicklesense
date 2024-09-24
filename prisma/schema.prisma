@@ -178,7 +178,11 @@ model Medication {
   dosage           String
   frequency        String
   time             String
-  order           Int      @default(0)
+  order            Int             @default(0)
+  reminderEnabled  Boolean         @default(false)
+  reminderFrequency String?
+  reminderTime     DateTime?
+  reminderPhone    String?
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
   PatientProfile   PatientProfile? @relation(fields: [patientProfileId], references: [id])

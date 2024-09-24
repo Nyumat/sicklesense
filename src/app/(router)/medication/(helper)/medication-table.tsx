@@ -105,6 +105,7 @@ const ReorderableMedicationsTable = ({ medications, removeMedication, updateMedi
                     <TableHeader>
                         <TableRow>
                             <TableHead>Name</TableHead>
+                            <TableHead>Reminders</TableHead>
                             <TableHead>Dosage</TableHead>
                             <TableHead>Frequency</TableHead>
                             <TableHead>Time</TableHead>
@@ -120,6 +121,9 @@ const ReorderableMedicationsTable = ({ medications, removeMedication, updateMedi
                                 className="border-b last:border-b-0"
                             >
                                 <TableCell className="font-medium">{med.name}</TableCell>
+                                <TableCell>
+                                    {med.reminderEnabled ? 'Enabled' : 'Disabled'}
+                                </TableCell>
                                 <TableCell>{med.dosage}</TableCell>
                                 <TableCell>{med.frequency}</TableCell>
                                 <TableCell>{med.time}</TableCell>
