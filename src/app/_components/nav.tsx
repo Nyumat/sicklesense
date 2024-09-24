@@ -45,10 +45,13 @@ export async function SiteHeader() {
                                         href: "/about",
                                     },
                                     {
-                                        title: "Contact",
-
-                                        href: "/contact",
+                                        title: "GitHub",
+                                        href: "https://github.com/nyumat/sicklesense",
                                     },
+                                    {
+                                        title: "DevPost",
+                                        href: "https://devpost.com/software/sicklesense",
+                                    }
                                 ]}
                             />
                         </div>
