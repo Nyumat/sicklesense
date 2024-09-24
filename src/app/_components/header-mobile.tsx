@@ -17,8 +17,8 @@ import { useMemo, useState } from 'react'
 const navItems = [
     { name: 'Home', href: '/' },
     { name: 'About', href: '/about' },
-    { name: 'Services', href: '#services' },
-    { name: 'Contact', href: '/contact' },
+    { name: 'GitHub', href: 'https://github.com/nyumat/sicklesense' },
+    { name: 'DevPost', href: 'https://devpost.com/software/sicklesense' },
 ]
 
 const loggedInNavItems = [
@@ -47,8 +47,8 @@ export function HeaderMobile({ session }: HeaderMobileProps) {
                         <span className="font-bold">SickleSense</span>
                     </Link>
                 </div>
-                <ModeToggle />
-                <div className="flex flex-1 items-center justify-end space-x-2">
+                <div className="flex flex-1 items-center justify-end space-x-2 gap-4">
+                    <ModeToggle />
                     <Sheet open={isOpen} onOpenChange={setIsOpen}>
                         <SheetTrigger asChild>
                             <Button
@@ -104,6 +104,7 @@ export function HeaderMobile({ session }: HeaderMobileProps) {
                                         >
                                             <Link
                                                 href={item.href}
+                                                target={item.href.startsWith('http') ? '_blank' : undefined}
                                                 className="flex items-center text-lg font-semibold"
                                                 onClick={() => setIsOpen(false)}
                                             >
