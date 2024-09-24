@@ -1,248 +1,261 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Post {
-    id          Int      @id @default(autoincrement())
-    name        String
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-    createdById String
-    createdBy   User     @relation(fields: [createdById], references: [id])
+  id          Int      @id @default(autoincrement())
+  name        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdById String
+  createdBy   User     @relation(fields: [createdById], references: [id])
 
-    @@index([name])
+  @@index([name])
 }
 
 model Account {
-    id                       String  @id @default(cuid())
-    userId                   String
-    type                     String
-    provider                 String
-    providerAccountId        String
-    refresh_token            String?
-    access_token             String?
-    expires_at               Int?
-    token_type               String?
-    scope                    String?
-    id_token                 String?
-    session_state            String?
-    refresh_token_expires_in Int?
-    user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                       String  @id @default(cuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String?
+  access_token             String?
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String?
+  session_state            String?
+  refresh_token_expires_in Int?
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@unique([provider, providerAccountId])
+  @@unique([provider, providerAccountId])
 }
 
 model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-    id              String          @id @default(cuid())
-    name            String?
-    email           String?         @unique
-    password        String?
-    emailVerified   DateTime?
-    image           String?
-    onboardingState Json?
-    accounts        Account[]
-    patientProfile  PatientProfile?
-    posts           Post[]
-    sessions        Session[]
+  id              String          @id @default(cuid())
+  name            String?
+  email           String?         @unique
+  password        String?
+  emailVerified   DateTime?
+  image           String?
+  onboardingState Json?
+  accounts        Account[]
+  patientProfile  PatientProfile?
+  posts           Post[]
+  sessions        Session[]
 }
 
 model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
+  identifier String
+  token      String   @unique
+  expires    DateTime
 
-    @@unique([identifier, token])
+  @@unique([identifier, token])
 }
 
 model PatientProfile {
-    id                       String                   @id @default(cuid())
-    userId                   String                   @unique
-    dateOfBirth              DateTime?
-    sickleCellType           SickleCellType?
-    Genotype                 SCDGenotype?
-    diagnosisDate            DateTime?
-    complications            String[]
-    otherMedicalConditions   String[]
-    medications              Medication[]
-    hydroxyureaUsage         Boolean?
-    bloodTransfusionHistory  String?
-    painManagementStrategies String[]
-    occupation               String?
-    physicalActivityLevel    CheckLevel?
-    dietaryHabits            String[]
-    smokingStatus            String?
-    alcoholConsumption       String?
-    location                 String?
-    homeEnvironment          String[]
-    travelFrequency          String?
-    knownTriggerEvents       TriggerEvent[]
-    allergies                String[]
-    emergencyContact         Json?
-    primaryCarePhysician     String?
-    hematologistContact      String?
-    sleepPatterns            SleepPattern?
-    energyLevels             CheckLevel?
-    painLevel                PainLevel?
-    moodAssessment           MoodAssessment?
-    shortTermGoals           String[]
-    longTermGoals            String[]
-    communicationPreference  CommunicationPreference?
-    clinicalTrialInterest    Boolean?
-    dataShareConsent         Boolean?
-    createdAt                DateTime                 @default(now())
-    updatedAt                DateTime                 @updatedAt
-    gender                   Gender?
-    healthMetrics            HealthMetric[]
-    symptoms                 Symptom[]
-    appointments             Appointment[]
-    user                     User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
-    physicians               CareTeam[]
+  id                       String                   @id @default(cuid())
+  userId                   String                   @unique
+  dateOfBirth              DateTime?
+  sickleCellType           SickleCellType?
+  Genotype                 SCDGenotype?
+  diagnosisDate            DateTime?
+  complications            String[]
+  otherMedicalConditions   String[]
+  medications              Medication[]
+  hydroxyureaUsage         Boolean?
+  bloodTransfusionHistory  String?
+  painManagementStrategies String[]
+  occupation               String?
+  physicalActivityLevel    CheckLevel?
+  dietaryHabits            String[]
+  smokingStatus            String?
+  alcoholConsumption       String?
+  location                 String?
+  homeEnvironment          String[]
+  travelFrequency          String?
+  knownTriggerEvents       TriggerEvent[]
+  allergies                String[]
+  emergencyContact         Json?
+  primaryCarePhysician     String?
+  hematologistContact      String?
+  sleepPatterns            SleepPattern?
+  energyLevels             CheckLevel?
+  painLevel                PainLevel?
+  moodAssessment           MoodAssessment?
+  shortTermGoals           String[]
+  longTermGoals            String[]
+  communicationPreference  CommunicationPreference?
+  clinicalTrialInterest    Boolean?
+  dataShareConsent         Boolean?
+  createdAt                DateTime                 @default(now())
+  updatedAt                DateTime                 @updatedAt
+  gender                   Gender?
+  healthMetrics            HealthMetric[]
+  symptoms                 Symptom[]
+  appointments             Appointment[]
+  user                     User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  physicians               CareTeam[]
 }
 
 model HealthMetric {
-    id               String         @id @default(cuid())
-    patientProfileId String
-    date             DateTime
-    painLevel        PainLevel
-    medication       String?
-    triggerEvent     TriggerEvent?
-    notes            String?
-    createdAt        DateTime       @default(now())
-    updatedAt        DateTime       @updatedAt
-    patientProfile   PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
+  id               String         @id @default(cuid())
+  patientProfileId String
+  date             DateTime
+  painLevel        PainLevel
+  medication       String?
+  triggerEvent     TriggerEvent?
+  notes            String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  patientProfile   PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
 }
 
 model Symptom {
-    id               String         @id @default(cuid())
-    patientProfileId String
-    name             String
-    severity         Int
-    date             DateTime       @default(now())
-    createdAt        DateTime       @default(now())
-    updatedAt        DateTime       @updatedAt
-    patientProfile   PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
+  id               String         @id @default(cuid())
+  patientProfileId String
+  name             String
+  severity         Int
+  date             DateTime       @default(now())
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  patientProfile   PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
 }
 
 model Appointment {
-    id               String         @id @default(cuid())
-    patientProfileId String
-    date             DateTime
-    doctor           String
-    type             String
-    title            String
-    notes            String?
-    createdAt        DateTime       @default(now())
-    updatedAt        DateTime       @updatedAt
-    patientProfile   PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
+  id               String         @id @default(cuid())
+  patientProfileId String
+  date             DateTime
+  doctor           String
+  type             String
+  title            String
+  notes            String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  patientProfile   PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
 }
 
 model Physician {
-    id        String     @id @default(cuid())
-    userId    String     @unique
-    name      String
-    email     String
-    phone     String
-    location  String
-    specialty String
-    createdAt DateTime   @default(now())
-    updatedAt DateTime   @updatedAt
-    CareTeam  CareTeam[]
+  id        String     @id @default(cuid())
+  userId    String     @unique
+  name      String
+  email     String
+  phone     String
+  location  String
+  specialty String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  CareTeam  CareTeam[]
 }
 
 model CareTeam {
-    id          String         @id @default(cuid())
-    patientId   String
-    physicianId String
-    createdAt   DateTime       @default(now())
-    updatedAt   DateTime       @updatedAt
-    patient     PatientProfile @relation(fields: [patientId], references: [id], onDelete: Cascade)
-    physician   Physician      @relation(fields: [physicianId], references: [id], onDelete: Cascade)
+  id          String         @id @default(cuid())
+  patientId   String
+  physicianId String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  patient     PatientProfile @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  physician   Physician      @relation(fields: [physicianId], references: [id], onDelete: Cascade)
 }
 
 model Medication {
-    id               String          @id @default(cuid())
-    name             String
-    dosage           String
-    frequency        String
-    time             String
-    createdAt        DateTime        @default(now())
-    updatedAt        DateTime        @updatedAt
-    PatientProfile   PatientProfile? @relation(fields: [patientProfileId], references: [id])
-    patientProfileId String?
+  id               String          @id @default(cuid())
+  name             String
+  dosage           String
+  frequency        String
+  time             String
+  order           Int      @default(0)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  PatientProfile   PatientProfile? @relation(fields: [patientProfileId], references: [id])
+  patientProfileId String?
+  MedicationLog    MedicationLog[]
+}
+
+model MedicationLog {
+  id           String     @id @default(cuid())
+  medicationId String
+  order           Int      @default(0)
+  medication   Medication @relation(fields: [medicationId], references: [id])
+  date         DateTime
+  taken        Boolean
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }
 
 enum SickleCellType {
-    AA
-    AS
-    SS
-    AC
-    SC
+  AA
+  AS
+  SS
+  AC
+  SC
 }
 
 enum SCDGenotype {
-    SCA
-    SCT
+  SCA
+  SCT
 }
 
 enum TriggerEvent {
-    Stress
-    Infection
-    Dehydration
-    Cold
-    Heat
-    Exercise
-    Other
+  Stress
+  Infection
+  Dehydration
+  Cold
+  Heat
+  Exercise
+  Other
 }
 
 enum PainLevel {
-    None
-    Mild
-    Moderate
-    Severe
+  None
+  Mild
+  Moderate
+  Severe
 }
 
 enum MoodAssessment {
-    Happy
-    Sad
-    Angry
-    Anxious
-    Depressed
-    Other
+  Happy
+  Sad
+  Angry
+  Anxious
+  Depressed
+  Other
 }
 
 enum CommunicationPreference {
-    Email
-    Phone
-    SMS
-    Other
+  Email
+  Phone
+  SMS
+  Other
 }
 
 enum SleepPattern {
-    Good
-    Poor
+  Good
+  Poor
 }
 
 enum CheckLevel {
-    High
-    Moderate
-    Low
+  High
+  Moderate
+  Low
 }
 
 enum Gender {
-    Male
-    Female
-    Other
+  Male
+  Female
+  Other
 }
