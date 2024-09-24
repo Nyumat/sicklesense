@@ -169,13 +169,13 @@ export function HeroSection({ session }: HeroSectionProps) {
                         className="mt-12 w-full max-w-3xl mx-auto relative"
                     >
                         <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg blur-3xl opacity-50 -z-10" />
-                        <Slider {...carouselSettings} className="scale-90 md:scale-100">
+                        <Slider {...carouselSettings} className="scale-90 md:scale-100 relative z-10">
                             {images.map((image, index) => (
                                 <div key={index} className="outline-none">
                                     <Image
                                         src={image.dark}
                                         alt={image.alt}
-                                        className="w-full h-auto rounded-lg shadow-lg z-50 p-2 border-2 border-accent/20 bg-background aspect-w-16 aspect-h-9"
+                                        className="w-full h-autoed-lg shadow-lg z-50 p-2 border-2 border-accent/20 bg-background aspect-w-16 aspect-h-9"
                                         width={1920}
                                         height={1080}
                                     />

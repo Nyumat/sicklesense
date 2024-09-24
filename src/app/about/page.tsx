@@ -10,7 +10,7 @@ export default function About() {
     return (
         <>
             <SiteHeader />
-            <div className="container mx-auto px-4 mt-24 py-16 max-w-3xl font-light">
+            <div className="container mx-auto px-4 md:mt-12 py-16 max-w-3xl font-light">
                 <header className="mb-16 text-center">
                     <Image
                         className="rounded-full mx-auto mb-6 w-44 h-auto"
@@ -33,37 +33,13 @@ export default function About() {
                         <br />
                         <br />
                         I created SickleSense to help people just like me better understand their health and improve their quality of life.
-                        I'm excited to see how this project grows and the impact it has on the sickle cell community, thanks for stopping by!
+                        I'm excited to see how this project grows and the impact it has on the sickle cell community, so thanks for stopping by!
                         <br />
                         <br />
                         I'm passionate about building products that make a difference in people's lives; more recently, those leveraging A.I. My favorite contributions are to socially good projects that help others.
                         <br />
                         <br />
                         A friend of mine informed me about the Afrotech AI Hackathon and I decided to participate in it. I'm excited to see how this project grows and the impact it has on the sickle cell community, thanks for stopping by!
-                    </p>
-                </section>
-                <section className="mb-16">
-                    <h2 className="text-2xl font-semibold mb-4">Why?</h2>
-                    <p className="text-lg text-muted-foreground">
-                        Sickle cell disease is a genetic blood disorder that affects millions of people worldwide. It can cause severe pain, organ damage, and other complications that can be life-threatening.
-                        <br />
-                        <br />
-                        Managing sickle cell disease can be challenging, especially when it comes to tracking symptoms, medications, and appointments. SickleSense aims to make this process easier by providing a centralized platform for patients to monitor their health and communicate with their healthcare providers.
-                        <br />
-                        <br />
-                        The idea for SickleSense was born when I realized that I have trouble remembering the details of when I took my Hydroxyurea medication, which is crucial for managing my sickle cell disease.
-                        <br />
-                        <br />
-                        By creating a digital health journal that's easy to use and accessible from anywhere, I hope to empower sickle cell patients to take control of their health and live their best lives.
-                        <br />
-                        <br />
-                        Cheers to a healthier future for <i>
-                            all{" "}
-                        </i>{"  "}sickle cell patients! 🩸💉
-                        
-                        <br />
-                        <br />  
-                        - Nyuma
                     </p>
                 </section>
                 <section className="mb-16">
