@@ -1,3 +1,5 @@
+/* @ts-nocheck */
+
 import { Button, buttonVariants } from '@/components/ui/button';
 import type { CalendarProps } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
@@ -256,6 +258,7 @@ function Calendar({
             classNames={{
                 months: 'flex flex-col sm:flex-row space-y-4  sm:space-y-0 justify-center',
                 month: 'flex flex-col items-center space-y-4',
+                // @ts-expect-error - `https://github.com/shadcn-ui/ui/issues/546`
                 month_caption: 'flex justify-center pt-1 relative items-center',
                 caption_label: 'text-sm font-medium',
                 nav: 'space-x-1 flex items-center ',
@@ -288,6 +291,7 @@ function Calendar({
                 ...classNames,
             }}
             components={{
+                // @ts-expect-error - `https://github.com/shadcn-ui/ui/issues/546`
                 Chevron: ({ ...props }) =>
                     props.orientation === 'left' ? (
                         <ChevronLeft className="h-4 w-4" />
