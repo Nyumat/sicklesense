@@ -1,14 +1,16 @@
 # SickleSense
 
-**SickleSense** is a web application designed to empower individuals with sickle cell disease (SCD) by providing AI-driven care insights, real-time support, and a community of patients, caregivers, and healthcare professionals.
+![Sickle Sense Landing Page](/public/preview.png)
+
+**SickleSense** is a web application designed to empower individuals with sickle cell disease (SCD) by providing AI-driven care insights, real-time support, through a community-driven platform.
 
 ## 🚀 Features
 
-- **AI-Driven Health Insights**: Personalized recommendations, symptom tracking, and crisis alerts powered by OpenAI and Google Gemini.
-- **Medication and Care Plan Management**: Create and manage care plans, medication reminders, and doctor appointments with ease.
-- **Community Support**: Join support groups and chat with other patients, caregivers, and medical professionals.
-- **Crisis Alerts**: Get real-time notifications for potential health crises based on symptom logs and AI predictions.
-- **Personalized Resources**: Access articles, videos, and tips tailored to your specific health needs.
+- **AI-Driven Insights**: Get personalized care insights and recommendations based on your health data and medical history.
+- **Community Support**: Connect with others in the SCD community, share experiences, and find support.
+- **Real-Time Monitoring**: Track your health vitals and receive alerts when your vitals are outside of normal ranges.
+- **RAG Consultation**: Get on-demand consultations with a chatbot that knows your medical history and can provide immediate care advice.
+- **Medication Reminders**: Set reminders for your medications and receive SMS notifications when it's time to take them.
 
 ## 🛠 Tech Stack
 
@@ -88,15 +90,22 @@ Then visit http://localhost:3000 to view SickleSense in your browser.
 .
 ├── public                   # Static assets
 ├── src                      # Application source code
-│   ├── components           # Reusable components (UI elements, forms, etc.)
-│   ├── pages                # Next.js pages (each file represents a route)
-│   ├── prisma               # Prisma schema and database client
-│   ├── styles               # TailwindCSS configurations
-│   └── utils                # Utility functions and helpers
-├── .env.example             # Environment variables example file
-├── .eslintrc.cjs            # ESLint configuration
-├── docker-compose.yml       # Docker setup for local database
+│   ├── app                  # Next.js pages and routing
+│   ├── components           # Reusable UI components
+│   ├── hooks                # Custom React hooks
+│   ├── lib                  # Utility functions and libraries
+│   ├── server               # Server-side code
+│   ├── styles               # CSS and styling files
+│   └── trpc                 # tRPC API routes and configurations
+├── .env                     # Environment variables
+├── .env.example             # Example environment variables
+├── .eslintrc.js             # ESLint configuration
+├── .gitignore               # Git ignore rules
+├── docker-compose.yml       # Docker configuration for services
+├── next.config.js           # Next.js configuration
 ├── package.json             # Project dependencies and scripts
+├── tailwind.config.ts       # Tailwind CSS configuration
+├── tsconfig.json            # TypeScript configuration
 └── README.md                # Project documentation
 ```
 
