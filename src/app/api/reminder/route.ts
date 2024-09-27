@@ -1,5 +1,9 @@
 export const dynamic = "force-dynamic"; // static by default, unless reading the request
+// import { medicationReminder } from "@/trigger/medication-reminder";
+// import { tasks } from "@trigger.dev/sdk/v3";
+import { NextResponse } from "next/server";
+
 
 export function GET(request: Request) {
-  return new Response(`Hello from ${process.env.VERCEL_REGION}`);
+    return NextResponse.json({ message: "Hello World" });
 }
