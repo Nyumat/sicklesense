@@ -52,6 +52,8 @@ model User {
   password        String?
   emailVerified   DateTime?
   image           String?
+  country         String?
+  timezone        String?
   onboardingState Json?
   accounts        Account[]
   patientProfile  PatientProfile?
@@ -177,7 +179,7 @@ model Medication {
   name             String
   dosage           String
   frequency        String
-  time             String
+  time             String?
   order            Int             @default(0)
   reminderEnabled  Boolean         @default(false)
   reminderFrequency String?
