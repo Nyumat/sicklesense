@@ -1,6 +1,5 @@
-"use client"
-
 import { CreateAppointment } from "../dashboard/(helper)/appointments"
+import { CreateSymptom } from "../dashboard/(helper)/symptoms"
 import { HealthMetrics } from "./(helper)/health-metrics"
 import { MedicationLogger } from "./(helper)/medication-logger"
 import { MedicationTable } from "./(helper)/medication-table"
@@ -16,6 +15,7 @@ export function MedicationTracker() {
             <div className="my-8 space-y-8">
                 <CreateAppointment />
                 <HealthMetrics />
+                <CreateSymptom />
             </div>
         </div>
     )

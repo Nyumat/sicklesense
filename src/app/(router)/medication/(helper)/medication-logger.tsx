@@ -25,14 +25,14 @@ export function MedicationLogger() {
     const [selectedDate, setSelectedDate] = useState(startOfToday());
 
     const utils = api.useUtils();
-    const getMedications = api.users.getMedications.useQuery();
-    const getMedicationLogs = api.users.getMedicationLogs.useQuery({
+    const getMedications = api.medication.getMedications.useQuery();
+    const getMedicationLogs = api.medication.getMedicationLogs.useQuery({
         startDate: startOfWeek(selectedDate),
         endDate: endOfWeek(selectedDate),
     });
-    const logMedicationMutation = api.users.logMedication.useMutation({
+    const logMedicationMutation = api.medication.logMedication.useMutation({
         onSuccess: () => {
-            utils.users.getMedicationLogs.invalidate();
+            utils.medication.getMedicationLogs.invalidate();
         },
     });
 

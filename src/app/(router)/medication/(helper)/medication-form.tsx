@@ -45,7 +45,7 @@ export function MedicationFormDialog() {
     const [isAddMedicationOpen, setIsAddMedicationOpen] = useState(false);
 
     const utils = api.useUtils();
-    const addMedicationMutation = api.users.addMedication.useMutation();
+    const addMedicationMutation = api.medication.addMedication.useMutation();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -65,8 +65,7 @@ export function MedicationFormDialog() {
     const onSubmit = (data: MedicationFormValues) => {
         addMedicationMutation.mutate(data, {
             onSuccess: () => {
-                utils.users.getMedications.invalidate();
-                utils.users.getMedicationLogs.invalidate();
+                utils.medication.invalidate();
                 setIsAddMedicationOpen(false);
                 form.reset();
             },

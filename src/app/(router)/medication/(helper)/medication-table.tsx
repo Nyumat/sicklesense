@@ -15,10 +15,10 @@ export function MedicationTable() {
     const utils = api.useUtils();
     const [isLayoutUnlocked, setLayoutUnlocked] = useState(false);
     const [medications, setMedications] = useState<Omit<Medication, 'PatientProfileId'>[]>([]);
-    const getMedications = api.users.getMedications.useQuery();
-    const removeMedicationMutation = api.users.removeMedication.useMutation({
+    const getMedications = api.medication.getMedications.useQuery();
+    const removeMedicationMutation = api.medication.removeMedication.useMutation({
         onSuccess: () => {
-            utils.users.getMedications.invalidate();
+            utils.medication.getMedications.invalidate();
         },
     });
     const removeMedication = (id: string) => {
@@ -27,9 +27,9 @@ export function MedicationTable() {
         }
     };
 
-    const reorderMedicationsMutation = api.users.reorderMedications.useMutation({
+    const reorderMedicationsMutation = api.medication.reorderMedications.useMutation({
         onSuccess: () => {
-            utils.users.getMedications.invalidate();
+            utils.medication.getMedications.invalidate();
         },
     });
 
