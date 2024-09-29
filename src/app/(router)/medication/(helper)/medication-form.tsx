@@ -30,7 +30,7 @@ const formSchema = z.object({
     name: z.string().min(1, "Medication name is required"),
     dosage: z.string().min(1, "Dosage is required"),
     frequency: z.string().min(1, "Frequency is required"),
-    time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format"),
+    time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format").optional(),
     reminderEnabled: z.boolean(),
     reminderDetails: z.object({
         reminderFrequency: z.string().optional(),
@@ -45,7 +45,7 @@ export function MedicationFormDialog() {
     const [isAddMedicationOpen, setIsAddMedicationOpen] = useState(false);
 
     const utils = api.useUtils();
-    const addMedicationMutation = api.users.addMedication.useMutation();
+    const addMedicationMutation = api.medication.addMedication.useMutation();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -65,8 +65,7 @@ export function MedicationFormDialog() {
     const onSubmit = (data: MedicationFormValues) => {
         addMedicationMutation.mutate(data, {
             onSuccess: () => {
-                utils.users.getMedications.invalidate();
-                utils.users.getMedicationLogs.invalidate();
+                utils.medication.invalidate();
                 setIsAddMedicationOpen(false);
                 form.reset();
             },

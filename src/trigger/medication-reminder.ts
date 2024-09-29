@@ -5,16 +5,9 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const resend = new Resend(process.env.RESEND);
 
-export const medicationReminder = task({
+export const medicationReminder = schedules.task({
   id: "medication-reminder",
-    run: async (payload: { 
-        userId: string;
-        email: string;
-        name: string;
-        timestamp: Date;
-        timezone: string;
-        lastTimestamp?: Date;
-  }) => {
+    run: async (payload) => {
     const { data, error } = await resend.emails.send({
       from: "Tom Nyuma <nyuma@nextjudge.org>",
       to: ["nyumat18@gmail.com"],

@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -23,16 +24,16 @@ import {
 import { useState } from "react";
 
 export function CreateSymptom() {
-    const [symptoms] = api.users.symptoms.useSuspenseQuery();
+    const [symptoms] = api.symptom.symptoms.useSuspenseQuery();
     const utils = api.useUtils();
-    const [isAddSymptomOpen, setIsAddSymptomOpen] = useState(false)
-    const [newSymptom, setNewSymptom] = useState<Omit<Symptom, 'id' | 'date' | 'createdAt' | 'updatedAt' | 'patientProfileId'>>({ name: '', severity: 0 })
-    const mutation = api.users.addSymptom.useMutation({
+    const mutation = api.symptom.addSymptom.useMutation({
         onSuccess: async () => {
-            await utils.users.symptoms.invalidate();
+            await utils.symptom.invalidate();
             setIsAddSymptomOpen(false)
         }
     });
+    const [isAddSymptomOpen, setIsAddSymptomOpen] = useState(false)
+    const [newSymptom, setNewSymptom] = useState<Omit<Symptom, 'id' | 'date' | 'createdAt' | 'updatedAt' | 'patientProfileId'>>({ name: '', severity: 0 })
     
     return (
         <>
