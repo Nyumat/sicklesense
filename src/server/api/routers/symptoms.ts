@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 import {
-  createTRPCRouter,
-  protectedProcedure,
+    createTRPCRouter,
+    protectedProcedure,
 } from "@/server/api/trpc";
 
 export const symptomsRouter = createTRPCRouter({
@@ -15,10 +15,6 @@ export const symptomsRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session?.user.id;
-      if (!userId) {
-        throw new Error("Unauthorized");
-      }
-
       const n_symptom = await ctx.db.symptom.create({
         data: {
           name: input.name,
@@ -36,21 +32,12 @@ export const symptomsRouter = createTRPCRouter({
     }),
     symptoms: protectedProcedure.query(async ({ ctx }) => {
         const userId = ctx.session?.user.id;
-        if (!userId) {
-            return [];
-        }
-    
-        const symptoms = await ctx.db.symptom.findMany({
+        return await ctx.db.symptom.findMany({
             where: {
-            patientProfile: {
-                userId,
-            },
-            },
-            orderBy: {
-            createdAt: "desc",
-            },
+                patientProfile: {
+                    userId,
+                },
+            }
         });
-    
-        return symptoms;
     }),
 });

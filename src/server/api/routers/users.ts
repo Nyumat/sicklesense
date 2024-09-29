@@ -1,4 +1,3 @@
-import { CompleteOnboarding } from "@/app/auth/onboarding/_sub";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { Gender, SickleCellType } from "@prisma/client";
 import bcrypt from "bcrypt";
@@ -54,9 +53,6 @@ export const userRouter = createTRPCRouter({
     }),
   personalInfo: publicProcedure.query(async ({ ctx }) => {
     const userId = ctx.session?.user.id;
-    if (!userId) {
-      return null;
-    }
     const userPersonalInformation = await ctx.db.user.findUnique({
       where: { id: userId },
       select: {
@@ -83,7 +79,7 @@ export const userRouter = createTRPCRouter({
       select: { onboardingState: true },
     });
 
-    const state = user?.onboardingState as CompleteOnboarding | null;
+      const state = user?.onboardingState as any;
 
     return !!state?.step && state.step >= 3;
   }),
