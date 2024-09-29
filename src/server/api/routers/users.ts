@@ -1,7 +1,10 @@
 import { CompleteOnboarding } from "@/app/auth/onboarding/_sub";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { reminderTask } from "@/trigger/reminder";
 import { Gender, SickleCellType } from "@prisma/client";
+import { schedules } from "@trigger.dev/sdk/v3";
 import bcrypt from "bcrypt";
+import { CronTime } from "cron-time-generator";
 import { z } from "zod";
 
 export const userRouter = createTRPCRouter({
@@ -183,10 +186,6 @@ export const userRouter = createTRPCRouter({
   }),
   me: publicProcedure.query(async ({ ctx }) => {
     const userId = ctx.session?.user.id;
-    if (!userId) {
-      return null;
-    }
-
     const user = await ctx.db.user.findUnique({
       where: { id: userId },
       select: {
@@ -228,9 +227,6 @@ export const userRouter = createTRPCRouter({
     }),
   symptoms: publicProcedure.query(async ({ ctx }) => {
     const userId = ctx.session?.user.id;
-    if (!userId) {
-      return [];
-    }
     const _ = await ctx.db.user.findUnique({
       where: { id: userId },
       select: {
@@ -241,24 +237,24 @@ export const userRouter = createTRPCRouter({
         },
       },
     });
-
-    if (!_?.patientProfile?.id) {
-      return [];
-    }
-    try {
-      const symptoms = await ctx.db.symptom.findMany({
-        where: {
-          patientProfileId: _.patientProfile?.id,
-        },
-        orderBy: {
-          date: "desc",
-        },
-      });
-      return symptoms;
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
+      if (_) {
+          try {
+              const symptoms = await ctx.db.symptom.findMany({
+                  where: {
+                      patientProfileId: _.patientProfile?.id,
+                  },
+                  orderBy: {
+                      date: "desc",
+                  },
+              });
+              return symptoms;
+          } catch (error) {
+              console.error(error);
+              return [];
+          }
+      } else {
+          return [];
+      }
   }),
   updatePersonalInfo: publicProcedure
     .input(
@@ -388,7 +384,7 @@ export const userRouter = createTRPCRouter({
         name: z.string(),
         dosage: z.string(),
         frequency: z.string(),
-        time: z.string(),
+        time: z.string().optional(),    
         reminderEnabled: z.boolean(),
         reminderDetails: z
           .object({
@@ -412,7 +408,7 @@ export const userRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session?.user.id;
-
+      let reminder;
       if (!userId) {
         throw new Error("Unauthorized");
       }
@@ -435,9 +431,51 @@ export const userRouter = createTRPCRouter({
         },
       });
 
+      const frequencyTimeToCron = (
+        frequency: "daily" | "weekly" | "monthly",
+        time: Date,
+      ) => {
+        const hour = time.getHours();
+        const minute = time.getMinutes();
+
+        switch (frequency) {
+          case "daily":
+            return CronTime.everyDayAt(hour, minute);
+          case "weekly":
+            return CronTime.everyWeekAt([time.getDay()], hour, minute);
+          case "monthly":
+            return CronTime.everyMonthOn([time.getDate()], hour, minute);
+          default:
+            throw new Error("Unsupported frequency");
+        }
+      };
+
+      if (newMedication.reminderEnabled && reminderDetails) {
+        const parsedFrequency = reminderDetails.reminderFrequency
+          ?.toLowerCase()
+          .includes("daily")
+          ? "daily"
+          : reminderDetails.reminderFrequency?.includes("weekly")
+            ? "weekly"
+            : reminderDetails.reminderFrequency?.includes("monthly")
+              ? "monthly"
+              : "daily";
+
+        const cron = frequencyTimeToCron(
+          parsedFrequency,
+          newMedication.reminderTime as Date,
+        );
+
+        reminder = await schedules.create({
+          task: reminderTask.id,
+          externalId: userId,
+          cron,
+          deduplicationKey: `medication-reminder-${newMedication.id}-${userId}`,
+        });
+      }
+
       return newMedication;
     }),
-
   getMedications: publicProcedure.query(async ({ ctx }) => {
     const userId = ctx.session?.user.id;
     if (!userId) {

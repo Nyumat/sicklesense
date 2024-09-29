@@ -7,7 +7,7 @@ export default async function OnboardingPage() {
   const session = await getServerAuthSession();
   const userId = session?.user?.id ?? "";
   const isOnboarded = await api.users.isOnboarded();
-  if (isOnboarded) {
+  if (isOnboarded && true === false) {
     redirect("/dashboard");
   }
   return (

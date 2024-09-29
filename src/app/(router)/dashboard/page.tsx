@@ -1,5 +1,5 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { Greeting } from "@/app/(router)/dashboard/(helper)/greeting";
 import { ContentLayout } from "@/app/_components/admin-panel/content-layout";
 import { NotificationButton } from "@/app/_components/admin-panel/notification-button";
@@ -16,17 +16,10 @@ import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
-    CardTitle,
+    CardTitle
 } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { cn } from "@/lib/utils";
-import { addDays, eachDayOfInterval, endOfWeek, format, isSameDay, startOfToday, startOfWeek } from "date-fns";
 import {
     Activity,
     Bell,
@@ -34,56 +27,17 @@ import {
     Droplet,
     Mail,
     PenSquare,
-    Plus,
     Search,
-    ThermometerSun,
+    ThermometerSun
 } from "lucide-react";
 import Link from "next/link";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect } from "react";
+import { CreateSymptom } from "./(helper)/symptoms";
 import { TourDisplay } from "./(helper)/tour-display";
 import tour from "./(helper)/tour-producer";
-import { CreateSymptom } from "./(helper)/symptoms";
-import { api } from "@/trpc/react";
-
-interface Medication {
-    id: number;
-    name: string;
-    dosage: string;
-    frequency: string;
-    time: string;
-}
-
-interface LogEntry {
-    id: number;
-    medicationId: number;
-    date: Date;
-    taken: boolean;
-}
-
-interface Symptom {
-    id: number;
-    name: string;
-    severity: number;
-    date: Date;
-}
-
-interface Appointment {
-    id: number;
-    title: string;
-    date: Date;
-    doctor: string;
-}
-
-interface HealthMetric {
-    date: string;
-    painLevel: number;
-    fatigueLevel: number;
-    hydrationLevel: number;
-}
 
 export default function DashboardPage() {
     const ctx = tour.useContext()
-    const serverSymptoms = api.users.symptoms.useQuery().data ?? []
     useEffect(() => {
         const tour = localStorage.getItem("tour")
         if (!tour) {
@@ -105,89 +59,6 @@ export default function DashboardPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const [medications, setMedications] = useState<Medication[]>([
-        { id: 1, name: "Hydroxyurea", dosage: "500mg", frequency: "Daily", time: "08:00" },
-        { id: 2, name: "Folic Acid", dosage: "1mg", frequency: "Daily", time: "20:00" },
-    ])
-    const [logs, setLogs] = useState<LogEntry[]>([])
-    const [symptoms, setSymptoms] = useState<Symptom[]>([])
-    const [appointments, setAppointments] = useState<Appointment[]>([
-        { id: 1, title: "Hematologist Check-up", date: addDays(new Date(), 7), doctor: "Dr. Smith" },
-        { id: 2, title: "Pain Management", date: addDays(new Date(), 14), doctor: "Dr. Johnson" },
-    ])
-    const [selectedDate, setSelectedDate] = useState<Date | undefined>(startOfToday())
-    const [isAddMedicationOpen, setIsAddMedicationOpen] = useState(false)
-    const [isAddSymptomOpen, setIsAddSymptomOpen] = useState(false)
-    const [isAddAppointmentOpen, setIsAddAppointmentOpen] = useState(false)
-    const [newMedication, setNewMedication] = useState<Omit<Medication, 'id'>>({
-        name: '',
-        dosage: '',
-        frequency: 'Daily',
-        time: '',
-    })
-    const [newSymptom, setNewSymptom] = useState<Omit<Symptom, 'id' | 'date'>>({
-        name: '',
-        severity: 0,
-    })
-    const [newAppointment, setNewAppointment] = useState<Omit<Appointment, 'id'>>({
-        title: '',
-        date: new Date(),
-        doctor: '',
-    })
-
-    const healthMetrics: HealthMetric[] = [
-        { date: "2023-06-01", painLevel: 3, fatigueLevel: 4, hydrationLevel: 7 },
-        { date: "2023-06-02", painLevel: 2, fatigueLevel: 3, hydrationLevel: 8 },
-        { date: "2023-06-03", painLevel: 4, fatigueLevel: 5, hydrationLevel: 6 },
-        { date: "2023-06-04", painLevel: 3, fatigueLevel: 4, hydrationLevel: 7 },
-        { date: "2023-06-05", painLevel: 2, fatigueLevel: 3, hydrationLevel: 9 },
-        { date: "2023-06-06", painLevel: 1, fatigueLevel: 2, hydrationLevel: 8 },
-        { date: "2023-06-07", painLevel: 3, fatigueLevel: 4, hydrationLevel: 7 },
-    ]
-
-    const addMedication = () => {
-        if (newMedication.name && newMedication.dosage && newMedication.time) {
-            setMedications([...medications, { ...newMedication, id: Date.now() }])
-            setIsAddMedicationOpen(false)
-            setNewMedication({ name: '', dosage: '', frequency: 'Daily', time: '' })
-        }
-    }
-
-    const removeMedication = (id: number) => {
-        setMedications(medications.filter(med => med.id !== id))
-        setLogs(logs.filter(log => log.medicationId !== id))
-    }
-
-    const toggleMedicationTaken = (medicationId: number, date: Date) => {
-        const existingLog = logs.find(log => log.medicationId === medicationId && isSameDay(log.date, date))
-        if (existingLog) {
-            setLogs(logs.map(log =>
-                log.id === existingLog.id ? { ...log, taken: !log.taken } : log
-            ))
-        } else {
-            setLogs([...logs, { id: Date.now(), medicationId, date, taken: true }])
-        }
-    }
-
-    const addSymptom = () => {
-        if (newSymptom.name && newSymptom.severity) {
-            setSymptoms([...symptoms, { ...newSymptom, id: Date.now(), date: new Date() }])
-            setIsAddSymptomOpen(false)
-            setNewSymptom({ name: '', severity: 0 })
-        }
-    }
-
-    const addAppointment = () => {
-        if (newAppointment.title && newAppointment.date && newAppointment.doctor) {
-            setAppointments([...appointments, { ...newAppointment, id: Date.now() }])
-            setIsAddAppointmentOpen(false)
-            setNewAppointment({ title: '', date: new Date(), doctor: '' })
-        }
-    }
-
-    const weekStart = startOfWeek(selectedDate || startOfToday())
-    const weekEnd = endOfWeek(selectedDate || startOfToday())
-    const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd })
     const summaryText = `As of today's date, your hemoglobin levels are stable. Remember to stay hydrated and
             take your Folic Acid and Hydroxyurea doses today. If you experience any
             symptoms, please contact Dr. Levi, the hematologist we've pulled from your records on SickleSense.`;
@@ -427,7 +298,7 @@ export default function DashboardPage() {
                 </Card>
                 <Suspense fallback={<div>Loading...</div>}>
                     <CreateSymptom />
-                    </Suspense>
+                </Suspense>
             </ContentLayout>
         </>
     );

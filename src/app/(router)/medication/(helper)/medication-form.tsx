@@ -30,7 +30,7 @@ const formSchema = z.object({
     name: z.string().min(1, "Medication name is required"),
     dosage: z.string().min(1, "Dosage is required"),
     frequency: z.string().min(1, "Frequency is required"),
-    time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format"),
+    time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format").optional(),
     reminderEnabled: z.boolean(),
     reminderDetails: z.object({
         reminderFrequency: z.string().optional(),
