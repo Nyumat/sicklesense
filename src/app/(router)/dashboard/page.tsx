@@ -32,7 +32,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Suspense, useEffect } from "react";
-import { CreateSymptom } from "./(helper)/symptoms";
 import { TourDisplay } from "./(helper)/tour-display";
 import tour from "./(helper)/tour-producer";
 
@@ -297,7 +296,7 @@ export default function DashboardPage() {
                     </CardContent>
                 </Card>
                 <Suspense fallback={<div>Loading...</div>}>
-                    <CreateSymptom />
+                    {/* <CreateSymptom /> */}
                 </Suspense>
             </ContentLayout>
         </>

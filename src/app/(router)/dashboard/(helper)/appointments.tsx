@@ -29,11 +29,11 @@ const appointmentSchema = z.object({
 type AppointmentFormValues = z.infer<typeof appointmentSchema>
 
 export function CreateAppointment() {
-    const [appointments] = api.users.appointments.useSuspenseQuery();
-    const utils = api.useUtils();
     const [isAddAppointmentOpen, setIsAddAppointmentOpen] = useState(false)
     const [selectedAppointment, setSelectedAppointment] = useState<AppointmentFormValues | null>(null)
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+    const appointments = api.appointment.appointments.useQuery().data ?? [];
+    const utils = api.useUtils();
 
     const openAppointmentDetails = (appointmentId: string) => {
         const appointment = appointments.find((a) => a.id === appointmentId);
@@ -56,9 +56,9 @@ export function CreateAppointment() {
         },
     })
 
-    const mutation = api.users.addAppointment.useMutation({
+    const mutation = api.appointment.addAppointment.useMutation({
         onSuccess: async () => {
-            await utils.users.appointments.invalidate();
+            await utils.appointment.invalidate();
             setIsAddAppointmentOpen(false)
             form.reset()
         }

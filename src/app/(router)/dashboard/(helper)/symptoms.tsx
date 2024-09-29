@@ -24,11 +24,11 @@ import {
 import { useState } from "react";
 
 export function CreateSymptom() {
-    const [symptoms] = api.users.symptoms.useSuspenseQuery();
+    const [symptoms] = api.symptom.symptoms.useSuspenseQuery();
     const utils = api.useUtils();
-    const mutation = api.users.addSymptom.useMutation({
+    const mutation = api.symptom.addSymptom.useMutation({
         onSuccess: async () => {
-            await utils.users.symptoms.invalidate();
+            await utils.symptom.invalidate();
             setIsAddSymptomOpen(false)
         }
     });
