@@ -1,9 +1,20 @@
+"use client";
+
+import { SessionProvider } from "next-auth/react";
 import AdminPanelLayout from "../_components/admin-panel/admin-panel-layout";
 
 export default function DemoLayout({
-  children,
+    children,
 }: {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }) {
-  return <AdminPanelLayout>{children}</AdminPanelLayout>;
+    return (
+        <>
+            <SessionProvider>
+                <AdminPanelLayout>
+                    {children}
+                </AdminPanelLayout>
+            </SessionProvider>
+        </> 
+    );
 }

@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { motion, useInView } from "framer-motion";
 import { GithubIcon, LogOutIcon } from "lucide-react";
 import { Session } from "next-auth";
+import { signOut, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useRef } from 'react';
 import Slider, { Settings } from "react-slick";
 import { toast } from "sonner";
@@ -27,6 +29,7 @@ export function HeroSection({ session }: HeroSectionProps) {
     const ref = useRef(null);
     const isInView = useInView(ref);
     const { theme } = useTheme();
+    const router = useRouter();
 
     const FADE_DOWN_ANIMATION_VARIANTS = {
         hidden: { opacity: 0, y: -10 },
@@ -75,11 +78,24 @@ export function HeroSection({ session }: HeroSectionProps) {
     };
 
     const handleGetStarted = () => {
-        toast.error("SickleSense is currently in development. Please check back later.");
+        if (localStorage.getItem("c232a24f") === "true") {
+            if (session?.user) {
+                router.push("/dashboard");
+            } else {
+                router.push("/auth/signin");
+            }
+        } else toast.error("SickleSense is currently in development. Please check back later.");
+
     }
 
     const handleInfo = () => {
-        window.open("https://github.com/nyumat/sicklesense", "_blank");
+        if (localStorage.getItem("c232a24f") === "true") {
+            signOut({
+                redirect: true,
+                callbackUrl: "/",
+            });
+        }
+        // window.open("https://github.com/nyumat/sicklesense", "_blank");
     }
 
     return (

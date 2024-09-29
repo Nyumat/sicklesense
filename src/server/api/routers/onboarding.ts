@@ -8,6 +8,8 @@ const onboardingStateSchema = z.object({
   gender: z.string(),
   scdType: z.string(),
   step: z.number().int().optional(),
+  country: z.string(),
+  timezone: z.string(),
 });
 
 export type OnboardingState = z.infer<typeof onboardingStateSchema>;
@@ -33,15 +35,15 @@ export const onboardingRouter = createTRPCRouter({
 
       await ctx.db.user.update({
         where: { id: ctx.session.user.id },
-          data: {
-              patientProfile: {
-                  create: {
-                      dateOfBirth: input.dateOfBirth,
-                      gender: input.gender as Gender,
-                      sickleCellType: input.scdType as SickleCellType,
-                  },
-              },
+        data: {
+          patientProfile: {
+            create: {
+              dateOfBirth: input.dateOfBirth,
+              gender: input.gender as Gender,
+              sickleCellType: input.scdType as SickleCellType,
+            },
           },
+        },
       });
 
       return true;

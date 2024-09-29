@@ -1,5 +1,6 @@
 "use client";
 
+import CountryDropdown from "@/app/_components/select-countries";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -18,7 +19,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { getOnboardingProgress } from "@/lib/api";
+import { getOnboardingProgress } from "@/lib/actions";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { format } from "date-fns";
@@ -34,12 +35,70 @@ export type CompleteOnboarding = {
     gender: string | null;
     scdType: string;
     step?: number;
+    timezone: string;
+    country: string;
 };
 
 export type OnboardingState = CompleteOnboarding & {
     step?: number;
 };
 
+/*
+const TimeZoneSelect = ({
+    value,
+    onChange,
+}: {
+    value: string;
+    onChange: (value: string) => void;
+}) => {
+    const [open, setOpen] = useState(false);
+    const [selected, setSelected] = useState(value);
+    return (
+        <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+                <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="w-[200px] justify-between"
+                >
+                    {countries.find((country) => country.id === selected)?.name}
+                    <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[200px] p-0">
+                <Command>
+                    <CommandInput placeholder="Search country..." className="h-9" />
+                    <CommandList>
+                        <CommandEmpty>No country found.</CommandEmpty>
+                        <CommandGroup>
+                            {countries.map((country) => (
+                                <CommandItem
+                                    key={country.id}
+                                    value={country.id}
+                                    onSelect={(currentValue) => {
+                                        setSelected(currentValue);
+                                        onChange(currentValue);
+                                        setOpen(false);
+                                    }}
+                                >
+                                    {country.name}
+                                    <CheckIcon
+                                        className={cn(
+                                            "ml-auto h-4 w-4",
+                                            selected === country.id ? "opacity-100" : "opacity-0"
+                                        )}
+                                    />
+                                </CommandItem>
+                            ))}
+                        </CommandGroup>
+                    </CommandList>
+                </Command>
+            </PopoverContent>
+        </Popover>
+    );
+}
+*/
 const SCDTypeSelect = ({
     value,
     onChange,
@@ -138,8 +197,12 @@ export function Onboarding({ userId }: { userId: string }) {
         gender: null,
         scdType: "",
         step: 0,
+        timezone: "",
+        country: "",
     });
     const [scdType, setScdType] = useState("");
+    const [country, setCountry] = useState("");
+    const [timezone, setTimeZone] = useState("");
     const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
     const [gender, setGender] = useState<Gender | string | null>("");
     //   const [dataConsent, setDataConsent] = useState(false);
@@ -149,8 +212,23 @@ export function Onboarding({ userId }: { userId: string }) {
             {
                 title: "Date of Birth",
                 description: "Enter your date of birth",
-                component: <AgeInput value={dateOfBirth} onChange={setDateOfBirth} />,
+                component: (
+                    <>
+                        <CountryDropdown />
+                        <AgeInput value={dateOfBirth} onChange={setDateOfBirth} />
+                    </>
+                ),
             },
+            // {
+            //     title: "Time Zone",
+            //     description: "Select your time zone",
+            //     component: (
+            //         <TimeZoneSelec
+            //             value={state.timezone ?? ""}
+            //             onChange={(value) => updateState({ timezone: value })}
+            //         />
+            //     ),
+            // },
             {
                 title: "SCD Type",
                 description: "Select your SCD type",
@@ -195,12 +273,14 @@ export function Onboarding({ userId }: { userId: string }) {
         gender,
         scdType,
         step,
+        timezone,
+        country,
     }: CompleteOnboarding): Promise<boolean> => {
         try {
             if (!id || !dateOfBirth || !gender || !scdType) {
                 throw new Error("All fields are required to save onboarding progress.");
             }
-            await mutation.mutateAsync({ id, dateOfBirth, gender, scdType, step });
+            await mutation.mutateAsync({ id, dateOfBirth, gender, scdType, step, timezone, country });
             return true;
         } catch (error) {
             console.error("Failed to save onboarding progress:", error);
@@ -225,6 +305,8 @@ export function Onboarding({ userId }: { userId: string }) {
                         gender: currentProgress.gender,
                         scdType: currentProgress.scdType,
                         step: currentProgress.step,
+                        timezone: currentProgress.timezone,
+                        country: currentProgress.country,
                     });
                 }
             });
@@ -245,6 +327,8 @@ export function Onboarding({ userId }: { userId: string }) {
         dateOfBirth,
         gender,
         scdType,
+        timezone,
+        country,
     }: CompleteOnboarding) => {
         localStorage.removeItem("onboardingState");
         if (userId) {
@@ -254,6 +338,8 @@ export function Onboarding({ userId }: { userId: string }) {
                 gender,
                 scdType,
                 step: 3,
+                timezone,
+                country,
             });
         }
     };
@@ -265,6 +351,8 @@ export function Onboarding({ userId }: { userId: string }) {
                 dateOfBirth,
                 scdType,
                 gender,
+                timezone,
+                country,
             });
             router.push("/auth/onboarded");
         } else {
@@ -273,6 +361,8 @@ export function Onboarding({ userId }: { userId: string }) {
                 scdType,
                 gender,
                 step: currentStep + 1,
+                timezone,
+                country,
             });
             setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1));
         }

@@ -1,4 +1,4 @@
-import { getOnboardingProgress } from "@/lib/api";
+import { getOnboardingProgress } from "@/lib/actions";
 import { api } from "@/trpc/react";
 import { useEffect, useState } from "react";
 
