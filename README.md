@@ -16,7 +16,7 @@
 
 ![Sickle Sense System Design](/public/system-design.png)
 
-## Tech Stack (~~for da nerds~~)
+## 🤓 Tech Stack (~~for da nerds~~)
 
 Got to use some cool tech to build this project. Here's a breakdown of just some of the services and tools I used:
 
