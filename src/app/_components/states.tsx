@@ -1,25 +1,15 @@
 "use client";
 
-/* -------------------------------------------------------------------------- */
-/*                             External Dependency                            */
-/* -------------------------------------------------------------------------- */
-
 import React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
-
-/* -------------------------------------------------------------------------- */
-/*                             Internal Dependency                            */
-/* -------------------------------------------------------------------------- */
-
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-
 import { cn, lowerCase, sentenceCase } from "@/lib/utils";
 import states from "@/data/states.json";
-
 import { type StateProps } from "@/lib/types";
+import { useDropdownStore } from "@/lib/store";
 
 const StateDropdown = () => {
     const { countryValue, stateValue, openStateDropdown, setOpenStateDropdown, setStateValue } = useDropdownStore();
