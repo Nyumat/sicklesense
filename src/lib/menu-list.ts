@@ -1,5 +1,6 @@
 import {
   BotMessageSquare,
+  ChartLine,
   Hospital,
   LayoutGrid,
   LucideIcon,
@@ -8,6 +9,8 @@ import {
   Settings,
   SquarePen,
   Users,
+  Watch,
+  Wifi,
 } from "lucide-react";
 
 export type Submenu = {
@@ -50,7 +53,7 @@ export function getMenuList(pathname: string): Group[] {
         {
           href: "/community",
           label: "Community",
-          active: pathname.includes("/community"),
+          active: pathname === "/community",
           icon: Users,
           submenus: [
             {
@@ -76,10 +79,30 @@ export function getMenuList(pathname: string): Group[] {
         },
         {
           href: "/plan",
-          label: "Devices & Plan",
+          label: "Health Plan",
           active: pathname.includes("/plan"),
           icon: Hospital,
           submenus: [],
+        },
+        {
+          href: "/devices",
+          label: "Wearable Devices",
+          active: pathname === "/devices",
+          icon: Watch,
+          submenus: [
+            {
+              href: "/devices/metrics",
+              label: "Device Metrics",
+              icon: ChartLine,
+              active: pathname === "/devices/metrics",
+            },
+            {
+              href: "/devices/connect",
+              label: "Connect a Device",
+              icon: Wifi,
+              active: pathname === "/devices/connect",
+            },
+          ],
         },
       ],
     },

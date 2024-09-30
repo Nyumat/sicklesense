@@ -30,7 +30,7 @@ export function Sidebar() {
                     variant="link"
                     asChild
                 >
-                    <Link href="/" className="flex items-center gap-2">
+                    <Link href="/" className="flex items-center gap-6">
                         <Image
                             alt="SickleSense"
                             src="/sicklesense.png"

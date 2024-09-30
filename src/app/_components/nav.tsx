@@ -25,7 +25,7 @@ export async function SiteHeader() {
                         />
                         <h1
                             className={cn(
-                                "whitespace-nowrap bg-gradient-to-r from-[#8b39b1] via-[#c80f3aaa] to-[#9E44F0] bg-clip-text font-mono text-lg font-bold text-transparent transition-[transform,opacity,display] duration-300 ease-in-out -ml-1",
+                                "whitespace-nowrap bg-gradient-to-r from-[#8b39b1] via-[#c80f3aaa] to-[#9E44F0] bg-clip-text font-mono text-lg font-bold text-transparent transition-[transform,opacity,display] duration-300 ease-in-out -ml-2",
                             )}
                         >
                             Sickle Sense
