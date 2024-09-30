@@ -100,7 +100,7 @@ serve({
     if (url.pathname === '/subscribe') return subscribeHandler(req);
     return new Response('Not Found', { status: 404 });
   },
-  port: 3001,
+  port: process.env.PORT || 3001,
 });
 
-console.log('Server running on http://localhost:3001');
+console.log(`Server running on port ${process.env.PORT || 3001}`);
