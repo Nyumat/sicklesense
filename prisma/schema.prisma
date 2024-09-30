@@ -112,6 +112,7 @@ model PatientProfile {
   appointments             Appointment[]
   user                     User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
   physicians               CareTeam[]
+  healthPlans              HealthPlan[]
 }
 
 model HealthMetric {
@@ -151,6 +152,19 @@ model Appointment {
   patientProfile   PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
 }
 
+model HealthPlan {
+  id               String         @id @default(cuid())
+  patientProfileId String
+  title            String
+  activityState    ActivityState  @default(Active)
+  description      String
+  startDate        DateTime
+  endDate          DateTime
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  patientProfile   PatientProfile @relation(fields: [patientProfileId], references: [id], onDelete: Cascade)
+}
+
 model Physician {
   id        String     @id @default(cuid())
   userId    String     @unique
@@ -175,27 +189,27 @@ model CareTeam {
 }
 
 model Medication {
-  id               String          @id @default(cuid())
-  name             String
-  dosage           String
-  frequency        String
-  time             String?
-  order            Int             @default(0)
-  reminderEnabled  Boolean         @default(false)
+  id                String          @id @default(cuid())
+  name              String
+  dosage            String
+  frequency         String
+  time              String?
+  order             Int             @default(0)
+  reminderEnabled   Boolean         @default(false)
   reminderFrequency String?
-  reminderTime     DateTime?
-  reminderPhone    String?
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  PatientProfile   PatientProfile? @relation(fields: [patientProfileId], references: [id])
-  patientProfileId String?
-  MedicationLog    MedicationLog[]
+  reminderTime      DateTime?
+  reminderPhone     String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  PatientProfile    PatientProfile? @relation(fields: [patientProfileId], references: [id])
+  patientProfileId  String?
+  MedicationLog     MedicationLog[]
 }
 
 model MedicationLog {
   id           String     @id @default(cuid())
   medicationId String
-  order           Int      @default(0)
+  order        Int        @default(0)
   medication   Medication @relation(fields: [medicationId], references: [id])
   date         DateTime
   taken        Boolean
@@ -264,4 +278,11 @@ enum Gender {
   Male
   Female
   Other
+}
+
+enum ActivityState {
+  Active
+  Paused
+  Inactive
+  Completed
 }

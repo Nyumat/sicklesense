@@ -10,7 +10,7 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Metrics } from "./metrics";
-export default function TagsPage() {
+export default function HealthPlanPage() {
     return (
         <ContentLayout title="Devices & Plan">
             <Breadcrumb>
