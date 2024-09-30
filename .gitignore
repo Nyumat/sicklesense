@@ -1,62 +1,9 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# database
-/prisma/db.sqlite
-/prisma/db.sqlite-journal
-db.sqlite
-
-# next.js
-/.next/
-/out/
-next-env.d.ts
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-.env
-.env*.local
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-
-# idea files
-.idea
-
-/.vscode
+.next
 .trigger
-
-# Virtualenv
-# http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
-.Python
-[Bb]in
-[Ii]nclude
-[Ll]ib
-[Ll]ib64
-[Ll]ocal
-[Ss]cripts
-pyvenv.cfg
-.venv
-pip-selfcheck.json
-__pycache__
-sicklesense
+.vscode
+node_modules
+next-env.d.ts
+.env
+elasticsearch/__pycache__
+elasticsearch/sicklesense
+.DS_Store
