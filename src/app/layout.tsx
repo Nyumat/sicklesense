@@ -10,6 +10,7 @@ import "slick-carousel/slick/slick.css";
 import { PostsProvider } from "./(router)/community/posts/context";
 
 export const metadata: Metadata = {
+    metadataBase: new URL("https://sicklesense.vercel.app/"),
     title: "Sickle Sense — The Sickle Cell Companion of the Future",
     description: "Sickle Sense is an all-in-one platform bridging the gap between you, your data, and better health outcomes for sickle cell patients worldwide.",
     icons: [{ rel: "icon", url: "/favicon.ico" }],
