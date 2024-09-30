@@ -5,14 +5,18 @@ import { Button } from "@/components/ui/button";
 import { useSidebarToggle } from '@/hooks/use-sidebar-toggle';
 import { useStore } from '@/hooks/use-store';
 import { cn } from '@/lib/utils';
-import { useChat } from 'ai/react';
+import { useChat, experimental_useObject as useObject } from 'ai/react';
 import { motion } from 'framer-motion';
 import { Send } from "lucide-react";
-import { useEffect, useRef } from 'react';
-import ReactMarkdown from 'react-markdown';
-import { EnhancedTextarea } from "./enhanced-textarea";
 import { useSession } from "next-auth/react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
+import { z } from 'zod';
+import { EnhancedTextarea } from "./enhanced-textarea";
+import React from 'react';
 
+
+const questionsSchema = z.array(z.object({ id: z.string(), question: z.string() }));
 const ES_SERVICE_URL = process.env.NEXT_PUBLIC_ES_SERVICE_URL;
 
 export function ChatUI() {
@@ -20,7 +24,11 @@ export function ChatUI() {
     const sidebar = useStore(useSidebarToggle, (state) => state);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const heightOfMostRecentMessage = useRef<number>(0);
-    const { messages, input, handleSubmit, handleInputChange, isLoading } =
+    const { object, submit, isLoading: qLoading } = useObject({
+        api: '/api/questions',
+        schema: z.object({ questions: questionsSchema }),
+    });
+    const { messages, input, handleSubmit, handleInputChange, isLoading, setInput } =
         useChat({
             api: `${ES_SERVICE_URL}/api/chat?protocol=text`,
             streamProtocol: 'text',
@@ -33,6 +41,11 @@ export function ChatUI() {
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
+
+    const handleSuggestionClick = useCallback((suggestion: string | undefined) => {
+        setInput(suggestion ?? '');
+        handleSubmit(new Event('submit') as unknown as React.FormEvent<HTMLFormElement>);
+    }, [setInput, handleSubmit]);
 
     const messageVariants = {
         hidden: { opacity: 0, y: 20 },
@@ -47,6 +60,11 @@ export function ChatUI() {
         }
     };
 
+    useLayoutEffect(() => {
+        submit(`${JSON.stringify(session)}`);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const handleScroll = () => {
         if (messagesEndRef.current) {
             const currentHeight = messagesEndRef.current.getBoundingClientRect().height;
@@ -59,7 +77,7 @@ export function ChatUI() {
 
     useEffect(() => {
         handleScroll();
-    });
+    }, [messages]);
 
     return (
         <div className="px-4 py-2 space-y-4 pb-32">
@@ -97,6 +115,45 @@ export function ChatUI() {
             ))}
             <div ref={messagesEndRef} />
             <div className="fixed bottom-0 left-0 right-0 p-4 bg-background shadow-inner">
+                {/* Suggestions */}
+                {qLoading ? (
+                    <div className={cn(
+                        sidebar?.isOpen === false ? "lg:ml-[90px]" : "lg:ml-72",
+                        "pb-4 flex justify-center mx-auto"
+                    )}>
+                        <div className="grid grid-cols-2 gap-1 mx-auto">
+                            {["Loading...", "Please wait..."].map((question) => (
+                                <button
+                                    key={question}
+                                    className="p-1 bg-secondary text-white rounded hover:bg-secondary-hover"
+                                >
+                                    {question}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        {messages.length < 2 && (
+                            <div className={cn(
+                                sidebar?.isOpen === false ? "lg:ml-[90px]" : "lg:ml-72",
+                                "pb-4 flex justify-center mx-auto"
+                            )}>
+                                <div className="grid grid-cols-2 gap-1 mx-auto">
+                                    {object?.questions?.map((question) => (
+                                        <button
+                                            key={question?.id}
+                                            className="p-1 bg-secondary text-white rounded hover:bg-secondary-hover"
+                                            onClick={() => handleSuggestionClick(question?.question)}
+                                        >
+                                            {question?.question}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </>
+                )}
                 <form className={cn("flex space-x-2 mx-auto", sidebar?.isOpen === false ? "lg:ml-[90px]" : "lg:ml-72")} onSubmit={handleSubmit}>
                     <div className="flex flex-grow items-center space-x-2">
                         <EnhancedTextarea
