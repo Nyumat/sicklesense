@@ -1,5 +1,7 @@
-import React from 'react';
+import { TimePicker } from '@/app/_components/date-picker';
+import { PhoneInput } from '@/app/_components/phone-input';
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
     Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
     DialogTrigger,
@@ -15,16 +17,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { api } from "@/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AnimatePresence, motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { motion, AnimatePresence } from "framer-motion";
-import { TimePicker, TimePickerInput } from '@/app/_components/date-picker';
-import { PhoneInput } from '@/app/_components/phone-input';
 
 const formSchema = z.object({
     name: z.string().min(1, "Medication name is required"),

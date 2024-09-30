@@ -79,7 +79,7 @@ export const userRouter = createTRPCRouter({
       select: { onboardingState: true },
     });
 
-      const state = user?.onboardingState as any;
+      const state = user?.onboardingState as { step: number };
 
     return !!state?.step && state.step >= 3;
   }),

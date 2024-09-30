@@ -44,6 +44,7 @@ export function MedicationLogger() {
         if (getMedicationLogs.data) setLogs(getMedicationLogs.data);
     }, [getMedicationLogs.data]);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedLogMedications = useCallback(
         debounce((logs: PendingLog[]) => {
             logs.forEach(log => {

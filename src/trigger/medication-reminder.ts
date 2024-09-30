@@ -1,8 +1,6 @@
-import { logger, schedules, wait, task } from "@trigger.dev/sdk/v3";
+import { logger, schedules, wait } from "@trigger.dev/sdk/v3";
 import { Resend } from "resend";
 
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
 const resend = new Resend(process.env.RESEND);
 
 export const medicationReminder = schedules.task({

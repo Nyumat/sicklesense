@@ -26,7 +26,7 @@ import { format } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import { CalendarIcon } from 'lucide-react';
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 type Gender = "Male" | "Female" | "Other" | null | string;
 export type CompleteOnboarding = {
@@ -201,11 +201,11 @@ export function Onboarding({ userId }: { userId: string }) {
         country: "",
     });
     const [scdType, setScdType] = useState("");
-    const [country, setCountry] = useState("");
-    const [timezone, setTimeZone] = useState("");
     const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
     const [gender, setGender] = useState<Gender | string | null>("");
     //   const [dataConsent, setDataConsent] = useState(false);
+    const [timezone,] = useState("");
+    const [country,] = useState("");
     const mutation = api.onboarding.saveProgress.useMutation();
     const steps = useMemo(() => {
         return [
@@ -305,8 +305,8 @@ export function Onboarding({ userId }: { userId: string }) {
                         gender: currentProgress.gender,
                         scdType: currentProgress.scdType,
                         step: currentProgress.step,
-                        timezone: currentProgress.timezone,
-                        country: currentProgress.country,
+                        timezone: currentProgress.timezone ?? "",
+                        country: currentProgress.country ?? "",
                     });
                 }
             });

@@ -8,6 +8,8 @@ export type CompleteOnboarding = {
   gender: string;
   scdType: string;
   step?: number;
+  timezone?: string;
+  country?: string;
 };
 export type OnboardingState = CompleteOnboarding & {
   step?: number;
@@ -40,6 +42,8 @@ function useOnboardingState(userId: string | null): {
     gender,
     scdType,
     step,
+    timezone,
+    country,
   }: CompleteOnboarding): Promise<boolean> => {
     try {
       if (!id) {
@@ -52,6 +56,8 @@ function useOnboardingState(userId: string | null): {
         gender,
         scdType,
         step,
+        timezone,
+        country,
       });
       return true;
     } catch (error) {

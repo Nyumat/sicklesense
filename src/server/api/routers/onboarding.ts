@@ -8,8 +8,8 @@ const onboardingStateSchema = z.object({
   gender: z.string(),
   scdType: z.string(),
   step: z.number().int().optional(),
-  country: z.string(),
-  timezone: z.string(),
+  country: z.string().optional(),
+  timezone: z.string().optional(),
 });
 
 export type OnboardingState = z.infer<typeof onboardingStateSchema>;
