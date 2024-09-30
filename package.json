@@ -61,6 +61,7 @@
     "@tsparticles/engine": "^3.5.0",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.5.0",
+    "@types/uuid": "^10.0.0",
     "ably": "^2.4.0",
     "ai": "^3.4.0",
     "bcrypt": "^5.1.1",
