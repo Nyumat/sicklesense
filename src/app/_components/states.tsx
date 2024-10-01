@@ -1,11 +1,4 @@
-import React from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn, lowerCase, sentenceCase } from "@/lib/utils";
-import states from "@/data/states.json";
-import { useDropdownStore } from "@/lib/store";
 import {
     Command,
     CommandEmpty,
@@ -14,6 +7,12 @@ import {
     CommandItem,
     CommandList,
 } from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import states from "@/data/states.json";
+import { useDropdownStore } from "@/lib/store";
+import { cn, lowerCase, sentenceCase } from "@/lib/utils";
+import { Check, ChevronsUpDown } from "lucide-react";
 
 interface StateProps {
     id: number;
@@ -41,7 +40,7 @@ export function StateDropdown() {
                     variant="outline"
                     role="combobox"
                     aria-expanded={openStateDropdown}
-                    className="w-[300px] cursor-pointer justify-between rounded-[6px] border !border-[#27272a] !bg-[#0f0f11] hover:!bg-[#0f0f11] focus:!bg-[#0f0f11] focus:!outline-none focus:!ring-2 focus:!ring-[#0f0f11] focus:!ring-offset-2 focus:!ring-offset-[#0f0f11] disabled:!cursor-not-allowed disabled:!opacity-50"
+                    className="w-[300px] justify-between rounded-[6px] border border-input bg-background hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     disabled={!countryValue || S.length === 0}
                 >
                     {stateValue ? (
@@ -51,14 +50,18 @@ export function StateDropdown() {
                             </span>
                         </div>
                     ) : (
-                        <span>Select State...</span>
+                        <>
+                            <span>
+                                {!countryValue || S.length === 0 ? "Select a Country First" : "Select a State"}
+                            </span>
+                        </>
                     )}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[300px] rounded-[6px] border border-[#27272a] p-0">
-                <Command>
-                    <CommandInput placeholder="Search state..." />
+            <PopoverContent className="w-[300px] rounded-[6px] border border-border p-0">
+                <Command className="bg-popover">
+                    <CommandInput placeholder="Search state..." className="border-border" />
                     <CommandEmpty>No state found.</CommandEmpty>
                     <CommandGroup>
                         <ScrollArea className="h-[300px] w-full">
@@ -71,10 +74,10 @@ export function StateDropdown() {
                                             setStateValue(lowerCase(currentValue));
                                             setOpenStateDropdown(false);
                                         }}
-                                        className="flex cursor-pointer items-center justify-between text-xs hover:!bg-[#27272a] hover:!text-white"
+                                        className="flex cursor-pointer items-center justify-between text-xs hover:bg-accent hover:text-accent-foreground"
                                     >
                                         <div className="flex items-end gap-2">
-                                            <span className="">{state.name}</span>
+                                            <span>{state.name}</span>
                                         </div>
                                         <Check
                                             className={cn(

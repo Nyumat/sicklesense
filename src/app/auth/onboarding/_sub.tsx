@@ -2,6 +2,7 @@
 
 import { CountryDropdown } from "@/app/_components/select-countries";
 import { StateDropdown } from "@/app/_components/states";
+import { ModeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -345,6 +346,9 @@ export function Onboarding({ userId }: { userId: string }) {
                     />
                     <span className="text-sm">Back to Landing</span>
                 </Link>
+            </div>
+            <div className="absolute top-4 right-4 m-12">
+                <ModeToggle />
             </div>
             <div className="space-y-4 w-full max-w-md">
                 <div className="mx-auto w-[50px] h-[50px] -translate-y-20">

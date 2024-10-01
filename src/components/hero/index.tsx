@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { motion, useInView } from "framer-motion";
 import { GithubIcon, LogOutIcon } from "lucide-react";
 import { Session } from "next-auth";
-import { signOut } from "next-auth/react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,7 +23,6 @@ type Image = {
     src: string;
     alt: string;
 }
-
 
 export function HeroSection({ session }: HeroSectionProps) {
     const ref = useRef(null);
@@ -100,27 +98,29 @@ export function HeroSection({ session }: HeroSectionProps) {
     const handleGetStarted = () => {
         if (localStorage.getItem("c232a24f") === "true") {
             if (session?.user) {
-                router.push("/auth/onboarding");
+                toast.message("Where should we navigate to? ", {
+                    actionButtonStyle: { backgroundColor: "hsl(280,100%,75%)" },
+                    cancelButtonStyle: { backgroundColor: "hsl(280,100%,75%)" },
+                    action: {
+                        label: "Dashboard",
+                        onClick: () => router.push("/dashboard"),
+                    },
+                    cancel: {
+                        label: "Onboarding",
+                        onClick: () => router.push("/auth/onboarding"),
+                    },
+                })
             } else {
                 router.push("/auth/signin");
             }
-        } else toast.error("SickleSense is currently in development. Please check back later.");
-
+        } else {
+            toast.error("To use Sickle Sense before its launch, you need the secret access key. Read the Devpost submission for more information.");
+        }
     }
 
     const getStartedText = session ? "Dashboard" : "Start Your Journey";
     const infoText = session ? "Sign Out" : "Learn More";
-    const getStartedLink = session ? "/dashboard" : "/auth/signin";
-    const infoLink = session ? "/" : "/about";
-
-    const handleInfo = () => {
-        if (localStorage.getItem("c232a24f") === "true") {
-            if (session) signOut({ redirect: true, callbackUrl: "/", });
-            else router.push("/about");
-        } else {
-            router.push("/about");
-        }
-    }
+    const infoLink = session ? "/auth/signout" : "/about";
 
     useEffect(() => {
         if (resolvedTheme === "system") {
@@ -203,7 +203,7 @@ export function HeroSection({ session }: HeroSectionProps) {
                             className="w-full sm:w-auto bg-gradient-to-r from-purple-500 to-purple-600"
                             onClick={handleGetStarted}
                         >
-                            {session ? "Dashboard" : "Start Your Journey"}
+                            {getStartedText}
                         </Button>
 
                         <Button
@@ -212,14 +212,16 @@ export function HeroSection({ session }: HeroSectionProps) {
                                 "w-full sm:w-auto bg-transparent outline-none hover:bg-transparent/5",
                                 buttonVariants({ variant: "link" })
                             )}
-                            onClick={handleInfo}
+                            asChild
                         >
-                            {session ? (
-                                <LogOutIcon className="mr-2 h-5 w-5" />
-                            ) : (
-                                <GithubIcon className="mr-2 h-5 w-5" />
-                            )}
-                            {infoText}
+                            <Link href={infoLink}>
+                                {session ? (
+                                    <LogOutIcon className="mr-2 h-5 w-5" />
+                                ) : (
+                                    <GithubIcon className="mr-2 h-5 w-5" />
+                                )}
+                                {infoText}
+                            </Link>
                         </Button>
 
                     </motion.div>

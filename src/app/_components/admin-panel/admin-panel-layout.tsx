@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { Sidebar } from "./sidebar";
 import { api } from "@/trpc/react";
-import { CommandMenu } from "../comand-menu";
 
 export default function AdminPanelLayout({
     children,

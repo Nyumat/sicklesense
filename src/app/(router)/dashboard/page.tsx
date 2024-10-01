@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
 import { Greeting } from "@/app/(router)/dashboard/(helper)/greeting";
 import { ContentLayout } from "@/app/_components/admin-panel/content-layout";
 import { NotificationButton } from "@/app/_components/admin-panel/notification-button";
+import { CommandMenu } from "@/app/_components/comand-menu";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -32,13 +32,12 @@ import {
     ThermometerSun
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Suspense, useEffect } from "react";
+import { PuffLoader } from "react-spinners";
 import { TourDisplay } from "./(helper)/tour-display";
 import tour from "./(helper)/tour-producer";
-import { CommandMenu } from "@/app/_components/comand-menu";
-import { PuffLoader, PulseLoader } from "react-spinners";
-import { useTheme } from "next-themes";
-import { useRouter } from "next/navigation";
+import React from "react";
 
 export default function DashboardPage() {
     const router = useRouter();
@@ -113,7 +112,7 @@ export default function DashboardPage() {
                             }
                         >
                             <div className="relative">
-                                <CommandMenu /> 
+                                <CommandMenu />
                             </div>
                         </tour.TourFocus>
                         <div className="ml-4 flex items-center space-x-2">
@@ -241,7 +240,7 @@ export default function DashboardPage() {
                                 <div className="text-3xl font-bold">120 mmHg</div>
                                 <div className="flex h-[80px] items-center justify-center">
                                     {/* Blood pressure icon placeholder */}
-                                    <PuffLoader color={"#9933ff"} size={80} speedMultiplier={0.65}/>
+                                    <PuffLoader color={"#9933ff"} size={80} speedMultiplier={0.65} />
                                 </div>
                             </CardContent>
                         </Card>

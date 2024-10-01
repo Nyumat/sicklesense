@@ -65,7 +65,7 @@ export function CountryDropdown({ disabled }: CountryDropdownProps) {
                     variant="outline"
                     role="combobox"
                     aria-expanded={openCountryDropdown}
-                    className="w-[300px] justify-between rounded-[6px] border !border-[#27272a] !bg-[#0f0f11] hover:!bg-[#0f0f11] focus:!bg-[#0f0f11] focus:!outline-none focus:!ring-2 focus:!ring-[#0f0f11] focus:!ring-offset-2 focus:!ring-offset-[#0f0f11]"
+                    className="w-[300px] justify-between rounded-[6px] border border-input bg-background hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                     disabled={disabled}
                 >
                     <span>
@@ -93,9 +93,9 @@ export function CountryDropdown({ disabled }: CountryDropdownProps) {
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[300px] rounded-[6px] border border-[#27272a] p-0">
-                <Command>
-                    <CommandInput placeholder="Search country..." />
+            <PopoverContent className="w-[300px] rounded-[6px] border border-border p-0">
+                <Command className="bg-popover">
+                    <CommandInput placeholder="Search country..." className="border-border" />
                     <CommandEmpty>No country found.</CommandEmpty>
                     <CommandGroup>
                         <ScrollArea className="h-[300px] w-full">
@@ -108,11 +108,11 @@ export function CountryDropdown({ disabled }: CountryDropdownProps) {
                                             setCountryValue(lowerCase(currentValue));
                                             setOpenCountryDropdown(false);
                                         }}
-                                        className="flex cursor-pointer items-center justify-between text-xs hover:!bg-[#27272a] hover:!text-white"
+                                        className="flex cursor-pointer items-center justify-between text-xs hover:bg-accent hover:text-accent-foreground"
                                     >
                                         <div className="flex items-end gap-2">
                                             <span>{country.emoji}</span>
-                                            <span className="">{country.name}</span>
+                                            <span>{country.name}</span>
                                         </div>
                                         <Check
                                             className={cn(

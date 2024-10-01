@@ -28,7 +28,7 @@ export function ChatUI({ context, session, user }: { context: string, session: S
         schema: z.object({ questions: questionsSchema }),
     });
     const requestBody = useRef({ user: JSON.stringify(session.user + user), context: context, query: '' });
-    const { messages, input, handleSubmit, handleInputChange, isLoading, setInput, append } =
+    const { messages, input, handleSubmit, handleInputChange, isLoading, append } =
     useChat({
         api: `${ES_SERVICE_URL}/api/chat?protocol=text`,
         streamProtocol: 'text',
