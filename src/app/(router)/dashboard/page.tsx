@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { Greeting } from "@/app/(router)/dashboard/(helper)/greeting";
 import { ContentLayout } from "@/app/_components/admin-panel/content-layout";
 import { NotificationButton } from "@/app/_components/admin-panel/notification-button";
@@ -34,8 +35,13 @@ import Link from "next/link";
 import { Suspense, useEffect } from "react";
 import { TourDisplay } from "./(helper)/tour-display";
 import tour from "./(helper)/tour-producer";
+import { CommandMenu } from "@/app/_components/comand-menu";
+import { PuffLoader, PulseLoader } from "react-spinners";
+import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
+    const router = useRouter();
     const ctx = tour.useContext()
     useEffect(() => {
         const tour = localStorage.getItem("tour")
@@ -107,8 +113,7 @@ export default function DashboardPage() {
                             }
                         >
                             <div className="relative">
-                                <Search className="absolute left-2 top-1/2 -translate-y-1/2 transform pr-1 text-gray-400" />
-                                <Input className="min-w-80 pl-8" placeholder="Search anything..." />
+                                <CommandMenu /> 
                             </div>
                         </tour.TourFocus>
                         <div className="ml-4 flex items-center space-x-2">
@@ -134,7 +139,7 @@ export default function DashboardPage() {
                 </TourDisplay>}>
 
                     <div className="mb-2 grid gap-2 md:grid-cols-2 lg:grid-cols-4 space-y-8">
-                        <Card>
+                        <Card className="bg-muted">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">Hemoglobin</CardTitle>
                                 <Activity className="h-4 w-4 text-muted-foreground" />
@@ -144,7 +149,7 @@ export default function DashboardPage() {
                                 <p className="text-xs text-muted-foreground">+5% from last month</p>
                             </CardContent>
                         </Card>
-                        <Card>
+                        <Card className="bg-muted">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">Pain Level</CardTitle>
                                 <ThermometerSun className="h-4 w-4 text-muted-foreground" />
@@ -154,7 +159,7 @@ export default function DashboardPage() {
                                 <p className="text-xs text-muted-foreground">Last updated 2h ago</p>
                             </CardContent>
                         </Card>
-                        <Card>
+                        <Card className="bg-muted">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">Hydration</CardTitle>
                                 <Droplet className="h-4 w-4 text-muted-foreground" />
@@ -166,7 +171,7 @@ export default function DashboardPage() {
                                 </p>
                             </CardContent>
                         </Card>
-                        <Card>
+                        <Card className="bg-muted">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">
                                     Oxygen Saturation
@@ -200,10 +205,10 @@ export default function DashboardPage() {
                     </p>
                 </TourDisplay>}>
                     <div className="grid grid-cols-3 gap-2 py-2 my-4">
-                        <Card className="text-white">
+                        <Card className="bg-muted">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">Heart Rate</CardTitle>
-                                <Button variant="ghost" size="icon" className="text-white">
+                                <Button variant="ghost" size="icon" >
                                     <PenSquare className="h-4 w-4" />
                                 </Button>
                             </CardHeader>
@@ -223,12 +228,12 @@ export default function DashboardPage() {
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className=" text-white">
+                        <Card className="bg-muted">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">
                                     Blood Pressure
                                 </CardTitle>
-                                <Button variant="ghost" size="icon" className="text-white">
+                                <Button variant="ghost" size="icon" >
                                     <PenSquare className="h-4 w-4" />
                                 </Button>
                             </CardHeader>
@@ -236,14 +241,14 @@ export default function DashboardPage() {
                                 <div className="text-3xl font-bold">120 mmHg</div>
                                 <div className="flex h-[80px] items-center justify-center">
                                     {/* Blood pressure icon placeholder */}
-                                    <div className="h-12 w-12 rounded-full border-4 border-white"></div>
+                                    <PuffLoader color={"#9933ff"} size={80} speedMultiplier={0.65}/>
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className="bg-muted text-white">
+                        <Card className="bg-muted">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">Sleep</CardTitle>
-                                <Button variant="ghost" size="icon" className="text-white">
+                                <Button variant="ghost" size="icon" >
                                     <PenSquare className="h-4 w-4" />
                                 </Button>
                             </CardHeader>
@@ -270,25 +275,29 @@ export default function DashboardPage() {
                         <CardTitle className="flex items-center justify-between">
                             SickleSense AI Chatbot
                             <Button variant="ghost" size="sm">
-                                See All Messages
+                                <Search className="h-4 w-4" />
                             </Button>
                         </CardTitle>
                         <CardDescription>Start a conversation</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-4">
-                            <div className="rounded-lg bg-muted p-4">
-                                <p className="text-blue-200">
+                            <div className="rounded-lg shadow-md bg-purple-100 dark:bg-muted p-4">
+                                <p>
                                     SickleSense makes it easier for you to monitor your sickle cell.
                                 </p>
-                                <p className="mt-2 text-blue-200">
-                                    Our chatbot can answer questions, which is fed <i>your data</i>{" "}
-                                    to give responses.
+                                <p>
+                                    You can ask me anything about your health, medications, or
+                                    symptom.
                                 </p>
                             </div>
                             <div className="flex items-center space-x-2">
-                                <Input placeholder="Reply to AI chatbot..." />
-                                <Button size="icon" className="bg-blue-500 text-white">
+                                <Input placeholder="Ask a question..." onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        router.push("/chat")
+                                    }
+                                }} />
+                                <Button size="icon" className="bg-primary" onClick={() => router.push("/chat")}>
                                     <ChevronRight className="h-4 w-4" />
                                 </Button>
                             </div>

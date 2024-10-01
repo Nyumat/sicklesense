@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { ContentLayout } from "@/app/_components/admin-panel/content-layout";
 import {
     Breadcrumb,
@@ -8,12 +7,27 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { getServerAuthSession } from "@/server/auth";
+import { api } from "@/trpc/server";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 import { ChatUI } from "./chatui";
+import { db } from "@/server/db";
 
-export default function ChatPage() {
+export default async function ChatPage() {
+    const patientProfileContext = await api.users.gatherContext();
+    const context = JSON.stringify(patientProfileContext);
+    const session = await getServerAuthSession();
+    const user = await db.user.findFirst({
+        where: {
+            email: session?.user.email,
+        },
+    });
+    if (!session) {
+        redirect("/auth/signin");
+    }
     return (
         <ContentLayout title="Chat">
-
             <Breadcrumb className="mb-4">
                 <BreadcrumbList>
                     <BreadcrumbItem>
@@ -33,8 +47,8 @@ export default function ChatPage() {
                     </BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>
-            <div className="max-h-96 h-full container my-6">
-                <ChatUI />
+            <div className="max-h-96 h-full container my-6 bg-dot-muted">
+                <ChatUI context={context} session={session} user={user} />
             </div>
         </ContentLayout>
     );

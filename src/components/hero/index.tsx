@@ -1,14 +1,16 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { motion, useInView } from "framer-motion";
 import { GithubIcon, LogOutIcon } from "lucide-react";
 import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Slider, { Settings } from "react-slick";
 import { toast } from "sonner";
 import SparklesText from "../magicui/sparkle";
@@ -19,8 +21,7 @@ interface HeroSectionProps {
 }
 
 type Image = {
-    dark: string;
-    light: string;
+    src: string;
     alt: string;
 }
 
@@ -30,39 +31,58 @@ export function HeroSection({ session }: HeroSectionProps) {
     const isInView = useInView(ref);
     const { resolvedTheme, theme } = useTheme();
     const router = useRouter();
+    const [images, setImages] = useState<Image[]>([]);
 
     const FADE_DOWN_ANIMATION_VARIANTS = {
         hidden: { opacity: 0, y: -10 },
         show: { opacity: 1, y: 0, transition: { type: "spring" } },
     };
 
-    const images: Image[] = [
+    const darkImages = [
         {
-            dark: "/dark.png",
-            light: "/light.png",
+            src: "/dark.png",
             alt: "Dashboard",
         },
         {
-            dark: "/medication-dark.png",
-            light: "/medication-light.png",
+            src: "/medication-dark.png",
             alt: "Medication",
         },
         {
-            dark: "/chat-dark.png",
-            light: "/chat-light.png",
+            src: "/chat-dark.png",
             alt: "Appointments",
         },
         {
-            dark: "/healthplan-dark.png",
-            light: "/healthplan-light.png",
+            src: "/healthplan-dark.png",
             alt: "Health Plan",
         },
         {
-            dark: "/metrics-dark.png",
-            light: "/metrics-light.png",
+            src: "/metrics-dark.png",
             alt: "Metrics",
         }
-    ]
+    ];
+
+    const lightImages = [
+        {
+            src: "/light.png",
+            alt: "Dashboard",
+        },
+        {
+            src: "/medication-light.png",
+            alt: "Medication",
+        },
+        {
+            src: "/chat-light.png",
+            alt: "Appointments",
+        },
+        {
+            src: "/healthplan-light.png",
+            alt: "Health Plan",
+        },
+        {
+            src: "/metrics-light.png",
+            alt: "Metrics",
+        }
+    ];
 
     const carouselSettings: Settings = {
         dots: true,
@@ -80,7 +100,7 @@ export function HeroSection({ session }: HeroSectionProps) {
     const handleGetStarted = () => {
         if (localStorage.getItem("c232a24f") === "true") {
             if (session?.user) {
-                router.push("/onboarding");
+                router.push("/auth/onboarding");
             } else {
                 router.push("/auth/signin");
             }
@@ -88,21 +108,37 @@ export function HeroSection({ session }: HeroSectionProps) {
 
     }
 
+    const getStartedText = session ? "Dashboard" : "Start Your Journey";
+    const infoText = session ? "Sign Out" : "Learn More";
+    const getStartedLink = session ? "/dashboard" : "/auth/signin";
+    const infoLink = session ? "/" : "/about";
+
     const handleInfo = () => {
         if (localStorage.getItem("c232a24f") === "true") {
-            signOut({
-                redirect: true,
-                callbackUrl: "/",
-            });
+            if (session) signOut({ redirect: true, callbackUrl: "/", });
+            else router.push("/about");
+        } else {
+            router.push("/about");
         }
-        // window.open("https://github.com/nyumat/sicklesense", "_blank");
     }
 
     useEffect(() => {
-        if (localStorage.getItem("c232a24f") === "true") {
-            toast.success("Welcome to SickleSense! 🎉");
+        if (resolvedTheme === "system") {
+            if (theme === "dark") {
+                setImages(darkImages);
+            } else {
+                setImages(lightImages);
+            }
         }
-    }, []);
+
+        if (resolvedTheme === "dark") {
+            setImages(darkImages);
+        } else {
+            setImages(lightImages);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [resolvedTheme, theme]);
+
 
     return (
         <section className="relative overflow-hidden min-h-screen flex items-center justify-center md:mt-16">
@@ -111,8 +147,8 @@ export function HeroSection({ session }: HeroSectionProps) {
                     id="tsparticlesfullpage"
                     background="transparent"
                     minSize={0.6}
-                    maxSize={1.4}
-                    particleDensity={120}
+                    maxSize={3.4}
+                    particleDensity={20}
                     className="w-full h-full"
                     particleColor={
                         theme === "dark" ? "hsl(280,100%,75%)" : "hsl(280,100%,15%)"
@@ -172,7 +208,10 @@ export function HeroSection({ session }: HeroSectionProps) {
 
                         <Button
                             variant="link"
-                            className="w-full sm:w-auto bg-transparent outline-none hover:bg-transparent/5"
+                            className={cn(
+                                "w-full sm:w-auto bg-transparent outline-none hover:bg-transparent/5",
+                                buttonVariants({ variant: "link" })
+                            )}
                             onClick={handleInfo}
                         >
                             {session ? (
@@ -180,7 +219,7 @@ export function HeroSection({ session }: HeroSectionProps) {
                             ) : (
                                 <GithubIcon className="mr-2 h-5 w-5" />
                             )}
-                            {session ? "Sign Out" : "Learn More"}
+                            {infoText}
                         </Button>
 
                     </motion.div>
@@ -192,15 +231,15 @@ export function HeroSection({ session }: HeroSectionProps) {
                     >
                         <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg blur-3xl opacity-50 -z-10" />
                         <Slider {...carouselSettings} className="scale-90 md:scale-100 relative z-10">
-                            {images.map((image, index) => (
+                            {images?.map((image, index) => (
                                 <div key={index} className="outline-none">
-                                        <Image
-                                            src={resolvedTheme === "dark" ? image.dark : image.light}
-                                            alt={image.alt}
-                                            className="w-full h-autoed-lg shadow-lg z-50 p-2 border-2 border-accent/20 bg-background aspect-w-16 aspect-h-9"
-                                            width={1920}
-                                            height={1080}
-                                        />
+                                    <Image
+                                        src={image.src}
+                                        alt={image.alt}
+                                        className="w-full h-autoed-lg shadow-lg z-50 p-2 border-2 border-accent/20 bg-background aspect-w-16 aspect-h-9"
+                                        width={1920}
+                                        height={1080}
+                                    />
 
                                 </div>
                             ))}

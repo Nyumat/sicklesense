@@ -74,12 +74,20 @@ export const userRouter = createTRPCRouter({
     if (!userId) {
       return false;
     }
+
+    if (
+      ctx.session?.user.email?.toLowerCase().includes("nyuma") ||
+      ctx.session?.user.email?.toLowerCase().includes("tom")
+    ) {
+      return false;
+    }
+
     const user = await ctx.db.user.findUnique({
       where: { id: userId },
       select: { onboardingState: true },
     });
 
-      const state = user?.onboardingState as { step: number };
+    const state = user?.onboardingState as { step: number };
 
     return !!state?.step && state.step >= 3;
   }),
@@ -123,5 +131,54 @@ export const userRouter = createTRPCRouter({
 
       return { success: true, userId: user.id };
     }),
-  
+  gatherContext: publicProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session?.user.id;
+    if (!userId) {
+      return null;
+    }
+
+    const user = await ctx.db.user.findUnique({
+      where: { id: userId },
+      select: {
+        patientProfile: true,
+      },
+    });
+
+    const patientProfileId = user?.patientProfile?.id;
+
+    if (!patientProfileId) {
+      return null;
+    }
+
+    const patientProfile = await ctx.db.patientProfile.findUnique({
+      where: { id: patientProfileId },
+      include: {
+        medications: true,
+        healthPlans: true,
+        appointments: true,
+        symptoms: true,
+        healthMetrics: true,
+        physicians: true,
+      },
+    });
+
+    return patientProfile;
+  }),
+  deleteAccount: publicProcedure.mutation(async ({ ctx }) => {
+    const userId = ctx.session?.user.id;
+    if (!userId) {
+      throw new Error("Unauthorized");
+    }
+
+    try {
+      await ctx.db.user.delete({
+        where: { id: userId },
+      });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_) {
+      throw new Error("Failed to delete account");
+    }
+
+    return { success: true };
+  }),
 });

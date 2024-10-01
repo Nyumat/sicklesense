@@ -3,14 +3,27 @@
 import { useSidebarToggle } from "@/hooks/use-sidebar-toggle";
 import { useStore } from "@/hooks/use-store";
 import { cn } from "@/lib/utils";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import React from "react";
 import { Sidebar } from "./sidebar";
+import { api } from "@/trpc/react";
+import { CommandMenu } from "../comand-menu";
 
 export default function AdminPanelLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
+    const router = useRouter();
     const sidebar = useStore(useSidebarToggle, (state) => state);
+    const session = useSession();
+    const isOnboarded = api.users.isOnboarded.useQuery();
+    if (!session.data?.user) {
+        if (!isOnboarded) {
+            router.push("/auth/signin");
+        }
+    }    
     if (!sidebar) return null;
     return (
         <>

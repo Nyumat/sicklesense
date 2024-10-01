@@ -109,7 +109,10 @@ export function Menu({ isOpen }: MenuProps) {
                             <Tooltip delayDuration={100}>
                                 <TooltipTrigger asChild>
                                     <Button
-                                        onClick={() => signOut()}
+                                        onClick={() => signOut({
+                                            redirect: true,
+                                            callbackUrl: "/",
+                                        })}
                                         variant="outline"
                                         className="mt-5 h-10 w-full justify-center"
                                     >

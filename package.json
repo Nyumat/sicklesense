@@ -12,7 +12,6 @@
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
-    "postinstall": "prisma generate && prisma migrate deploy",
     "format": "prettier --write ."
   },
   "dependencies": {
@@ -61,6 +60,7 @@
     "@tsparticles/engine": "^3.5.0",
     "@tsparticles/react": "^3.0.0",
     "@tsparticles/slim": "^3.5.0",
+    "@types/react-syntax-highlighter": "^15.5.13",
     "@types/uuid": "^10.0.0",
     "ably": "^2.4.0",
     "ai": "^3.4.0",
@@ -100,7 +100,10 @@
     "react-resizable-panels": "^2.1.2",
     "react-slick": "^0.30.2",
     "react-spinners": "^0.14.1",
+    "react-syntax-highlighter": "^15.5.0",
     "recharts": "^2.12.7",
+    "remark-gfm": "^4.0.0",
+    "remark-math": "^6.0.0",
     "resend": "^4.0.0",
     "server-only": "^0.0.1",
     "slick-carousel": "^1.8.1",

@@ -15,7 +15,7 @@ The questions should be personalized, for instance.
 - How can I manage my pain?
 - What is the best diet for me?
 
-The questions shouldnt be long, just short and precise.
+The questions should be just short and precise.
 
 But, dont use these exact questions, it's just a reference.
 

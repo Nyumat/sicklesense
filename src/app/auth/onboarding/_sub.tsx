@@ -1,7 +1,7 @@
 "use client";
 
 import { CountryDropdown } from "@/app/_components/select-countries";
-import{ StateDropdown} from "@/app/_components/states";
+import { StateDropdown } from "@/app/_components/states";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -21,15 +21,17 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { getOnboardingProgress } from "@/lib/actions";
+import { useDropdownStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
+import cityTimezones from "city-timezones";
 import { format } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
-import { CalendarIcon } from 'lucide-react';
+import { ArrowLeft, CalendarIcon, LucideLoader } from 'lucide-react';
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
-import { useDropdownStore } from "@/lib/store";
-import cityTimezones from "city-timezones";
 
 type Gender = "Male" | "Female" | "Other" | null | string;
 export type CompleteOnboarding = {
@@ -154,14 +156,15 @@ export function Onboarding({ userId }: { userId: string }) {
     const [timezone, setTimezone] = useState("");
     const [_state, setStateValue] = useState("");
     const [country, setCountry] = useState("");
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
-        setCountry(countryValue);   
+        setCountry(countryValue);
     }, [countryValue]);
-    
+
     useEffect(() => {
         setStateValue(stateValue);
     }, [stateValue]);
-    const cityLookup = cityTimezones.findFromCityStateProvince(`${_state}`);  
+    const cityLookup = cityTimezones.findFromCityStateProvince(`${_state}`);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const timezoneCountry = cityLookup.find((items: any) => items.country.toLowerCase().includes(`${country}`.toLowerCase()));
     useEffect(() => {
@@ -189,16 +192,6 @@ export function Onboarding({ userId }: { userId: string }) {
                     </>
                 ),
             },
-            // {
-            //     title: "Time Zone",
-            //     description: "Select your time zone",
-            //     component: (
-            //         <TimeZoneSelec
-            //             value={state.timezone ?? ""}
-            //             onChange={(value) => updateState({ timezone: value })}
-            //         />
-            //     ),
-            // },
             {
                 title: "SCD Type",
                 description: "Select your SCD type",
@@ -316,6 +309,7 @@ export function Onboarding({ userId }: { userId: string }) {
 
     const nextStep = async () => {
         if (currentStep === steps.length - 1) {
+            setLoading(true);
             await completeOnboarding({
                 id: userId,
                 dateOfBirth,
@@ -324,6 +318,7 @@ export function Onboarding({ userId }: { userId: string }) {
                 timezone,
                 country,
             });
+            setLoading(false);
             router.push("/auth/onboarded");
         } else {
             updateState({
@@ -341,7 +336,38 @@ export function Onboarding({ userId }: { userId: string }) {
 
     return (
         <div className="flex min-h-screen w-full items-center justify-center bg-background p-4">
-            <div className="w-full max-w-md">
+            <div className="absolute top-4 left-4 m-12">
+                <Link href="/">
+                    <ArrowLeft
+                        className="cursor-pointer"
+                        size={20}
+                        color="#9933ff"
+                    />
+                    <span className="text-sm">Back to Landing</span>
+                </Link>
+            </div>
+            <div className="space-y-4 w-full max-w-md">
+                <div className="mx-auto w-[50px] h-[50px] -translate-y-20">
+                    <div className="flex flex-col items-center justify-center space-x-2">
+                        <div className="flex flex-col items-center justify-center w-full">
+                            <Image
+                                src="/sicklesense.png"
+                                alt="SickleSense Logo"
+                                className="rounded-full"
+                                width={50}
+                                height={50}
+                            />
+                            <h1
+                                className={cn(
+                                    "whitespace-nowrap bg-gradient-to-r from-[#8b39b1] via-[#c80f3aaa] to-[#9E44F0] bg-clip-text font-mono text-lg font-bold text-transparent transition-[transform,opacity,display] duration-300 ease-in-out -ml-2",
+                                )}
+                            >
+                                Sickle Sense
+                            </h1>
+                        </div>
+                        <h1 className="text-3xl font-bold">Onboarding</h1>
+                    </div>
+                </div>
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={currentStep}
@@ -390,6 +416,7 @@ export function Onboarding({ userId }: { userId: string }) {
                                 </div>
                                 <Button onClick={nextStep}>
                                     {currentStep === steps.length - 1 ? "Complete" : "Next"}
+                                    {loading && <LucideLoader className="ml-2" />}
                                 </Button>
                             </CardFooter>
                         </Card>

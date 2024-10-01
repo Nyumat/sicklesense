@@ -1,7 +1,7 @@
 import json
 from pydantic import BaseModel
-from typing import List, Optional
-from .types import ClientAttachment, ToolInvocation
+from typing import Any, List, Optional
+from .types import ClientAttachment, ToolInvocation, ChatRequestBody
 
 class ClientMessage(BaseModel):
     role: str
@@ -9,8 +9,23 @@ class ClientMessage(BaseModel):
     experimental_attachments: Optional[List[ClientAttachment]] = None
     toolInvocations: Optional[List[ToolInvocation]] = None
 
-def convert_to_openai_messages(messages: List[ClientMessage]):
+def convert_to_openai_messages(messages: List[ClientMessage], context: Optional[ChatRequestBody] = None, user: Optional[ChatRequestBody] = None, elasticsearch: Any = None):
     openai_messages = []
+
+    if context:
+        openai_messages.append({
+            "role": "system",
+            "content": [
+                {
+                    "type": "text",
+                    "text": (
+                        f"Context: {elasticsearch}"
+                        f"Never say : To protect your privacy and confidentiality, I don't have direct access to your personal information, including specific details about your doctor. "
+                        f" Because the information is in the Sickle Sense context above."
+                    )
+                }
+            ]
+        })
 
     for message in messages:
         parts = []

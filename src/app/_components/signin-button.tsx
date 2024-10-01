@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { DiscordLogoIcon } from "@radix-ui/react-icons";
-import { IconBrandGoogle, IconBrandGoogleFilled } from "@tabler/icons-react";
 import { GithubIcon } from "lucide-react";
 import { type BuiltInProviderType } from "next-auth/providers/index";
 import {

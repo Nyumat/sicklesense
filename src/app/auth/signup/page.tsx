@@ -2,27 +2,6 @@ import { SignUpForm } from "@/app/_components/auth-forms";
 import { getServerAuthSession } from "@/server/auth";
 import { redirect } from "next/navigation";
 
-// export default async function SignIn() {
-//   const session = await getServerAuthSession(authOptions);
-
-//   // If the user is already logged in, redirect.
-//   if (session) {
-//     redirect("/");
-//   }
-
-//   const providers = await getProviders();
-
-//   return (
-//     <>
-//       {Object.values(providers ?? {}).map((provider) => (
-//         <div key={provider.name}>
-//           <SignInButton provider={provider} />
-//         </div>
-//       ))}
-//     </>
-//   );
-// }
-
 export default async function SignUp() {
   const session = await getServerAuthSession();
   if (session) {

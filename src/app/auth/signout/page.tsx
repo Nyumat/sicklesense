@@ -6,7 +6,10 @@ import { useLayoutEffect } from "react";
 export default function SignOutPage() {
   useLayoutEffect(() => {
     void (async () => {
-      await signOut();
+        await signOut({
+            redirect: true,
+            callbackUrl: "/",   
+      });
     })();
   }, []);
   return (

@@ -11,3 +11,7 @@ class ToolInvocation(BaseModel):
     toolName: str
     args: dict
     result: dict
+
+class ChatRequestBody(BaseModel):
+    user: dict
+    context: dict

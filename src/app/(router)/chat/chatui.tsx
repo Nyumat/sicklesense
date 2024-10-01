@@ -1,5 +1,6 @@
 "use client";
 
+import { MemoizedReactMarkdown } from "@/app/_components/markdown";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useSidebarToggle } from '@/hooks/use-sidebar-toggle';
@@ -8,43 +9,53 @@ import { cn } from '@/lib/utils';
 import { useChat, experimental_useObject as useObject } from 'ai/react';
 import { motion } from 'framer-motion';
 import { Send } from "lucide-react";
-import { useSession } from "next-auth/react";
-import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
-import ReactMarkdown from 'react-markdown';
+import { Session } from "next-auth";
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import { SyncLoader } from "react-spinners";
 import { z } from 'zod';
 import { EnhancedTextarea } from "./enhanced-textarea";
-
 
 const questionsSchema = z.array(z.object({ id: z.string(), question: z.string() }));
 const ES_SERVICE_URL = process.env.NEXT_PUBLIC_ES_SERVICE_URL;
 
-export function ChatUI() {
-    const session = useSession();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function ChatUI({ context, session, user }: { context: string, session: Session, user: any }) {
     const sidebar = useStore(useSidebarToggle, (state) => state);
-    const messagesEndRef = useRef<HTMLDivElement>(null);
+    const messagesEndRef = React.useRef<HTMLDivElement>(null);
     const heightOfMostRecentMessage = useRef<number>(0);
     const { object, submit, isLoading: qLoading } = useObject({
         api: '/api/questions',
         schema: z.object({ questions: questionsSchema }),
     });
-    const { messages, input, handleSubmit, handleInputChange, isLoading, setInput } =
-        useChat({
-            api: `${ES_SERVICE_URL}/api/chat?protocol=text`,
-            streamProtocol: 'text',
-            initialInput: '',
-            initialMessages: [
-                { id: '1', role: 'system', content: `Hello ${session.data?.user.name ?? "there"}! I\'m the Sickle Sense assistant, fine tuned on over 25,000 sickle cell articles, books, and organization blogs. Let me know how I can help you today!` },
-            ],
-        });
+    const requestBody = useRef({ user: JSON.stringify(session.user + user), context: context, query: '' });
+    const { messages, input, handleSubmit, handleInputChange, isLoading, setInput, append } =
+    useChat({
+        api: `${ES_SERVICE_URL}/api/chat?protocol=text`,
+        streamProtocol: 'text',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: requestBody.current,
+        initialInput: '',
+        initialMessages: [
+            { id: '1', role: 'system', content: `Hello ${session.user.name ?? "there"}! I\'m the Sickle Sense assistant, loaded with over 25,000 sickle cell articles, books, and organization blogs. Let me know how I can help you today!` },
+        ],
+    });
 
+    useEffect(() => {
+        if (requestBody.current) {
+            requestBody.current = { user: JSON.stringify(session.user), context: context, query: input.length > 0 ? input : '' };
+        }   
+    }, [input, context, session.user]);
+    
+    // const obj = { user: JSON.stringify(session.user), context: context, query: input.length > 0 ? input : '' };
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
 
-    const handleSuggestionClick = useCallback((suggestion: string | undefined) => {
-        setInput(suggestion ?? '');
-        handleSubmit(new Event('submit') as unknown as React.FormEvent<HTMLFormElement>);
-    }, [setInput, handleSubmit]);
+    const handleSuggestionClick = (suggestion: string) => () => {
+        append({ role: 'user', content: suggestion }, { allowEmptySubmit: false, body: { ...requestBody.current, query: suggestion } });
+    }
 
     const messageVariants = {
         hidden: { opacity: 0, y: 20 },
@@ -100,9 +111,20 @@ export function ChatUI() {
                             : 'bg-secondary text-secondary-foreground'
                             }`}
                     >
-                        <ReactMarkdown className="break-words whitespace-pre-wrap">
-                            {message.content.toString()}
-                        </ReactMarkdown>
+                        <p className="text-sm">
+                            <MemoizedReactMarkdown
+                                components={{
+                                    p: ({ children }) => <p className="text-sm">{children}</p>,
+                                    a: ({ children, href, ...props }) => (
+                                        <a href={href} target="_blank" rel="noreferrer" className="text-purple-500 underline" {...props}>
+                                            {children}
+                                        </a>
+                                    ),
+                                }}
+                            >
+                                {message.content}
+                            </MemoizedReactMarkdown>
+                        </p>
                     </motion.div>
                     {message.role === 'user' && (
                         <Avatar className="ml-2 flex-shrink-0">
@@ -113,22 +135,15 @@ export function ChatUI() {
                 </motion.div>
             ))}
             <div ref={messagesEndRef} />
-            <div className="fixed bottom-0 left-0 right-0 p-4 bg-background shadow-inner">
+            <div className="fixed bottom-0 left-0 right-0 p-4 bg-background">
                 {/* Suggestions */}
                 {qLoading ? (
                     <div className={cn(
                         sidebar?.isOpen === false ? "lg:ml-[90px]" : "lg:ml-72",
                         "pb-4 flex justify-center mx-auto"
                     )}>
-                        <div className="grid grid-cols-2 gap-1 mx-auto">
-                            {["Loading...", "Please wait..."].map((question) => (
-                                <button
-                                    key={question}
-                                    className="p-1 bg-secondary text-white rounded hover:bg-secondary-hover"
-                                >
-                                    {question}
-                                </button>
-                            ))}
+                        <div className="flex justify-center">
+                            <SyncLoader color="#9933ff" />
                         </div>
                     </div>
                 ) : (
@@ -138,15 +153,16 @@ export function ChatUI() {
                                 sidebar?.isOpen === false ? "lg:ml-[90px]" : "lg:ml-72",
                                 "pb-4 flex justify-center mx-auto"
                             )}>
-                                <div className="grid grid-cols-2 gap-1 mx-auto">
+                                <div className="grid grid-cols-2 gap-3 mx-auto">
                                     {object?.questions?.map((question) => (
-                                        <button
+                                        <Button
                                             key={question?.id}
-                                            className="p-1 bg-secondary rounded-md hover:bg-secondary-hover"
-                                            onClick={() => handleSuggestionClick(question?.question)}
+                                            variant="secondary"
+                                            onClick={handleSuggestionClick(question?.question ?? '')}
+                                            className="p-1 bg-secondary/70 shadow-md ring-primary rounded-lg hover:bg-secondary-hover text-xs text-secondary-foreground"
                                         >
                                             {question?.question}
-                                        </button>
+                                        </Button>
                                     ))}
                                 </div>
                             </div>

@@ -6,16 +6,10 @@ import { useEffect, useState } from "react";
 
 const loadingStates = [
     {
-        text: "Parsing your data...",
-    },
-    {
         text: "Personalizing SickleSense for you...",
     },
     {
         text: "Loading modules...",
-    },
-    {
-        text: "Setting up your dashboard...",
     },
     {
         text: "Redirecting to your dashboard...",
@@ -31,7 +25,7 @@ export default function MultiStepLoaderDemo() {
         const timer = setTimeout(() => {
             setLoading(false);
             router.push("/dashboard");
-        }, 9000);
+        }, 6000);
 
         return () => clearTimeout(timer);
         // eslint-disable-next-line react-hooks/exhaustive-deps

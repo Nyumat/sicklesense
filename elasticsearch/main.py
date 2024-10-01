@@ -29,11 +29,16 @@ client = OpenAI(
 
 class Request(BaseModel):
     messages: List[ClientMessage]
+    context: str
+    user: str
+
+class Body(BaseModel):
+    obj: dict
 
 def stream_text(messages: List[ClientMessage], protocol: str = 'data'):
     stream = client.chat.completions.create(
         messages=messages,
-        model="gpt-3.5-turbo",
+        model="gpt-4o-mini",
         stream=True,
     )
 
@@ -70,16 +75,16 @@ def stream_text(messages: List[ClientMessage], protocol: str = 'data'):
                     completion=completion_tokens
                 )
 
-
 @app.post("/api/chat")
 async def handle_chat_data(request: Request, protocol: str = Query('data')):
+    print(request.user, request.context) 
     messages = request.messages
-    openai_messages = convert_to_openai_messages(messages)
+    openai_messages = convert_to_openai_messages(messages, request.context, request.user)  
 
     response = StreamingResponse(stream_text(openai_messages, protocol))
     response.headers['x-vercel-ai-data-stream'] = 'v1'
     return response
 
 if __name__ == "__main__":
-    specified_port = int(os.getenv("PORT", 8000))  # Default to 8000 if PORT is not set
+    specified_port = int(os.getenv("PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=specified_port)
