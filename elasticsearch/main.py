@@ -81,4 +81,5 @@ async def handle_chat_data(request: Request, protocol: str = Query('data')):
     return response
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    specified_port = int(os.getenv("PORT", 8000))  # Default to 8000 if PORT is not set
+    uvicorn.run(app, host="0.0.0.0", port=specified_port)
