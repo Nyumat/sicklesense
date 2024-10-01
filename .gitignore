@@ -7,3 +7,4 @@ next-env.d.ts
 elasticsearch/__pycache__
 elasticsearch/sicklesense
 .DS_Store
+__pycache__
