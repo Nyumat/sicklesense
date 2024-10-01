@@ -1,21 +1,38 @@
-"use client";
-
 import React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn, lowerCase, sentenceCase } from "@/lib/utils";
 import states from "@/data/states.json";
-import { type StateProps } from "@/lib/types";
 import { useDropdownStore } from "@/lib/store";
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+} from "@/components/ui/command";
 
-const StateDropdown = () => {
-    const { countryValue, stateValue, openStateDropdown, setOpenStateDropdown, setStateValue } = useDropdownStore();
+interface StateProps {
+    id: number;
+    name: string;
+    country_id: number;
+    country_code: string;
+    country_name: string;
+    state_code: string;
+    type: string | null;
+    latitude: string;
+    longitude: string;
+}
 
-    const SD = states as StateProps[];
-    const S = SD.filter((state) => state.country_name === sentenceCase(countryValue));
+export function StateDropdown() {
+    const { countryValue, stateValue, openStateDropdown, setOpenStateDropdown, setStateValue } =
+        useDropdownStore();
+
+    const SD = (states as StateProps[]) || [];
+    const S = SD.filter((state) => sentenceCase(state.country_name) === sentenceCase(countryValue));
 
     return (
         <Popover open={openStateDropdown} onOpenChange={setOpenStateDropdown}>
@@ -29,7 +46,9 @@ const StateDropdown = () => {
                 >
                     {stateValue ? (
                         <div className="flex items-end gap-2">
-                            <span>{S.find((state) => lowerCase(state.name) === stateValue)?.name}</span>
+                            <span>
+                                {S.find((state) => lowerCase(state.name) === stateValue)?.name}
+                            </span>
                         </div>
                     ) : (
                         <span>Select State...</span>
@@ -43,27 +62,31 @@ const StateDropdown = () => {
                     <CommandEmpty>No state found.</CommandEmpty>
                     <CommandGroup>
                         <ScrollArea className="h-[300px] w-full">
-                            {S.map((state) => (
-                                <CommandItem
-                                    key={state.id}
-                                    value={state.name}
-                                    onSelect={(currentValue) => {
-                                        setStateValue(currentValue === lowerCase(state.name) ? currentValue : "");
-                                        setOpenStateDropdown(false);
-                                    }}
-                                    className="flex cursor-pointer items-center justify-between text-xs hover:!bg-[#27272a] hover:!text-white"
-                                >
-                                    <div className="flex items-end gap-2">
-                                        <span className="">{state.name}</span>
-                                    </div>
-                                    <Check
-                                        className={cn(
-                                            "mr-2 h-4 w-4",
-                                            stateValue === lowerCase(state.name) ? "opacity-100" : "opacity-0",
-                                        )}
-                                    />
-                                </CommandItem>
-                            ))}
+                            <CommandList>
+                                {S.map((state) => (
+                                    <CommandItem
+                                        key={state.id}
+                                        value={state.name}
+                                        onSelect={(currentValue) => {
+                                            setStateValue(lowerCase(currentValue));
+                                            setOpenStateDropdown(false);
+                                        }}
+                                        className="flex cursor-pointer items-center justify-between text-xs hover:!bg-[#27272a] hover:!text-white"
+                                    >
+                                        <div className="flex items-end gap-2">
+                                            <span className="">{state.name}</span>
+                                        </div>
+                                        <Check
+                                            className={cn(
+                                                "mr-2 h-4 w-4",
+                                                stateValue === lowerCase(state.name)
+                                                    ? "opacity-100"
+                                                    : "opacity-0"
+                                            )}
+                                        />
+                                    </CommandItem>
+                                ))}
+                            </CommandList>
                             <ScrollBar orientation="vertical" />
                         </ScrollArea>
                     </CommandGroup>
@@ -72,5 +95,3 @@ const StateDropdown = () => {
         </Popover>
     );
 };
-
-export default StateDropdown;

@@ -9,7 +9,7 @@ import {
   type LiteralUnion,
 } from "next-auth/react";
 import { match } from "ts-pattern";
-import { SignInForm } from "./auth-forms";
+import React from "react";
 
 interface SignInProps {
   providers: Record<
@@ -35,11 +35,6 @@ export function SignInBtn({ providers }: SignInProps) {
 
     return (
       <>
-        {provider.type === "credentials" && (
-          <>
-            <SignInForm />
-          </>
-        )}
         <Button
           className="w-full"
           onClick={() =>

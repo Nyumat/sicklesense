@@ -80,7 +80,7 @@ export function HeroSection({ session }: HeroSectionProps) {
     const handleGetStarted = () => {
         if (localStorage.getItem("c232a24f") === "true") {
             if (session?.user) {
-                router.push("/dashboard");
+                router.push("/onboarding");
             } else {
                 router.push("/auth/signin");
             }

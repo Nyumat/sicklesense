@@ -1,6 +1,7 @@
 "use client";
 
-import CountryDropdown from "@/app/_components/select-countries";
+import { CountryDropdown } from "@/app/_components/select-countries";
+import{ StateDropdown} from "@/app/_components/states";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -27,6 +28,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { CalendarIcon } from 'lucide-react';
 import { useRouter } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
+import { useDropdownStore } from "@/lib/store";
+import cityTimezones from "city-timezones";
 
 type Gender = "Male" | "Female" | "Other" | null | string;
 export type CompleteOnboarding = {
@@ -43,62 +46,6 @@ export type OnboardingState = CompleteOnboarding & {
     step?: number;
 };
 
-/*
-const TimeZoneSelect = ({
-    value,
-    onChange,
-}: {
-    value: string;
-    onChange: (value: string) => void;
-}) => {
-    const [open, setOpen] = useState(false);
-    const [selected, setSelected] = useState(value);
-    return (
-        <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-                <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    className="w-[200px] justify-between"
-                >
-                    {countries.find((country) => country.id === selected)?.name}
-                    <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
-                <Command>
-                    <CommandInput placeholder="Search country..." className="h-9" />
-                    <CommandList>
-                        <CommandEmpty>No country found.</CommandEmpty>
-                        <CommandGroup>
-                            {countries.map((country) => (
-                                <CommandItem
-                                    key={country.id}
-                                    value={country.id}
-                                    onSelect={(currentValue) => {
-                                        setSelected(currentValue);
-                                        onChange(currentValue);
-                                        setOpen(false);
-                                    }}
-                                >
-                                    {country.name}
-                                    <CheckIcon
-                                        className={cn(
-                                            "ml-auto h-4 w-4",
-                                            selected === country.id ? "opacity-100" : "opacity-0"
-                                        )}
-                                    />
-                                </CommandItem>
-                            ))}
-                        </CommandGroup>
-                    </CommandList>
-                </Command>
-            </PopoverContent>
-        </Popover>
-    );
-}
-*/
 const SCDTypeSelect = ({
     value,
     onChange,
@@ -129,7 +76,7 @@ const GendeSelect = ({
 }) => (
     <Select onValueChange={onChange} defaultValue={value?.toString()}>
         <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select Condition Status" />
+            <SelectValue placeholder="Select Your Gender" />
         </SelectTrigger>
         <SelectContent>
             {["Male", "Female", "Other"].map((gender) => (
@@ -203,18 +150,41 @@ export function Onboarding({ userId }: { userId: string }) {
     const [scdType, setScdType] = useState("");
     const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
     const [gender, setGender] = useState<Gender | string | null>("");
-    //   const [dataConsent, setDataConsent] = useState(false);
-    const [timezone,] = useState("");
-    const [country,] = useState("");
+    const { stateValue, countryValue } = useDropdownStore();
+    const [timezone, setTimezone] = useState("");
+    const [_state, setStateValue] = useState("");
+    const [country, setCountry] = useState("");
+    useEffect(() => {
+        setCountry(countryValue);   
+    }, [countryValue]);
+    
+    useEffect(() => {
+        setStateValue(stateValue);
+    }, [stateValue]);
+    const cityLookup = cityTimezones.findFromCityStateProvince(`${_state}`);  
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const timezoneCountry = cityLookup.find((items: any) => items.country.toLowerCase().includes(`${country}`.toLowerCase()));
+    useEffect(() => {
+        setTimezone(timezoneCountry?.timezone ?? "");
+    }, [country, _state, timezoneCountry]);
     const mutation = api.onboarding.saveProgress.useMutation();
     const steps = useMemo(() => {
         return [
+            {
+                title: "Location",
+                description: "Select your country and state",
+                component: (
+                    <>
+                        <CountryDropdown />
+                        <StateDropdown />
+                    </>
+                ),
+            },
             {
                 title: "Date of Birth",
                 description: "Enter your date of birth",
                 component: (
                     <>
-                        <CountryDropdown />
                         <AgeInput value={dateOfBirth} onChange={setDateOfBirth} />
                     </>
                 ),

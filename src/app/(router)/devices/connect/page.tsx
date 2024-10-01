@@ -9,7 +9,7 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import PlaceholderContent from "@/app/_components/place";
+import { FitbitConnectWidget } from "./(helper)/widget";
 
 export default function DeviceConnectPage() {
     return (
@@ -32,14 +32,22 @@ export default function DeviceConnectPage() {
                         <BreadcrumbLink asChild>
                             <Link href="/devices">Devices</Link>
                         </BreadcrumbLink>
-                    </BreadcrumbItem>   
+                    </BreadcrumbItem>
                     <BreadcrumbSeparator />
                     <BreadcrumbItem>
                         <BreadcrumbPage>Connect a Device</BreadcrumbPage>
                     </BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>
-            <PlaceholderContent />
+            <div className="container mx-auto my-6">
+                <h1 className="text-3xl font-bold mb-6">
+                    Connect a Device
+                </h1>
+                <p className="text-muted-foreground">
+                    Connect a wearable device to start tracking your health data.
+                </p>
+                <FitbitConnectWidget />
+            </div>
         </ContentLayout>
     );
 }

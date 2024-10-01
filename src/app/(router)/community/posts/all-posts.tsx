@@ -53,7 +53,7 @@ export function AllPosts() {
     }, [inView, hasMore, filteredPosts, displayedPosts]);
 
     return (
-        <div className="space-y-6 md:p-6 dark:bg-muted rounded-lg shadow-none">
+        <div className="space-y-6 md:p-6 rounded-lg shadow-sm">
             <div className="flex justify-between items-center">
                 <div className="relative flex-grow mr-4">
                     <Input
@@ -85,6 +85,16 @@ export function AllPosts() {
                     </motion.div>
                 ))}
             </AnimatePresence>
+
+            {posts.length === 0 && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-center text-muted-foreground py-8"
+                >
+                    No posts found. Be the first to create one!
+                </motion.div>
+            )}
 
             {filteredPosts.length === 0 && (
                 <motion.div

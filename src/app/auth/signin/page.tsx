@@ -1,37 +1,9 @@
 import { SignInBtn } from "@/app/_components/signin-button";
-import { getServerAuthSession } from "@/server/auth";
 import { getProviders } from "next-auth/react";
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
-// export default async function SignIn() {
-//   const session = await getServerAuthSession(authOptions);
-
-//   // If the user is already logged in, redirect.
-//   if (session) {
-//     redirect("/");
-//   }
-
-//   const providers = await getProviders();
-
-//   return (
-//     <>
-//       {Object.values(providers ?? {}).map((provider) => (
-//         <div key={provider.name}>
-//           <SignInButton provider={provider} />
-//         </div>
-//       ))}
-//     </>
-//   );
-// }
 
 export default async function SignIn() {
-    const session = await getServerAuthSession();
-    if (session) {
-        redirect("/");
-    }
-
     const providers = await getProviders();
-
     return (
         <div className="py-36">
             <div className="mx-auto grid w-[350px] gap-6">
