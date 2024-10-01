@@ -8,7 +8,7 @@ import { signOut } from "next-auth/react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Slider, { Settings } from "react-slick";
 import { toast } from "sonner";
 import SparklesText from "../magicui/sparkle";
@@ -28,7 +28,7 @@ type Image = {
 export function HeroSection({ session }: HeroSectionProps) {
     const ref = useRef(null);
     const isInView = useInView(ref);
-    const { theme } = useTheme();
+    const { resolvedTheme, theme } = useTheme();
     const router = useRouter();
 
     const FADE_DOWN_ANIMATION_VARIANTS = {
@@ -98,6 +98,12 @@ export function HeroSection({ session }: HeroSectionProps) {
         // window.open("https://github.com/nyumat/sicklesense", "_blank");
     }
 
+    useEffect(() => {
+        if (localStorage.getItem("c232a24f") === "true") {
+            toast.success("Welcome to SickleSense! 🎉");
+        }
+    }, []);
+
     return (
         <section className="relative overflow-hidden min-h-screen flex items-center justify-center md:mt-16">
             <div className="absolute inset-0 z-0">
@@ -106,7 +112,7 @@ export function HeroSection({ session }: HeroSectionProps) {
                     background="transparent"
                     minSize={0.6}
                     maxSize={1.4}
-                    particleDensity={30}
+                    particleDensity={120}
                     className="w-full h-full"
                     particleColor={
                         theme === "dark" ? "hsl(280,100%,75%)" : "hsl(280,100%,15%)"
@@ -188,13 +194,14 @@ export function HeroSection({ session }: HeroSectionProps) {
                         <Slider {...carouselSettings} className="scale-90 md:scale-100 relative z-10">
                             {images.map((image, index) => (
                                 <div key={index} className="outline-none">
-                                    <Image
-                                        src={image.dark}
-                                        alt={image.alt}
-                                        className="w-full h-autoed-lg shadow-lg z-50 p-2 border-2 border-accent/20 bg-background aspect-w-16 aspect-h-9"
-                                        width={1920}
-                                        height={1080}
-                                    />
+                                        <Image
+                                            src={resolvedTheme === "dark" ? image.dark : image.light}
+                                            alt={image.alt}
+                                            className="w-full h-autoed-lg shadow-lg z-50 p-2 border-2 border-accent/20 bg-background aspect-w-16 aspect-h-9"
+                                            width={1920}
+                                            height={1080}
+                                        />
+
                                 </div>
                             ))}
                         </Slider>

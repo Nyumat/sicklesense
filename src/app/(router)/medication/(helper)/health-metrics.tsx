@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import React from 'react'
 
 interface HealthMetric {
     date: string;
@@ -12,13 +13,13 @@ interface HealthMetric {
 
 export function HealthMetrics() {
     const healthMetrics: HealthMetric[] = [
-        { date: "2023-06-01", painLevel: 3, fatigueLevel: 4, hydrationLevel: 7 },
-        { date: "2023-06-02", painLevel: 2, fatigueLevel: 3, hydrationLevel: 8 },
-        { date: "2023-06-03", painLevel: 4, fatigueLevel: 5, hydrationLevel: 6 },
-        { date: "2023-06-04", painLevel: 3, fatigueLevel: 4, hydrationLevel: 7 },
-        { date: "2023-06-05", painLevel: 2, fatigueLevel: 3, hydrationLevel: 9 },
-        { date: "2023-06-06", painLevel: 1, fatigueLevel: 2, hydrationLevel: 8 },
-        { date: "2023-06-07", painLevel: 3, fatigueLevel: 4, hydrationLevel: 7 },
+        { date: "2024-09-21", painLevel: 3, fatigueLevel: 4, hydrationLevel: 7 },
+        { date: "2024-09-22", painLevel: 2, fatigueLevel: 3, hydrationLevel: 8 },
+        { date: "2024-09-23", painLevel: 4, fatigueLevel: 5, hydrationLevel: 6 },
+        { date: "2024-09-24", painLevel: 3, fatigueLevel: 4, hydrationLevel: 7 },
+        { date: "2024-09-25", painLevel: 2, fatigueLevel: 3, hydrationLevel: 9 },
+        { date: "2024-09-26", painLevel: 1, fatigueLevel: 2, hydrationLevel: 8 },
+        { date: "2024-09-27", painLevel: 3, fatigueLevel: 4, hydrationLevel: 7 },
     ]
     return (
         <>

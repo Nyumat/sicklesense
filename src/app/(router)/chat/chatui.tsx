@@ -9,11 +9,10 @@ import { useChat, experimental_useObject as useObject } from 'ai/react';
 import { motion } from 'framer-motion';
 import { Send } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { z } from 'zod';
 import { EnhancedTextarea } from "./enhanced-textarea";
-import React from 'react';
 
 
 const questionsSchema = z.array(z.object({ id: z.string(), question: z.string() }));
@@ -143,7 +142,7 @@ export function ChatUI() {
                                     {object?.questions?.map((question) => (
                                         <button
                                             key={question?.id}
-                                            className="p-1 bg-secondary text-white rounded hover:bg-secondary-hover"
+                                            className="p-1 bg-secondary rounded-md hover:bg-secondary-hover"
                                             onClick={() => handleSuggestionClick(question?.question)}
                                         >
                                             {question?.question}

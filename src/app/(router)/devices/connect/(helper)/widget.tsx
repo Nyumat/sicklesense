@@ -55,7 +55,7 @@ export function FitbitConnectWidget() {
     }
 
     return (
-        <div className="p-6 max-w-md mx-auto">
+        <div className="my-4">
             <Card>
                 <CardHeader>
                     <CardTitle>Fitbit Connection</CardTitle>

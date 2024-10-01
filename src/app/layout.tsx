@@ -25,12 +25,12 @@ export default function RootLayout({
     children,
 }: Readonly<{ children: React.ReactNode }>) {
     return (
-        <html lang="en" className={`${GeistSans.variable}`}>
-            <body>
+        <html lang="en" className={`${GeistSans.variable}`} suppressHydrationWarning>
+            <body suppressHydrationWarning>
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="dark"
-                    enableSystem={false} // TODO: Maybe enable this in the future (?)
+                    enableSystem={true}
                     disableTransitionOnChange
                 >
                     <TRPCReactProvider>
