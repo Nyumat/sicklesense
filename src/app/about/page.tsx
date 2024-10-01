@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "About — Sickle Sense",
         description: "Learn more about the creator of Sickle Sense and the features of the platform.",
-        images: [{ url: "/preview.png" }],
+        images: [{ url: "/preview-light.png" }],
     },
 };
 

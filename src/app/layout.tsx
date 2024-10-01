@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     openGraph: {
         title: "Sickle Sense — The Sickle Cell Companion of the Future",
         description: "Sickle Sense is an all-in-one platform bridging the gap between you, your data, and better health outcomes for sickle cell patients worldwide.",
-        images: [{ url: "/preview.png" }],
+        images: [{ url: "/preview-light.png" }],
     },
 };
 
