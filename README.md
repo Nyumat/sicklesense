@@ -1,20 +1,12 @@
 # [Sickle Sense](https://sicklesense.vercel.app/)
 
-![Sickle Sense Landing Page](/public/preview.png)
+![Sickle Sense Landing Page](/public/preview-light.png)
 
 **Sickle Sense** Sickle Sense is an innovative web application designed to transform the management of sickle cell disease. My mission is to create a holistic platform that enhances the quality of life for individuals living with SCD, bridging the gap between personal health management and medical support.
 
-## 🚀 Features
-
-- **AI-Driven Insights**: Get personalized care insights and recommendations based on your health data and medical history.
-- **Community Support**: Connect with others in the SCD community, share experiences, and find support.
-- **Real-Time Monitoring**: Track your health vitals and receive alerts when your vitals are outside of normal ranges.
-- **RAG Consultation**: Get on-demand consultations with a chatbot that knows your medical history and can provide immediate care advice.
-- **Medication Reminders**: Set reminders for your medications and receive live notifications when it's time to take them.
-
 ## ⚙️ System Architecture
 
-![Sickle Sense System Design](/public/system-design.png)
+![Sickle Sense System Design](/public/system-design-light.png)
 
 ## 🤓 Tech Stack (~~for da nerds~~)
 
