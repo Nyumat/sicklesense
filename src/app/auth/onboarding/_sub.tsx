@@ -70,7 +70,7 @@ const SCDTypeSelect = ({
     </Select>
 );
 
-const GendeSelect = ({
+const GenderSelect = ({
     value,
     onChange,
 }: {
@@ -199,10 +199,10 @@ export function Onboarding({ userId }: { userId: string }) {
                 component: <SCDTypeSelect value={scdType} onChange={setScdType} />,
             },
             {
-                title: "Gener",
+                title: "Gender",
                 description: "Select your gender",
                 component: (
-                    <GendeSelect value={gender} onChange={setGender} />
+                    <GenderSelect value={gender} onChange={setGender} />
                 ),
             },
             {
@@ -257,8 +257,8 @@ export function Onboarding({ userId }: { userId: string }) {
         localStorage.removeItem("tour");
         const savedState = localStorage.getItem("onboardingState");
         if (savedState) {
-            const retreivedState = JSON.parse(savedState) as OnboardingState;
-            setState(retreivedState);
+            const retrievedState = JSON.parse(savedState) as OnboardingState;
+            setState(retrievedState);
         } else if (userId) {
             void getOnboardingProgress().then((progress) => {
                 if (progress) {
