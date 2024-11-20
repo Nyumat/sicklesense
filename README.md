@@ -2,7 +2,7 @@
 
 ![Sickle Sense Landing Page](/public/preview-light.png)
 
-**Sickle Sense** Sickle Sense is an innovative web application designed to transform the management of sickle cell disease. My mission is to create a holistic platform that enhances the quality of life for individuals living with SCD, bridging the gap between personal health management and medical support.
+Sickle Sense is a web application designed to transform the management of sickle cell disease. As someone living with the illness, my mission is to create a holistic platform that enhances the quality of life for *all* individuals living with SCD, bridging the gap between personal health management and medical support.
 
 ## ⚙️ System Architecture
 
@@ -72,7 +72,6 @@ npm install
 Create a .env file based on the .env.example provided:
 
 ```bash
-Copy code
 cp .env.example .env
 ```
 
@@ -130,7 +129,7 @@ Then visit http://localhost:3000 to view Sickle Sense in your browser.
 ├── next.config.js           # Next.js configuration
 |—— publisher                # Bun.js pub/sub service
 |—— prisma                   # Prisma schema and migrations
-|__ elastisearch             # Elasticsearch web service
+|__ elasticsearch            # Elasticsearch web service
 ├── package.json             # Project dependencies and scripts
 ├── tailwind.config.ts       # Tailwind CSS configuration
 ├── tsconfig.json            # TypeScript configuration
